@@ -113,8 +113,10 @@
       "upstream": "channel config",
       "downstream": "story-thinker",
       "category": "research",
-      "status": "mvp",
-      "phase": "1"
+      "status": "implemented",
+      "phase": "1",
+      "type": "prompt-only",
+      "batch": 2
     },
     "trend-finder": {
       "input": "config/channel.json + research/trend-cache/",
@@ -122,8 +124,10 @@
       "upstream": "channel config",
       "downstream": "story-thinker",
       "category": "research",
-      "status": "mvp",
-      "phase": "1"
+      "status": "implemented",
+      "phase": "1",
+      "type": "prompt-only",
+      "batch": 2
     },
     "competitor-analyzer": {
       "input": "research/niche-report.md",
@@ -131,8 +135,10 @@
       "upstream": "niche report",
       "downstream": "story-thinker",
       "category": "research",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 2
     },
     "audience-persona-builder": {
       "input": "config/channel.json + niche report",
@@ -140,8 +146,10 @@
       "upstream": "research outputs",
       "downstream": "hook-writer",
       "category": "research",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 2
     },
     "fact-checker": {
       "input": "draft script claims",
@@ -149,8 +157,10 @@
       "upstream": "draft script",
       "downstream": "final-test",
       "category": "research",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 2
     },
     "content-calendar": {
       "input": "niche and trend reports",
@@ -158,8 +168,10 @@
       "upstream": "research outputs",
       "downstream": "scheduler-publisher",
       "category": "research",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 2
     },
     "story-thinker": {
       "input": "research/niche-report.md + config/channel.json",

@@ -2,9 +2,17 @@
 name: content-calendar
 description: Plans topics and posting dates.
 category: research
-status: planned
+status: implemented
 phase: later
+type: prompt-only
+batch: 2
 ---
+
+> Context is always loaded via project-memory; all generated data lives under projects/<project>/.
+
+# When to use
+
+Use when plans topics and posting dates for a video in `projects/<project>/`.
 
 # Purpose
 
@@ -12,20 +20,32 @@ Plans topics and posting dates.
 
 # Input
 
-niche and trend reports
+- `niche and trend reports`
+- `config/channel.json` and `config/style-bible.json`, read through project-memory
+- `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-content calendar
+- `content calendar`
+- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 
-TODO
+1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
+2. Validate the input at `niche and trend reports`; if it is missing or malformed, follow Failure handling and stop.
+3. Follow this skill's prompt instructions to plans topics and posting dates, using only the context loaded in step 1.
+4. Write the result to `content calendar` under `projects/<project>/`; create parent folders first.
+5. Re-open `content calendar` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-TODO
+- Type: `Use the content-calendar skill with PROJECT=<project>`. Expected: `content calendar` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into
 
 research outputs -> scheduler-publisher
+
+# Failure handling
+
+If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.

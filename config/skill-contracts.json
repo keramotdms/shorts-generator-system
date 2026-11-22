@@ -878,8 +878,10 @@
       "upstream": "video-editing",
       "downstream": "bug-finder",
       "category": "final-test",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "ruthless-team": {
       "input": "final video",
@@ -887,8 +889,10 @@
       "upstream": "video-editing",
       "downstream": "bug-finder",
       "category": "final-test",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "bug-finder": {
       "input": "final video + reports",
@@ -896,8 +900,10 @@
       "upstream": "video-editing",
       "downstream": "description-maker",
       "category": "final-test",
-      "status": "mvp",
-      "phase": "5"
+      "status": "implemented",
+      "phase": "5",
+      "type": "checker",
+      "batch": 8
     },
     "solver": {
       "input": "bug report",
@@ -905,8 +911,10 @@
       "upstream": "bug-finder",
       "downstream": "final render",
       "category": "final-test",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "copyright-policy-checker": {
       "input": "final script + assets + video",
@@ -914,8 +922,10 @@
       "upstream": "final-test",
       "downstream": "publish stage",
       "category": "final-test",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "checker",
+      "batch": 8
     },
     "platform-compliance-checker": {
       "input": "final video + metadata",
@@ -923,8 +933,10 @@
       "upstream": "final-test",
       "downstream": "publish stage",
       "category": "final-test",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "checker",
+      "batch": 8
     },
     "accessibility-safety-checker": {
       "input": "final video",
@@ -932,8 +944,10 @@
       "upstream": "final-test",
       "downstream": "publish stage",
       "category": "final-test",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "checker",
+      "batch": 8
     },
     "handover": {
       "input": "all final assets",
@@ -941,8 +955,10 @@
       "upstream": "final-test",
       "downstream": "publish stage",
       "category": "final-test",
-      "status": "mvp",
-      "phase": "5"
+      "status": "implemented",
+      "phase": "5",
+      "type": "script-backed",
+      "batch": 8
     },
     "description-maker": {
       "input": "final script + channel config",
@@ -950,8 +966,10 @@
       "upstream": "final-test",
       "downstream": "growth stage",
       "category": "marketing",
-      "status": "mvp",
-      "phase": "5"
+      "status": "implemented",
+      "phase": "5",
+      "type": "prompt-only",
+      "batch": 8
     },
     "copywriter": {
       "input": "final script + audience persona",
@@ -959,8 +977,10 @@
       "upstream": "final-test",
       "downstream": "description-maker",
       "category": "marketing",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "seo-specialist": {
       "input": "description + final script",
@@ -968,8 +988,10 @@
       "upstream": "description-maker",
       "downstream": "growth stage",
       "category": "marketing",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "marketing-specialist": {
       "input": "final video + audience persona",
@@ -977,8 +999,10 @@
       "upstream": "final-test",
       "downstream": "growth stage",
       "category": "marketing",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "youtube-seo-specialist": {
       "input": "video metadata",
@@ -986,8 +1010,10 @@
       "upstream": "description-maker",
       "downstream": "publish stage",
       "category": "growth",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "youtube-analyst": {
       "input": "YouTube analytics data",
@@ -995,8 +1021,10 @@
       "upstream": "published video",
       "downstream": "research loop",
       "category": "growth",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "analytics-feedback-loop": {
       "input": "analytics reports",
@@ -1004,8 +1032,10 @@
       "upstream": "youtube-analyst",
       "downstream": "research stage",
       "category": "growth",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "scheduler-publisher": {
       "input": "final assets + content calendar",
@@ -1013,8 +1043,10 @@
       "upstream": "handover",
       "downstream": "platforms",
       "category": "growth",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "cross-platform-repurposer": {
       "input": "final video",
@@ -1022,8 +1054,10 @@
       "upstream": "handover",
       "downstream": "other platforms",
       "category": "growth",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "comment-community-manager": {
       "input": "viewer comments",
@@ -1031,8 +1065,10 @@
       "upstream": "published video",
       "downstream": "research stage",
       "category": "growth",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "ab-tester": {
       "input": "variants + analytics data",
@@ -1040,8 +1076,10 @@
       "upstream": "growth data",
       "downstream": "research stage",
       "category": "growth",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     },
     "monetization-tracker": {
       "input": "analytics and revenue data",
@@ -1049,8 +1087,10 @@
       "upstream": "published video",
       "downstream": "research stage",
       "category": "growth",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 8
     }
   }
 }

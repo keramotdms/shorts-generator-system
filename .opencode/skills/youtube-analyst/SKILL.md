@@ -2,9 +2,17 @@
 name: youtube-analyst
 description: Analyzes channel performance.
 category: growth
-status: planned
+status: implemented
 phase: later
+type: prompt-only
+batch: 8
 ---
+
+> Context is always loaded via project-memory; all generated data lives under projects/<project>/.
+
+# When to use
+
+Use when analyzes channel performance for a video in `projects/<project>/`.
 
 # Purpose
 
@@ -12,20 +20,32 @@ Analyzes channel performance.
 
 # Input
 
-YouTube analytics data
+- `YouTube analytics data`
+- `config/channel.json` and `config/style-bible.json`, read through project-memory
+- `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-performance report
+- `performance report`
+- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 
-TODO
+1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
+2. Validate the input at `YouTube analytics data`; if it is missing or malformed, follow Failure handling and stop.
+3. Follow this skill's prompt instructions to analyzes channel performance, using only the context loaded in step 1.
+4. Write the result to `performance report` under `projects/<project>/`; create parent folders first.
+5. Re-open `performance report` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-TODO
+- Type: `Use the youtube-analyst skill with PROJECT=<project>`. Expected: `performance report` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into
 
 published video -> research loop
+
+# Failure handling
+
+If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.

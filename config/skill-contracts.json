@@ -3,121 +3,880 @@
   "notes": [
     "Skill folders live under .opencode/skills/<skill-name>/SKILL.md.",
     "Generated project data lives under projects/<project>/<stage>/, never inside skill folders.",
-    "A skill's output must exactly match the next skill's input."
+    "A skill's output must exactly match the next skill's input.",
+    "upstream and downstream mirror the 'Depends on / feeds into' line in each SKILL.md."
   ],
   "voiceover_captions_split_proposal": {
-    "problem": "The existing 'voiceover-captions' skill does two jobs: audio generation and caption timing generation.",
-    "decision": "Keep it as a legacy compatibility skill for now, but map it to two future skills. Do not write those skill contents until Phase 3 and Phase 4.",
+    "problem": "The legacy 'voiceover-captions' skill does two jobs: audio generation and caption timing generation.",
+    "decision": "Keep it as legacy compatibility until voiceover-generator and caption-maker are built.",
     "mapping": {
-      "voice-over-generator": {
+      "voiceover-generator": {
         "phase": 3,
         "input": "projects/<project>/02-script/latest_script.json",
         "output": "projects/<project>/03-voice/voiceover.mp3",
-        "job": "Generate natural Bangla/English speech only."
+        "job": "Generate natural Bangla/English speech only.",
+        "maps_to": [
+          "voiceover-captions"
+        ]
       },
       "caption-maker": {
         "phase": 4,
-        "input": "projects/<project>/03-voice/voiceover.mp3 plus word-boundary timings",
-        "output": "projects/<project>/07-edit/captions.json",
-        "job": "Create word/phrase caption timings and safe-zone-ready caption data only."
+        "input": "projects/<project>/03-voice/voiceover.mp3 plus word-boundary timings and rough-cut.mp4",
+        "output": "projects/<project>/07-edit/captions.json + captioned video",
+        "job": "Create word/phrase caption timings and safe-zone-ready caption data only.",
+        "maps_to": [
+          "voiceover-captions"
+        ]
       },
       "voiceover-captions": {
         "status": "legacy-compat",
-        "maps_to": ["voice-over-generator", "caption-maker"],
+        "maps_to": [
+          "voiceover-generator",
+          "caption-maker"
+        ],
         "current_helper": "scripts/generate_audio.py",
         "output_today": "output/voiceover.mp3 + output/captions.json",
-        "migration": "When the two future skills are built, keep this skill as a thin wrapper that calls both, then deprecate it."
+        "migration": "When both target skills are built, keep this skill as a thin wrapper that calls both, then deprecate it."
       }
     }
   },
   "skills": {
     "orchestrator": {
-      "input": "projects/_template/pipeline-state.json",
-      "output": "updated pipeline-state.json"
+      "input": "projects/<project>/pipeline-state.json",
+      "output": "updated pipeline state and current stage",
+      "upstream": "channel config",
+      "downstream": "all pipeline stages",
+      "category": "core",
+      "status": "mvp",
+      "phase": "1"
     },
     "project-memory": {
       "input": "config/channel.json",
-      "output": "config/style-bible.json"
+      "output": "config/style-bible.json",
+      "upstream": "channel config",
+      "downstream": "script, voice and character stages",
+      "category": "core",
+      "status": "mvp",
+      "phase": "1"
+    },
+    "task-tracker": {
+      "input": "pipeline state and task list",
+      "output": "task status report",
+      "upstream": "orchestrator",
+      "downstream": "all stages",
+      "category": "core",
+      "status": "planned",
+      "phase": "later"
     },
     "asset-manager": {
       "input": "assets/ and projects/<project>/",
-      "output": "validated folder structure and naming report"
+      "output": "validated structure and naming report",
+      "upstream": "channel config",
+      "downstream": "all stage folders",
+      "category": "core",
+      "status": "mvp",
+      "phase": "1"
+    },
+    "error-log-keeper": {
+      "input": "error reports from skills",
+      "output": "structured error log",
+      "upstream": "all stages",
+      "downstream": "pipeline-health-checker",
+      "category": "core",
+      "status": "planned",
+      "phase": "later"
+    },
+    "pipeline-health-checker": {
+      "input": "whole repository and final video",
+      "output": "PASS / WARN / FAIL report",
+      "upstream": "all stages",
+      "downstream": "final render gate",
+      "category": "core",
+      "status": "mvp",
+      "phase": "1"
     },
     "book-finder": {
       "input": "config/channel.json",
-      "output": "research/niche-report.md"
+      "output": "research/niche-report.md",
+      "upstream": "channel config",
+      "downstream": "story-thinker",
+      "category": "research",
+      "status": "mvp",
+      "phase": "1"
     },
     "trend-finder": {
       "input": "config/channel.json + research/trend-cache/",
-      "output": "research/trend-cache/*.json"
+      "output": "research/trend-cache/*.json",
+      "upstream": "channel config",
+      "downstream": "story-thinker",
+      "category": "research",
+      "status": "mvp",
+      "phase": "1"
     },
-    "pipeline-health-checker": {
-      "input": "whole repository",
-      "output": "PASS / WARN / FAIL report"
+    "competitor-analyzer": {
+      "input": "research/niche-report.md",
+      "output": "competitor analysis report",
+      "upstream": "niche report",
+      "downstream": "story-thinker",
+      "category": "research",
+      "status": "planned",
+      "phase": "later"
+    },
+    "audience-persona-builder": {
+      "input": "config/channel.json + niche report",
+      "output": "audience persona profile",
+      "upstream": "research outputs",
+      "downstream": "hook-writer",
+      "category": "research",
+      "status": "planned",
+      "phase": "later"
+    },
+    "fact-checker": {
+      "input": "draft script claims",
+      "output": "fact-check notes",
+      "upstream": "draft script",
+      "downstream": "final-test",
+      "category": "research",
+      "status": "planned",
+      "phase": "later"
+    },
+    "content-calendar": {
+      "input": "niche and trend reports",
+      "output": "content calendar",
+      "upstream": "research outputs",
+      "downstream": "scheduler-publisher",
+      "category": "research",
+      "status": "planned",
+      "phase": "later"
     },
     "story-thinker": {
       "input": "research/niche-report.md + config/channel.json",
-      "output": "projects/<project>/02-script/story.json"
+      "output": "projects/<project>/02-script/story.json",
+      "upstream": "research outputs",
+      "downstream": "hook-writer",
+      "category": "script",
+      "status": "mvp",
+      "phase": "2"
+    },
+    "story-organizer": {
+      "input": "story.json",
+      "output": "organized story beats",
+      "upstream": "story-thinker",
+      "downstream": "hook-writer",
+      "category": "script",
+      "status": "planned",
+      "phase": "later"
     },
     "hook-writer": {
-      "input": "projects/<project>/02-script/story.json",
-      "output": "projects/<project>/02-script/hook.json"
+      "input": "story.json + config/channel.json",
+      "output": "projects/<project>/02-script/hook.json",
+      "upstream": "story-thinker",
+      "downstream": "script-writer",
+      "category": "script",
+      "status": "mvp",
+      "phase": "2"
     },
     "script-writer": {
       "input": "story.json + hook.json + config/channel.json",
-      "output": "projects/<project>/02-script/latest_script.json"
+      "output": "projects/<project>/02-script/latest_script.json",
+      "upstream": "story and hook",
+      "downstream": "voice stage",
+      "category": "script",
+      "status": "mvp",
+      "phase": "2"
+    },
+    "retention-pacing-optimizer": {
+      "input": "draft script",
+      "output": "pacing suggestions",
+      "upstream": "script-writer",
+      "downstream": "final-test",
+      "category": "script",
+      "status": "planned",
+      "phase": "later"
+    },
+    "loop-cta-designer": {
+      "input": "draft script",
+      "output": "loop and CTA plan",
+      "upstream": "script-writer",
+      "downstream": "video-editing",
+      "category": "script",
+      "status": "planned",
+      "phase": "later"
     },
     "script-tester": {
       "input": "projects/<project>/02-script/latest_script.json",
-      "output": "audit report + optional optimized script"
+      "output": "audit report + optional optimized script",
+      "upstream": "script-writer",
+      "downstream": "voice stage",
+      "category": "script",
+      "status": "planned",
+      "phase": "later"
+    },
+    "script-user-tester": {
+      "input": "draft script + test audience",
+      "output": "viewer feedback report",
+      "upstream": "script-writer",
+      "downstream": "script-tester",
+      "category": "script",
+      "status": "planned",
+      "phase": "later"
+    },
+    "localization": {
+      "input": "final script + config/channel.json",
+      "output": "localized script",
+      "upstream": "script-writer",
+      "downstream": "voice stage",
+      "category": "script",
+      "status": "planned",
+      "phase": "later"
+    },
+    "voiceover-organizer": {
+      "input": "final script + style bible",
+      "output": "voice plan",
+      "upstream": "script-writer",
+      "downstream": "voiceover-generator",
+      "category": "voice",
+      "status": "planned",
+      "phase": "later"
+    },
+    "pronunciation-emotion-director": {
+      "input": "voice plan + final script",
+      "output": "pronunciation and emotion notes",
+      "upstream": "voice plan",
+      "downstream": "voiceover-generator",
+      "category": "voice",
+      "status": "planned",
+      "phase": "later"
+    },
+    "voiceover-generator": {
+      "input": "projects/<project>/02-script/latest_script.json",
+      "output": "projects/<project>/03-voice/voiceover.mp3",
+      "upstream": "script-writer",
+      "downstream": "collector",
+      "category": "voice",
+      "status": "mvp",
+      "phase": "3"
+    },
+    "voiceover-tester": {
+      "input": "voiceover.mp3 + final script",
+      "output": "voice QA report",
+      "upstream": "voiceover-generator",
+      "downstream": "final-test",
+      "category": "voice",
+      "status": "planned",
+      "phase": "later"
+    },
+    "music-sfx-selector": {
+      "input": "video mood + style bible",
+      "output": "music and SFX selection list",
+      "upstream": "scene plan",
+      "downstream": "audio-mixer",
+      "category": "voice",
+      "status": "planned",
+      "phase": "later"
+    },
+    "audio-mixer": {
+      "input": "voice + music + SFX files",
+      "output": "mixed audio track",
+      "upstream": "voice and music",
+      "downstream": "video-editing",
+      "category": "voice",
+      "status": "planned",
+      "phase": "later"
     },
     "voiceover-captions": {
       "input": "projects/<project>/02-script/latest_script.json",
-      "output": "output/voiceover.mp3 + output/captions.json"
+      "output": "output/voiceover.mp3 + output/captions.json",
+      "upstream": "script",
+      "downstream": "legacy split targets",
+      "category": "voice",
+      "status": "legacy",
+      "phase": "later"
     },
-    "voice-over-generator": {
-      "input": "projects/<project>/02-script/latest_script.json",
-      "output": "projects/<project>/03-voice/voiceover.mp3"
+    "character-thinker-counter": {
+      "input": "style bible + final script",
+      "output": "character idea list",
+      "upstream": "script and voice",
+      "downstream": "character-designer",
+      "category": "character",
+      "status": "planned",
+      "phase": "later"
     },
-    "caption-maker": {
-      "input": "voiceover.mp3 + word-boundary timings + projects/<project>/07-edit/rough-cut.mp4",
-      "output": "projects/<project>/07-edit/captions.json + captioned video"
+    "character-organizer": {
+      "input": "character ideas + assets",
+      "output": "character reference index",
+      "upstream": "character-thinker-counter",
+      "downstream": "character-designer",
+      "category": "character",
+      "status": "planned",
+      "phase": "later"
     },
     "character-designer": {
       "input": "config/style-bible.json",
-      "output": "assets/characters/<character-id>.json"
+      "output": "assets/characters/<character-id>.json",
+      "upstream": "style bible",
+      "downstream": "collector",
+      "category": "character",
+      "status": "mvp",
+      "phase": "3"
+    },
+    "character-setup-manager": {
+      "input": "character design files",
+      "output": "character setup assets",
+      "upstream": "character-designer",
+      "downstream": "video-maker",
+      "category": "character",
+      "status": "planned",
+      "phase": "later"
+    },
+    "expression-pose-library": {
+      "input": "character setup assets",
+      "output": "expression and pose library",
+      "upstream": "character-designer",
+      "downstream": "video-maker",
+      "category": "character",
+      "status": "planned",
+      "phase": "later"
+    },
+    "consistency-guardian": {
+      "input": "rendered scenes + character references",
+      "output": "consistency report",
+      "upstream": "video-maker",
+      "downstream": "final-test",
+      "category": "character",
+      "status": "planned",
+      "phase": "later"
+    },
+    "character-qa-tester": {
+      "input": "character assets",
+      "output": "character QA report",
+      "upstream": "character-designer",
+      "downstream": "final-test",
+      "category": "character",
+      "status": "planned",
+      "phase": "later"
+    },
+    "element-designer": {
+      "input": "style bible + final script",
+      "output": "scene element assets",
+      "upstream": "character and voice",
+      "downstream": "scenario-designer",
+      "category": "scene",
+      "status": "planned",
+      "phase": "later"
+    },
+    "element-organizer": {
+      "input": "scene elements",
+      "output": "element index",
+      "upstream": "element-designer",
+      "downstream": "scenario-designer",
+      "category": "scene",
+      "status": "planned",
+      "phase": "later"
+    },
+    "scenario-designer": {
+      "input": "collector output + style bible",
+      "output": "scene layout specs",
+      "upstream": "collector",
+      "downstream": "video-maker",
+      "category": "scene",
+      "status": "planned",
+      "phase": "later"
     },
     "script-voice-character-collector": {
       "input": "script + voiceover + character references",
-      "output": "projects/<project>/05-scene/collection.json"
+      "output": "projects/<project>/05-scene/collection.json",
+      "upstream": "script, voice and character",
+      "downstream": "video-maker",
+      "category": "video-making",
+      "status": "mvp",
+      "phase": "3"
+    },
+    "lipsync-motion-planner": {
+      "input": "voice timings + character references",
+      "output": "lip sync and motion plan",
+      "upstream": "collector",
+      "downstream": "video-maker",
+      "category": "video-making",
+      "status": "planned",
+      "phase": "later"
     },
     "video-maker": {
       "input": "projects/<project>/05-scene/collection.json",
-      "output": "projects/<project>/06-video/scenes/"
+      "output": "projects/<project>/06-video/scenes/",
+      "upstream": "collector",
+      "downstream": "rough-cut-assembler",
+      "category": "video-making",
+      "status": "mvp",
+      "phase": "3"
+    },
+    "video-quality-checker": {
+      "input": "rendered scene videos",
+      "output": "video quality report",
+      "upstream": "video-maker",
+      "downstream": "rough-cut-assembler",
+      "category": "video-making",
+      "status": "planned",
+      "phase": "later"
+    },
+    "script-video-voice-collector": {
+      "input": "script + rendered scenes + voiceover",
+      "output": "edit package",
+      "upstream": "video-making",
+      "downstream": "rough-cut-assembler",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
     },
     "rough-cut-assembler": {
       "input": "projects/<project>/06-video/scenes/",
-      "output": "projects/<project>/07-edit/rough-cut.mp4"
+      "output": "projects/<project>/07-edit/rough-cut.mp4",
+      "upstream": "video-maker",
+      "downstream": "caption-maker",
+      "category": "video-editing",
+      "status": "mvp",
+      "phase": "4"
+    },
+    "video-editor": {
+      "input": "rough cut + edit notes",
+      "output": "edited video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "animator": {
+      "input": "rough cut + scene elements",
+      "output": "animated video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "motion-graphic-editor": {
+      "input": "rough cut + brand assets",
+      "output": "motion graphics video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "branding-manager": {
+      "input": "style bible + edited video",
+      "output": "branded video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "cut-rhythm-editor": {
+      "input": "rough cut + script timings",
+      "output": "re-paced video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "pattern-interrupt-inserter": {
+      "input": "rough cut + final script",
+      "output": "video with pattern interrupts",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "hook-visual-editor": {
+      "input": "rough cut + hook plan",
+      "output": "hook-enhanced video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "seamless-loop-editor": {
+      "input": "rough cut + loop plan",
+      "output": "loop-ready video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "virtual-camera-planner": {
+      "input": "scene layouts",
+      "output": "camera move plan",
+      "upstream": "video-making",
+      "downstream": "video-editor",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "transition-designer": {
+      "input": "rough cut + style bible",
+      "output": "transition plan and video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "color-grading-keeper": {
+      "input": "edited video + style bible",
+      "output": "color-graded video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "broll-variety-planner": {
+      "input": "final script + stock assets",
+      "output": "B-roll plan",
+      "upstream": "video-making",
+      "downstream": "video-editor",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
     },
     "caption-maker": {
-      "input": "projects/<project>/07-edit/captions.json",
-      "output": "captioned video"
+      "input": "voice timings + rough cut",
+      "output": "projects/<project>/07-edit/captions.json + captioned video",
+      "upstream": "voice and rough cut",
+      "downstream": "safe-zone-checker",
+      "category": "video-editing",
+      "status": "mvp",
+      "phase": "4"
+    },
+    "kinetic-text-animator": {
+      "input": "caption data + video",
+      "output": "video with kinetic text",
+      "upstream": "caption-maker",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "emphasis-sticker-placer": {
+      "input": "final script + video",
+      "output": "video with emphasis graphics",
+      "upstream": "caption-maker",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "intro-outro-manager": {
+      "input": "video + brand assets",
+      "output": "video with intro and outro",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "watermark-logo-placer": {
+      "input": "video + logo asset",
+      "output": "branded video",
+      "upstream": "rough-cut-assembler",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "beat-sync-editor": {
+      "input": "video + music track",
+      "output": "beat-synced video",
+      "upstream": "audio-mixer",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "audio-ducking-controller": {
+      "input": "voice track + music track",
+      "output": "ducked audio track",
+      "upstream": "audio-mixer",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "sfx-timing-placer": {
+      "input": "video + SFX list",
+      "output": "video with SFX",
+      "upstream": "audio-mixer",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "av-sync-checker": {
+      "input": "final video",
+      "output": "AV sync report",
+      "upstream": "video-editing",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "template-preset-manager": {
+      "input": "style bible + edit presets",
+      "output": "template library",
+      "upstream": "style bible",
+      "downstream": "video-editing",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
     },
     "safe-zone-checker": {
       "input": "captioned video",
-      "output": "safe-zone report"
+      "output": "safe-zone report",
+      "upstream": "caption-maker",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "mvp",
+      "phase": "4"
+    },
+    "preview-frame-extractor": {
+      "input": "final video",
+      "output": "preview frames",
+      "upstream": "video-editing",
+      "downstream": "final-test",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "format-converter": {
+      "input": "final video",
+      "output": "converted video files",
+      "upstream": "final video",
+      "downstream": "publish stage",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "thumbnail-designer": {
+      "input": "final video + title",
+      "output": "thumbnail image",
+      "upstream": "final video",
+      "downstream": "description-maker",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "render-export-optimizer": {
+      "input": "edit project + video",
+      "output": "optimized render settings",
+      "upstream": "video-editing",
+      "downstream": "publish stage",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "variant-batch-renderer": {
+      "input": "template + variant list",
+      "output": "batch rendered videos",
+      "upstream": "template-preset-manager",
+      "downstream": "growth stage",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "stock-asset-finder": {
+      "input": "final script + asset needs",
+      "output": "stock asset list",
+      "upstream": "research",
+      "downstream": "scene and video stages",
+      "category": "video-editing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "red-team": {
+      "input": "final video + final script",
+      "output": "red-team findings",
+      "upstream": "video-editing",
+      "downstream": "bug-finder",
+      "category": "final-test",
+      "status": "planned",
+      "phase": "later"
+    },
+    "ruthless-team": {
+      "input": "final video",
+      "output": "harsh critique report",
+      "upstream": "video-editing",
+      "downstream": "bug-finder",
+      "category": "final-test",
+      "status": "planned",
+      "phase": "later"
     },
     "bug-finder": {
       "input": "final video + reports",
-      "output": "bug report"
+      "output": "bug report",
+      "upstream": "video-editing",
+      "downstream": "description-maker",
+      "category": "final-test",
+      "status": "mvp",
+      "phase": "5"
     },
-    "description-maker": {
-      "input": "final script + channel config",
-      "output": "projects/<project>/09-description/description.md"
+    "solver": {
+      "input": "bug report",
+      "output": "fix plan",
+      "upstream": "bug-finder",
+      "downstream": "final render",
+      "category": "final-test",
+      "status": "planned",
+      "phase": "later"
+    },
+    "copyright-policy-checker": {
+      "input": "final script + assets + video",
+      "output": "copyright risk report",
+      "upstream": "final-test",
+      "downstream": "publish stage",
+      "category": "final-test",
+      "status": "planned",
+      "phase": "later"
+    },
+    "platform-compliance-checker": {
+      "input": "final video + metadata",
+      "output": "compliance report",
+      "upstream": "final-test",
+      "downstream": "publish stage",
+      "category": "final-test",
+      "status": "planned",
+      "phase": "later"
+    },
+    "accessibility-safety-checker": {
+      "input": "final video",
+      "output": "accessibility report",
+      "upstream": "final-test",
+      "downstream": "publish stage",
+      "category": "final-test",
+      "status": "planned",
+      "phase": "later"
     },
     "handover": {
       "input": "all final assets",
-      "output": "projects/<project>/10-publish/handover.md"
+      "output": "projects/<project>/10-publish/handover.md",
+      "upstream": "final-test",
+      "downstream": "publish stage",
+      "category": "final-test",
+      "status": "mvp",
+      "phase": "5"
+    },
+    "description-maker": {
+      "input": "final script + channel config",
+      "output": "projects/<project>/09-description/description.md",
+      "upstream": "final-test",
+      "downstream": "growth stage",
+      "category": "marketing",
+      "status": "mvp",
+      "phase": "5"
+    },
+    "copywriter": {
+      "input": "final script + audience persona",
+      "output": "marketing copy",
+      "upstream": "final-test",
+      "downstream": "description-maker",
+      "category": "marketing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "seo-specialist": {
+      "input": "description + final script",
+      "output": "SEO metadata",
+      "upstream": "description-maker",
+      "downstream": "growth stage",
+      "category": "marketing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "marketing-specialist": {
+      "input": "final video + audience persona",
+      "output": "marketing plan",
+      "upstream": "final-test",
+      "downstream": "growth stage",
+      "category": "marketing",
+      "status": "planned",
+      "phase": "later"
+    },
+    "youtube-seo-specialist": {
+      "input": "video metadata",
+      "output": "YouTube SEO plan",
+      "upstream": "description-maker",
+      "downstream": "publish stage",
+      "category": "growth",
+      "status": "planned",
+      "phase": "later"
+    },
+    "youtube-analyst": {
+      "input": "YouTube analytics data",
+      "output": "performance report",
+      "upstream": "published video",
+      "downstream": "research loop",
+      "category": "growth",
+      "status": "planned",
+      "phase": "later"
+    },
+    "analytics-feedback-loop": {
+      "input": "analytics reports",
+      "output": "insight notes for research",
+      "upstream": "youtube-analyst",
+      "downstream": "research stage",
+      "category": "growth",
+      "status": "planned",
+      "phase": "later"
+    },
+    "scheduler-publisher": {
+      "input": "final assets + content calendar",
+      "output": "scheduled or published video",
+      "upstream": "handover",
+      "downstream": "platforms",
+      "category": "growth",
+      "status": "planned",
+      "phase": "later"
+    },
+    "cross-platform-repurposer": {
+      "input": "final video",
+      "output": "platform-specific variants",
+      "upstream": "handover",
+      "downstream": "other platforms",
+      "category": "growth",
+      "status": "planned",
+      "phase": "later"
+    },
+    "comment-community-manager": {
+      "input": "viewer comments",
+      "output": "reply plan",
+      "upstream": "published video",
+      "downstream": "research stage",
+      "category": "growth",
+      "status": "planned",
+      "phase": "later"
+    },
+    "ab-tester": {
+      "input": "variants + analytics data",
+      "output": "A/B test report",
+      "upstream": "growth data",
+      "downstream": "research stage",
+      "category": "growth",
+      "status": "planned",
+      "phase": "later"
+    },
+    "monetization-tracker": {
+      "input": "analytics and revenue data",
+      "output": "monetization report",
+      "upstream": "published video",
+      "downstream": "research stage",
+      "category": "growth",
+      "status": "planned",
+      "phase": "later"
     }
   }
 }

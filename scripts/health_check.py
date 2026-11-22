@@ -7,9 +7,12 @@ import json
 import shutil
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+SKILLS_DIR = ROOT / ".opencode" / "skills"
+CONTRACTS_PATH = ROOT / "config" / "skill-contracts.json"
 
 REQUIRED_DIRS = [
     ".opencode/skills",
@@ -30,10 +33,12 @@ REQUIRED_FILES = [
     "AGENTS.md",
     "projects/_template/project.json",
     "docs/ROADMAP.md",
+    "docs/SKILL-INDEX.md",
     "config/channel.json",
     "config/skill-contracts.json",
     "docs/lessons.md",
     "scripts/generate_audio.py",
+    "scripts/generate_skill_scaffolds.py",
     "scripts/orchestrator.py",
 ]
 
@@ -105,35 +110,81 @@ def check_json() -> None:
             report("FAIL", f"Invalid JSON: {item} ({exc})")
 
 
-def check_skill_naming() -> None:
-    skills_dir = ROOT / ".opencode" / "skills"
-    if not skills_dir.is_dir():
+def parse_frontmatter(text: str) -> tuple[dict[str, str], str]:
+    """Return simple frontmatter fields and the body text."""
+    if not text.startswith("---"):
+        return {}, text
+    end = text.find("\n---", 3)
+    if end == -1:
+        return {}, text
+
+    fields: dict[str, str] = {}
+    for line in text[3:end].splitlines():
+        if ":" in line:
+            key, value = line.split(":", 1)
+            fields[key.strip()] = value.strip()
+    return fields, text[end + 4 :]
+
+
+def check_skills() -> None:
+    """Validate skill folders against contracts and count statuses."""
+    if not SKILLS_DIR.is_dir():
         report("FAIL", "Missing .opencode/skills folder")
         return
 
-    bad = []
-    placeholders = []
-    checked = 0
-    for folder in sorted(skills_dir.iterdir()):
+    contracts: dict = {}
+    if CONTRACTS_PATH.is_file():
+        try:
+            contracts = json.loads(CONTRACTS_PATH.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            contracts = {}
+
+    contract_skills = contracts.get("skills", {})
+    if not isinstance(contract_skills, dict):
+        report("FAIL", "skill-contracts.json: 'skills' must be an object")
+        contract_skills = {}
+
+    for name in sorted(contract_skills):
+        folder = SKILLS_DIR / name
+        if not folder.is_dir():
+            report("FAIL", f"Contract skill has no folder: {name}")
+        elif not (folder / "SKILL.md").is_file():
+            report("FAIL", f"Contract skill has no SKILL.md: {name}")
+
+    status_counts: Counter[str] = Counter()
+    implemented = 0
+    total = 0
+    for folder in sorted(SKILLS_DIR.iterdir()):
         if not folder.is_dir():
             continue
-        checked += 1
-        if folder.name.startswith("shorts-"):
-            bad.append(folder.name)
-        if not (folder / "SKILL.md").is_file():
-            placeholders.append(folder.name)
+        total += 1
+        skill_md = folder / "SKILL.md"
+        if not skill_md.is_file():
+            report("FAIL", f"Skill folder has no SKILL.md: {folder.name}")
+            continue
 
-    if placeholders:
-        report(
-            "WARN",
-            f"Placeholder skill folders (no SKILL.md yet, {len(placeholders)}): "
-            + ", ".join(placeholders),
-        )
+        fields, body = parse_frontmatter(skill_md.read_text(encoding="utf-8"))
+        frontmatter_name = fields.get("name", "")
+        if frontmatter_name != folder.name:
+            report(
+                "FAIL",
+                f"Frontmatter name '{frontmatter_name}' does not match folder '{folder.name}'",
+            )
 
-    if bad:
-        report("FAIL", f"Old 'shorts-' prefix still used: {', '.join(bad)}")
-    else:
-        report("PASS", f"Skill naming OK ({checked} skills checked)")
+        status = fields.get("status", "unknown")
+        status_counts[status] += 1
+        if status != "legacy" and "TODO" not in body:
+            implemented += 1
+
+    parts = [f"{total} total"]
+    for status in ("mvp", "planned", "legacy"):
+        parts.append(f"{status_counts.get(status, 0)} {status}")
+    parts.append(f"{implemented} implemented")
+    report("PASS", "Skills: " + " | ".join(parts))
+
+    unknown = sorted(set(status_counts) - {"mvp", "planned", "legacy"})
+    if unknown:
+        report("WARN", f"Unrecognized skill statuses: {', '.join(unknown)}")
 
 
 def check_gitignore() -> None:
@@ -157,7 +208,7 @@ def main() -> None:
     check_dirs()
     check_files()
     check_json()
-    check_skill_naming()
+    check_skills()
     check_gitignore()
 
     passes = sum(1 for status, _ in results if status == "PASS")

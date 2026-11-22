@@ -1,6 +1,9 @@
 ---
 name: orchestrator
 description: Pipeline Manager that tracks the 10-stage Shorts production workflow and advances one stage at a time.
+category: core
+status: mvp
+phase: 1
 ---
 
 # Orchestrator / Pipeline Manager Skill

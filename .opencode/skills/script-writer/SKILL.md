@@ -1,6 +1,9 @@
 ---
 name: script-writer
 description: Generates viral, high-retention 30-60 second YouTube Shorts scripts in Bangla or English with scene-by-scene visual prompts and timing metadata saved as JSON.
+category: script
+status: mvp
+phase: 2
 ---
 
 # Shorts Script Writer Skill

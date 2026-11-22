@@ -56,18 +56,17 @@ Writes the full script with scenes and timings.
 
 # Steps
 
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `story.json + hook.json + config/channel.json`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to writes the full script with scenes and timings, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/02-script/latest_script.json` under `projects/<project>/`; create parent folders first.
-5. Re-open `projects/<project>/02-script/latest_script.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read niche, language, location, video length and style through project-memory (`config/channel.json` + `config/style-bible.json`); never hardcode them.
+2. Validate `projects/<project>/02-script/story.json`, `projects/<project>/02-script/hook.json` and `config/channel.json`; stop if any is missing or malformed.
+3. Write `title`, `hook`, `narration` and `highlight_words` in the project language; keep `visual_prompt` in clear English for renderers.
+4. Apply the original real rules: hook at 0-3 s, fast body at 3-45 s with 8-12-word sentences, strong CTA/loop in the last 3-5 s.
+5. Save `projects/<project>/02-script/latest_script.json` with `language`, `title`, `hook`, `total_duration_sec` (30-60) and `scenes[].scene_number/narration/visual_prompt/highlight_words`.
+6. Re-open the JSON, confirm it parses and every scene has a renderable visual prompt; show a readable summary in chat and log problems to `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-
-- Type: `Use the script-writer skill with PROJECT=<project>`. Expected: `projects/<project>/02-script/latest_script.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Prompt: `Use the script-writer skill with PROJECT=<project>` after story and hook exist.
+- Checklist: expected `projects/<project>/02-script/latest_script.json` exists, parses, has 30-60 s total, every scene has 1-2 `highlight_words` present in its narration, and no niche/language value is hardcoded.
 
 # Depends on / feeds into
 

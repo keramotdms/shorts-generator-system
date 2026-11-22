@@ -4,7 +4,7 @@ description: Generates natural Bangla or English voiceover audio (MP3) and exact
 category: voice
 status: legacy
 phase: later
-note: legacy pointer to voiceover-generator and caption-maker
+note: legacy; will later be split into voiceover-generator and caption-maker
 type: prompt-only
 batch: 4
 ---
@@ -42,18 +42,16 @@ Legacy combined voiceover and caption generator.
 
 # Steps
 
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `projects/<project>/02-script/latest_script.json`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to legacy combined voiceover and caption generator, using only the context loaded in step 1.
-4. Write the result to `output/voiceover.mp3 + output/captions.json` under `projects/<project>/`; create parent folders first.
-5. Re-open `output/voiceover.mp3 + output/captions.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read language and voice style through project-memory (`config/channel.json` + `config/style-bible.json`); this skill is kept only for compatibility.
+2. Validate `projects/<project>/02-script/latest_script.json`; stop if it is missing or malformed.
+3. Keep the original behaviour: ensure `edge-tts` is available, then run `python scripts/generate_audio.py` with the gender requested by the user.
+4. Verify `output/voiceover.mp3` and `output/captions.json` were created and report exact audio duration in seconds.
+5. Tell the user to use `voiceover-generator` + `caption-maker` for new projects; do not duplicate their logic here.
 
 # How to test
 
-
-- Type: `Use the voiceover-captions skill with PROJECT=<project>`. Expected: `output/voiceover.mp3 + output/captions.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Prompt: `Use the voiceover-captions skill with PROJECT=<project>` on a legacy project only.
+- Checklist: both legacy output files exist, `captions.json` parses, duration is reported, and the reply points to the two replacement skills.
 
 # Depends on / feeds into
 

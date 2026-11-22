@@ -54,18 +54,17 @@ Audits script quality across five pillars.
 
 # Steps
 
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `projects/<project>/02-script/latest_script.json`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py script-tester run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `audit report + optional optimized script` under `projects/<project>/`; create parent folders first.
-5. Re-open `audit report + optional optimized script` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read language and style through project-memory (`config/channel.json` + `config/style-bible.json`); use that language for all pacing estimates.
+2. Load `projects/<project>/02-script/latest_script.json`; stop if it is missing or malformed.
+3. Count words in every `narration`, estimate speaking time from the project language (Bangla ~110-130 wpm, English ~140-160 wpm), compare with `total_duration_sec`, and flag scenes over 15 words.
+4. Score hook power, tone/naturalness, goal alignment and visual readiness on 1-10 with a short reason for each, keeping the original 5-pillar rubric above.
+5. Write the scorecard to `projects/<project>/08-final-test/script-audit.json`; if any pillar scores below 8, also write an improved script to `projects/<project>/02-script/latest_script.optimized.json`.
+6. Validate both JSON outputs and log any problem to `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-
-- `python scripts/skill_tools.py script-tester --self-test` → expected `PASS script-tester: ...`. Then confirm `audit report + optional optimized script` exists and is non-empty after a real run.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- `python scripts/skill_tools.py script-tester --self-test` → expected `PASS script-tester: helper imports and contract verified`.
+- Checklist: feed the fixture script; expect 5 pillar scores in the report; if any score is below 8, the optimized script file exists and parses.
 
 # Depends on / feeds into
 

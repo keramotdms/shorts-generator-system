@@ -27,6 +27,14 @@
 - **Health check false positive:** the original `check_ffmpeg()` used `shutil.which()`, which only finds the file on PATH and reported PASS even though the binary could not run. Fixed it to actually execute `ffmpeg -version` / `ffprobe -version` and report `WARN` on failure.
 - Lesson: **finding a binary is not the same as running it.** Always execute `--version` in environment checks. Disabling Smart App Control is a security change and needs explicit user approval (it cannot be re-enabled without a Windows reset).
 
+## 2026-11-22 — Full 93-skill scaffold and implementation
+
+- **Generator wrote `status: mvp`/`planned` instead of `implemented`.** The scaffold table's `meta()` was reused for the real-content generator. Fix: an explicit final status (`legacy` only for `voiceover-captions`, else `implemented`) in `generate_skill_contents.py`.
+- **The phrase "no TODO remains" in a test checklist made the validator fail.** The validator does a literal `"TODO" in text` check. Fix: reworded to "no placeholder steps remain". Lesson: avoid literal sentinel words in generated documentation.
+- **Python here starts with site initialization disabled, so sibling imports fail** (`ModuleNotFoundError: skill_lib`). Fix: `sys.path.insert(0, str(Path(__file__).resolve().parent))` in scripts that import sibling modules.
+- **patch_real only added 3 of 8 required headings**, so existing hand-written skills failed validation. Fix: add every missing required heading from the generated standard body, preserving the original text.
+- **Health check reported ffmpeg-blocked skills as WARN only.** Fix: skills with `requires: ffmpeg` now produce an explicit `BLOCKED ... (not FAIL)` line and a named list, keeping FFmpeg's original WARN unchanged.
+
 ## Rules for future mistakes
 
 - Log the mistake, why it happened, and the fix here immediately.

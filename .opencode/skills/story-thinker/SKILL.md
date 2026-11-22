@@ -31,11 +31,38 @@ Turns research into a short story concept.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `research/niche-report.md + config/channel.json`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to turns research into a short story concept, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/02-script/story.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/02-script/story.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. Validate `projects/<project>/02-script/story.json` against `config/schemas/story.json` with `python scripts/schema_validator.py story projects/<project>/02-script/story.json` before accepting it.
+1. Read `research/niche-report.md` (winner and ranking) plus `config/channel.json` and `config/style-bible.json` through project-memory. Read `research/trend-cache/trend-report.json` if it exists and use its top local trend as a timing hint.
+2. Pick the single winner topic. Write one sentence naming the viewer's pain in Bangladesh, one sentence naming the promised outcome, and one `hook_seed` phrased as a question or bold claim in the project language.
+3. Split the story into exactly 3 beats: (1) show the pain, (2) give one cheap action, (3) return to the hook for the loop. Each beat must be visualisable in one 9:16 frame.
+4. Write `projects/<project>/02-script/story.json` using the schema fields below; create the `02-script` folder first. Copy `niche` and `audience` from channel config.
+5. Run `python scripts/schema_validator.py story projects/<project>/02-script/story.json` and re-open the file. If validation fails, fix and re-run; log remaining problems via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+
+**Acceptance criteria**
+- `story.json` passes `config/schemas/story.json`.
+- `beats` has 3 items, each with `beat` (1-3) and a `purpose` naming what the viewer sees.
+- `angle` names one specific action, not a vague theme.
+- `niche` and `audience` are copied verbatim from channel config.
+
+**Output format (short example)**
+```json
+{
+  "niche": "Personal finance / side hustles",
+  "audience": "Bangladesh / Bangla-speaking",
+  "angle": "Resell one used phone this week",
+  "hook_seed": "পুরনো ফোন দিয়েই শুরু করা যায়?",
+  "source_files": ["research/niche-report.md"],
+  "beats": [
+    {"beat": 1, "purpose": "show an empty wallet"},
+    {"beat": 2, "purpose": "list one used phone"},
+    {"beat": 3, "purpose": "repeat the hook as a loop"}
+  ]
+}
+```
+
+**Quality rules**
+1. One story, one promise — never combine two side hustles in one Short.
+2. Every beat must be drawable as a flat 2D frame; drop abstract-only ideas.
+3. Keep the hook seed in spoken Bangla and under 12 words.
 
 # How to test
 

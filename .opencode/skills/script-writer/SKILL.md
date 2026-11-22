@@ -56,12 +56,38 @@ Writes the full script with scenes and timings.
 
 # Steps
 
-1. Read niche, language, location, video length and style through project-memory (`config/channel.json` + `config/style-bible.json`); never hardcode them.
-2. Validate `projects/<project>/02-script/story.json`, `projects/<project>/02-script/hook.json` and `config/channel.json`; stop if any is missing or malformed.
-3. Write `title`, `hook`, `narration` and `highlight_words` in the project language; keep `visual_prompt` in clear English for renderers.
-4. Apply the original real rules: hook at 0-3 s, fast body at 3-45 s with 8-12-word sentences, strong CTA/loop in the last 3-5 s.
-5. Save `projects/<project>/02-script/latest_script.json` with `language`, `title`, `hook`, `total_duration_sec` (30-60) and `scenes[].scene_number/narration/visual_prompt/highlight_words`.
-6. Re-open the JSON, confirm it parses and every scene has a renderable visual prompt; validate it with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json` before accepting it, then show a readable summary in chat and log problems to `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read `config/channel.json` and `config/style-bible.json` through project-memory for language, video length and tone. Read `projects/<project>/02-script/story.json` and `projects/<project>/02-script/hook.json`; stop if either is missing or malformed.
+2. Carry the hook text into the script's `hook` field unchanged. Write `title`, `narration` and `highlight_words` in the project language; keep every `visual_prompt` in plain English so renderers can parse it.
+3. Apply the real pacing rules: hook at 0-3 s, fast body from 3-45 s with sentences of 8-12 words, and a CTA or loop back to the hook in the last 3-5 s. Use the 3 story beats as scenes 1-3.
+4. Save `projects/<project>/02-script/latest_script.json` with `language`, `title`, `hook`, `total_duration_sec` (30-60) and `scenes[].scene_number/narration/visual_prompt/highlight_words`. Give each scene a `duration_sec` whose sum is within 2 seconds of the total.
+5. Run `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`; re-open the file and confirm each `highlight_words` entry appears in its scene narration.
+6. Show a short summary in chat (title, duration, scene count). Log any problem to `projects/<project>/08-final-test/error-log.jsonl` and re-run after fixing the input.
+
+**Acceptance criteria**
+- `latest_script.json` passes `config/schemas/latest_script.json`.
+- `total_duration_sec` is between 30 and 60; scene durations sum within 2 seconds.
+- 3 or more scenes, each with an English `visual_prompt` and 1-2 `highlight_words` present in its narration.
+- Hook text equals the approved `hook.json` text.
+
+**Output format (short example)**
+```json
+{
+  "language": "bn",
+  "title": "টাকা ছাড়াই সাইড হাসল",
+  "hook": "পুরনো ফোন দিয়েই শুরু করা যায়?",
+  "total_duration_sec": 40,
+  "scenes": [
+    {"scene_number": 1, "narration": "অনেকের মনে হয় পুঁজি না থাকলে চলে না।",
+     "visual_prompt": "Flat 2D worried person with empty wallet",
+     "highlight_words": ["পুঁজি"], "duration_sec": 12}
+  ]
+}
+```
+
+**Quality rules**
+1. One idea per sentence, max 12 words; cut adjectives that do not change the action.
+2. Every visual prompt must describe a single 9:16 frame drawable in flat 2D.
+3. Never add a fact, price or statistic that is not in the story or niche report.
 
 # How to test
 

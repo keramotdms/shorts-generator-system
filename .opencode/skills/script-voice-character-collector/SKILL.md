@@ -31,11 +31,35 @@ Collects script, voice and character inputs.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `script + voiceover + character references`; if it is missing or malformed, follow Failure handling and stop. Validate `projects/<project>/02-script/latest_script.json` against `config/schemas/latest_script.json` with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`.
-3. Run `python scripts/skill_tools.py script-voice-character-collector run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/05-scene/collection.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/05-scene/collection.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. Validate `projects/<project>/05-scene/collection.json` against `config/schemas/collection.json` with `python scripts/schema_validator.py collection projects/<project>/05-scene/collection.json` before accepting it.
+1. Read context through project-memory (`config/channel.json` + `config/style-bible.json`). Validate `projects/<project>/02-script/latest_script.json` with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`; stop on failure.
+2. Confirm the three production inputs exist: `projects/<project>/03-voice/voiceover.mp3`, `projects/<project>/03-voice/captions.json` (word timings from voiceover-generator) and at least one file in `assets/characters/*.json`. Report each missing path explicitly.
+3. Run `python scripts/skill_tools.py script-voice-character-collector run` with `PROJECT=<project>`. The helper builds `collection.json` with `project`, `context`, `script`, `voiceover`, `characters` and `status`; `status` is `PASS` only when the MP3 exists, otherwise `WARN`.
+4. Write the result to `projects/<project>/05-scene/collection.json`; create the folder first. Do not copy any JSON into a skill folder.
+5. Run `python scripts/schema_validator.py collection projects/<project>/05-scene/collection.json`, re-open the file, and log any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+
+**Acceptance criteria**
+- `collection.json` passes `config/schemas/collection.json`.
+- `context.niche`, `context.language` and `context.audience_location` match channel config exactly.
+- `script` is the full latest script object, not a path string.
+- `voiceover` is a relative path that exists, or `null` with `status: WARN`.
+
+**Output format (short example)**
+```json
+{
+  "project": "my-video",
+  "status": "PASS",
+  "context": {"niche": "Personal finance / side hustles", "language": "bn",
+              "audience_location": "Bangladesh / Bangla-speaking"},
+  "script": {"language": "bn", "title": "...", "scenes": []},
+  "voiceover": "projects/my-video/03-voice/voiceover.mp3",
+  "characters": {"creator-01": {"voice": {"gender": "male"}}}
+}
+```
+
+**Quality rules**
+1. Never fabricate a voiceover path — a missing MP3 must produce `WARN`, not a fake `PASS`.
+2. Keep `characters` keyed by the `id` used in `assets/characters/`.
+3. Do not merge in scene or video files; those belong to the later stage.
 
 # How to test
 

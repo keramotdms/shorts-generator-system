@@ -31,11 +31,35 @@ Finds niche and topic ideas for the channel.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `config/channel.json`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to finds niche and topic ideas for the channel, using only the context loaded in step 1.
-4. Write the result to `research/niche-report.md` at the repository root (do not add a projects/<project>/ prefix); create parent folders first.
-5. Re-open `research/niche-report.md` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read `config/channel.json` and `config/style-bible.json` through project-memory; take `niche`, `language` and `audience_location` from there, never from memory. If either file is missing or a value is null, stop and ask once.
+2. Build a candidate list of exactly 3 low-startup-cost topics that fit the niche and a Bangladesh audience (examples: mobile-based side hustle, small home service, reselling). For each candidate write: who pays, what is sold, first action possible with under 1,000 BDT, and one concrete Bangla hook line.
+3. Rank the candidates with a simple 1-5 score for demand, ease of first sale, and story potential. Pick the top topic and write one paragraph explaining why it beats the other two.
+4. Write the report to `research/niche-report.md` at the repository root (no `projects/<project>/` prefix). Use the format below and create `research/` first.
+5. Re-open the report and check that all 3 candidates, their scores, the winner and the source files are present. Log any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+
+**Acceptance criteria**
+- `research/niche-report.md` exists at the repository root and is not empty.
+- It contains exactly 3 ranked candidates with a demand/ease/story score each.
+- The winning topic names the payer, the offer, and a first action under 1,000 BDT.
+- Niche, language and location match `config/channel.json` exactly.
+
+**Output format (short example)**
+```markdown
+# Niche report — {niche} — {audience_location}
+Sources: config/channel.json, config/style-bible.json
+
+| # | Topic | Payer | First action (<1,000 BDT) | Demand | Ease | Story | Total |
+|---|-------|-------|---------------------------|--------|------|-------|-------|
+| 1 | Phone reselling | local buyers | list one used phone | 4 | 5 | 4 | 13 |
+
+Winner: Phone reselling — easiest first sale and clear visual story.
+Bangla hook: "পুরনো ফোন দিয়েই শুরু করুন।"
+```
+
+**Quality rules**
+1. Never invent market statistics; say "estimate" or ask the user for data instead.
+2. Keep every topic achievable inside 7 days with under 1,000 BDT.
+3. Write the hook in natural spoken Bangla; keep file names and scores in English.
 
 # How to test
 

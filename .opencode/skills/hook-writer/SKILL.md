@@ -31,11 +31,33 @@ Writes the first 3-second attention hook.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `story.json + config/channel.json`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to writes the first 3-second attention hook, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/02-script/hook.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/02-script/hook.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. Validate `projects/<project>/02-script/hook.json` against `config/schemas/hook.json` with `python scripts/schema_validator.py hook projects/<project>/02-script/hook.json` before accepting it.
+1. Read `projects/<project>/02-script/story.json` (`hook_seed`, `angle`, first beat) and `config/channel.json` + `config/style-bible.json` through project-memory. Use `language` from channel config for the hook text.
+2. Choose one hook type from `question`, `shock`, `relatable`, `promise`, `contrarian`. Write the hook in one spoken sentence of at most 12 words; it must name the viewer's pain or the promised outcome from the story angle.
+3. Write a `visual_prompt` in English describing one contrasting image for the first frame (for example: empty wallet → coin stack). Keep it to one flat 2D scene that a renderer can draw without extra assets.
+4. Set `duration_sec` to 2.5 or 3 and write `projects/<project>/02-script/hook.json` with the fields below; create the folder first.
+5. Run `python scripts/schema_validator.py hook projects/<project>/02-script/hook.json`, re-open the file, and log any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+
+**Acceptance criteria**
+- `hook.json` passes `config/schemas/hook.json`.
+- `text` is in the project language, at most 12 words, and matches the story `hook_seed` in meaning.
+- `type` is one of the 5 allowed values and `duration_sec` is 2-3.5.
+- `visual_prompt` is English, at least 8 characters, and describes exactly one frame.
+
+**Output format (short example)**
+```json
+{
+  "text": "পুরনো ফোন দিয়েই শুরু করা যায়?",
+  "type": "question",
+  "duration_sec": 3,
+  "visual_prompt": "Flat 2D split frame: empty wallet on left, one coin stack on right",
+  "language": "bn"
+}
+```
+
+**Quality rules**
+1. No polite openings ("আজ আমরা আলোচনা করব") — the first word must create tension or curiosity.
+2. Do not promise unrealistic money; keep the outcome reachable in 7 days.
+3. The visual prompt must not require a photo, logo, or FFmpeg effect.
 
 # How to test
 

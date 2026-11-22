@@ -31,11 +31,39 @@ Packages final files for publishing.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `all final assets`; if it is missing or malformed, follow Failure handling and stop. Validate `projects/<project>/07-edit/captions.json` against `config/schemas/captions.json` with `python scripts/schema_validator.py captions projects/<project>/07-edit/captions.json`.
-3. Run `python scripts/skill_tools.py handover run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/10-publish/handover.md` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/10-publish/handover.md` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read `config/channel.json` and `config/style-bible.json` through project-memory so the handover lists the real niche, language and location.
+2. Check these four final assets by exact path: `projects/<project>/08-final-test/final-video.mp4`, `projects/<project>/07-edit/captions.json`, `projects/<project>/09-description/description.md`, `projects/<project>/10-publish/handover.md`. List every missing path; do not publish while any is missing.
+3. Validate `projects/<project>/07-edit/captions.json` with `python scripts/schema_validator.py captions projects/<project>/07-edit/captions.json`. Run `python scripts/skill_tools.py handover run` with `PROJECT=<project>` to write `handover-check.json`.
+4. Write `projects/<project>/10-publish/handover.md` with the exact sections shown below: asset checklist with PASS/MISSING, exact publish path, duration from captions `total_duration_sec`, and any `BLOCKED` items from FFmpeg skills.
+5. Re-open both `handover.md` and `handover-check.json`; confirm `ready` matches the checklist and the file list is identical. Log any mismatch via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+
+**Acceptance criteria**
+- `handover.md` and `handover-check.json` both exist under `projects/<project>/10-publish/`.
+- Every checked asset appears with its exact relative path and a PASS or MISSING status.
+- Captions pass `config/schemas/captions.json` and the duration is copied from that file.
+- `ready` is true only when all four assets are present.
+
+**Output format (short example)**
+```markdown
+# Handover — my-video
+Niche: Personal finance / side hustles | Language: bn
+
+## Assets
+- PASS projects/my-video/08-final-test/final-video.mp4
+- PASS projects/my-video/07-edit/captions.json
+- MISSING projects/my-video/09-description/description.md
+
+## Publish
+Path: projects/my-video/08-final-test/final-video.mp4
+Duration: 40.0 s (from captions.json)
+Blocked: video-maker (ffmpeg BLOCKED by application control)
+Ready: no
+```
+
+**Quality rules**
+1. Never mark an asset PASS without checking the file on disk.
+2. Report `BLOCKED` items separately from FAIL so a blocked render is not called a broken video.
+3. Keep the publish path relative to the repository root; no absolute paths.
 
 # How to test
 

@@ -31,11 +31,37 @@ Designs the 2D character look.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `config/style-bible.json`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to designs the 2d character look, using only the context loaded in step 1.
-4. Write the result to `assets/characters/<character-id>.json` at the repository root (do not add a projects/<project>/ prefix); create parent folders first.
-5. Re-open `assets/characters/<character-id>.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. Validate `assets/characters/<character-id>.json` against `config/schemas/character.json` with `python scripts/schema_validator.py character assets/characters/<character-id>.json` before accepting it.
+1. Read `config/style-bible.json` (`style.palette`, `style.visual_style`, `characters`, `voice`) and `projects/<project>/02-script/latest_script.json` through project-memory. Stop if the style bible is missing or has no palette.
+2. Derive one reusable character: `id` in lowercase-kebab-case, `name` in the project language, `appearance` with `body`, `hair`, `clothing` and a `palette` copied from the style bible, and `voice` with `gender` and `tone` matching the script's narrator.
+3. Check the design against the real 2D constraint: simple shapes only (circle head, rounded body, 2-3 clothing shapes), no fine facial detail, no gradients, no photo texture. Describe each part in one short English phrase.
+4. Write `assets/characters/<character-id>.json` at the repository root (no `projects/<project>/` prefix); create `assets/characters/` first.
+5. Run `python scripts/schema_validator.py character assets/characters/<character-id>.json`, re-open the file, and log any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+
+**Acceptance criteria**
+- `character.json` passes `config/schemas/character.json`.
+- `id` matches `^[a-z0-9-]+$` and is unique inside `assets/characters/`.
+- `appearance.palette` is copied from `config/style-bible.json`, not invented.
+- `voice.gender` and `voice.tone` agree with the script's narrator.
+
+**Output format (short example)**
+```json
+{
+  "id": "creator-01",
+  "name": "অনিক",
+  "style_source": "config/style-bible.json",
+  "appearance": {
+    "body": "slim, rounded young adult", "hair": "short black hair",
+    "clothing": "simple blue shirt",
+    "palette": ["#111827", "#F9FAFB", "#F59E0B", "#10B981"]
+  },
+  "voice": {"gender": "male", "tone": "calm and conversational"}
+}
+```
+
+**Quality rules**
+1. Use at most 3 clothing shapes so the look stays consistent across scenes.
+2. Keep hair, shirt and palette identical for this `id` in every scene.
+3. Do not add a second character here; create a new file with a new `id` instead.
 
 # How to test
 

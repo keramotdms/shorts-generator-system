@@ -31,11 +31,35 @@ Writes the title, description and hashtags.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final script + channel config`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to writes the title, description and hashtags, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/09-description/description.md` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/09-description/description.md` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read `projects/<project>/02-script/latest_script.json`, `config/channel.json` and `config/style-bible.json` through project-memory. Use `language` for the copy and `niche` for the keyword.
+2. Write a title of at most 60 characters that contains the niche keyword and the hook promise from `script.hook`. Write the first 2 description lines as the hook itself, because Shorts collapses the rest.
+3. Add 2-4 short sentences that state the value and one call to action. Add optional timestamps only if the script has `scene[].duration_sec`; otherwise omit them. Finish with 3-5 hashtags, lower-case, niche-related, no more than 2 generic tags.
+4. Write `projects/<project>/09-description/description.md` with the exact blocks shown below; create the `09-description` folder first.
+5. Re-open the file and check the character count of the title, that the hook lines match `script.hook`, and that the hashtag count is 3-5. Log any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+
+**Acceptance criteria**
+- `description.md` exists and has `TITLE:`, `DESCRIPTION:` and `HASHTAGS:` blocks.
+- Title is 60 characters or fewer and contains the channel niche keyword.
+- First description line equals `script.hook`.
+- 3-5 hashtags; no capital letters and no unrelated trends.
+
+**Output format (short example)**
+```markdown
+TITLE: টাকা ছাড়াই সাইড হাসল | Phone Reselling
+
+DESCRIPTION:
+পুরনো ফোন দিয়েই শুরু করা যায়?
+একটি_used ফোন তালিকাভুক্ত করুন, ক্রেতা খুঁজুন, প্রথম বিক্রি করুন।
+আপনার প্রথম পদক্ষেপ কী? কমেন্টে লিখুন।
+
+HASHTAGS:
+#sidehustle #বাংলাদেশ #phoneselling #personal finance
+```
+
+**Quality rules**
+1. No clickbait that contradicts the script outcome.
+2. No keyword stuffing — the niche keyword appears at most twice.
+3. Keep hashtags specific to the video; drop any tag unrelated to the niche.
 
 # How to test
 

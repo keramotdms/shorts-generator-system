@@ -35,6 +35,14 @@
 - **patch_real only added 3 of 8 required headings**, so existing hand-written skills failed validation. Fix: add every missing required heading from the generated standard body, preserving the original text.
 - **Health check reported ffmpeg-blocked skills as WARN only.** Fix: skills with `requires: ffmpeg` now produce an explicit `BLOCKED ... (not FAIL)` line and a named list, keeping FFmpeg's original WARN unchanged.
 
+## 2026-11-22 — Quality pass on Steps, paths and schemas
+
+- **Generic generator wording replaced real skill logic.** Steps such as "Follow this skill's prompt instructions to ..." were appended to `script-writer`, `script-tester` and `voiceover-captions`. Fix: restored the original bodies from `7f4c2a5` and merged the new standard headings around them. Added those skills (plus the 10 rewritten ones) to `REAL_SKILLS` so regeneration cannot overwrite them.
+- **Blind `under projects/<project>/` suffix corrupted root-level outputs.** `config/`, `assets/` and `research/` paths became `projects/<project>/config/...`. Fix: `canonical_output()` and `location_hint()` in `generate_skill_contents.py` now keep root paths at the root and stage paths under the project.
+- **`book-finder` niche report path was inconsistent** across SKILL.md, HOW-TO-USE.md and contracts. Fix: `research/niche-report.md` everywhere at the repository root.
+- **Schemas were missing, so "valid JSON" did not mean "correct shape".** Fix: six JSON schemas in `config/schemas/`, a stdlib validator, and schema checks in `skill_tools.py` and `generate_audio.py`.
+- **Step text was near-identical in 87 of 93 skills.** Fix: rewrote the 10 most important Steps with real acceptance criteria, an output example and 3 quality rules each.
+
 ## Rules for future mistakes
 
 - Log the mistake, why it happened, and the fix here immediately.

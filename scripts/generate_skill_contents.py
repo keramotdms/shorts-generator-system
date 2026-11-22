@@ -109,7 +109,12 @@ REQUIRES_FFMPEG = {
     "variant-batch-renderer", "audio-mixer",
 }
 
-REAL_SKILLS = {"orchestrator", "script-writer", "script-tester", "voiceover-captions"}
+REAL_SKILLS = {
+    "orchestrator", "script-writer", "script-tester", "voiceover-captions",
+    "book-finder", "trend-finder", "story-thinker", "hook-writer",
+    "character-designer", "description-maker", "project-memory",
+    "script-voice-character-collector", "handover",
+}
 BATCH_OF = {name: number for number, names in BATCHES.items() for name in names}
 
 ROOT_PREFIXES = ("config/", "assets/", "research/", "output/")

@@ -179,8 +179,10 @@
       "upstream": "research outputs",
       "downstream": "hook-writer",
       "category": "script",
-      "status": "mvp",
-      "phase": "2"
+      "status": "implemented",
+      "phase": "2",
+      "type": "prompt-only",
+      "batch": 3
     },
     "story-organizer": {
       "input": "story.json",
@@ -188,8 +190,10 @@
       "upstream": "story-thinker",
       "downstream": "hook-writer",
       "category": "script",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 3
     },
     "hook-writer": {
       "input": "story.json + config/channel.json",
@@ -197,8 +201,10 @@
       "upstream": "story-thinker",
       "downstream": "script-writer",
       "category": "script",
-      "status": "mvp",
-      "phase": "2"
+      "status": "implemented",
+      "phase": "2",
+      "type": "prompt-only",
+      "batch": 3
     },
     "script-writer": {
       "input": "story.json + hook.json + config/channel.json",
@@ -206,8 +212,10 @@
       "upstream": "story and hook",
       "downstream": "voice stage",
       "category": "script",
-      "status": "mvp",
-      "phase": "2"
+      "status": "implemented",
+      "phase": "2",
+      "type": "prompt-only",
+      "batch": 3
     },
     "retention-pacing-optimizer": {
       "input": "draft script",
@@ -215,8 +223,10 @@
       "upstream": "script-writer",
       "downstream": "final-test",
       "category": "script",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 3
     },
     "loop-cta-designer": {
       "input": "draft script",
@@ -224,8 +234,10 @@
       "upstream": "script-writer",
       "downstream": "video-editing",
       "category": "script",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 3
     },
     "script-tester": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -234,7 +246,9 @@
       "downstream": "voice stage",
       "category": "script",
       "status": "implemented",
-      "phase": "later"
+      "phase": "later",
+      "type": "checker",
+      "batch": 3
     },
     "script-user-tester": {
       "input": "draft script + test audience",
@@ -242,8 +256,10 @@
       "upstream": "script-writer",
       "downstream": "script-tester",
       "category": "script",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 3
     },
     "localization": {
       "input": "final script + config/channel.json",
@@ -251,8 +267,10 @@
       "upstream": "script-writer",
       "downstream": "voice stage",
       "category": "script",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 3
     },
     "voiceover-organizer": {
       "input": "final script + style bible",

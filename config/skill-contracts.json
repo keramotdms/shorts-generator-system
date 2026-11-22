@@ -278,8 +278,10 @@
       "upstream": "script-writer",
       "downstream": "voiceover-generator",
       "category": "voice",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 4
     },
     "pronunciation-emotion-director": {
       "input": "voice plan + final script",
@@ -287,8 +289,10 @@
       "upstream": "voice plan",
       "downstream": "voiceover-generator",
       "category": "voice",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 4
     },
     "voiceover-generator": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -296,8 +300,10 @@
       "upstream": "script-writer",
       "downstream": "collector",
       "category": "voice",
-      "status": "mvp",
-      "phase": "3"
+      "status": "implemented",
+      "phase": "3",
+      "type": "script-backed",
+      "batch": 4
     },
     "voiceover-tester": {
       "input": "voiceover.mp3 + final script",
@@ -305,8 +311,10 @@
       "upstream": "voiceover-generator",
       "downstream": "final-test",
       "category": "voice",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "checker",
+      "batch": 4
     },
     "music-sfx-selector": {
       "input": "video mood + style bible",
@@ -314,8 +322,10 @@
       "upstream": "scene plan",
       "downstream": "audio-mixer",
       "category": "voice",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 4
     },
     "audio-mixer": {
       "input": "voice + music + SFX files",
@@ -323,8 +333,11 @@
       "upstream": "voice and music",
       "downstream": "video-editing",
       "category": "voice",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "script-backed",
+      "batch": 4,
+      "requires": "ffmpeg"
     },
     "voiceover-captions": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -333,7 +346,9 @@
       "downstream": "legacy split targets",
       "category": "voice",
       "status": "legacy",
-      "phase": "later"
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 4
     },
     "character-thinker-counter": {
       "input": "style bible + final script",

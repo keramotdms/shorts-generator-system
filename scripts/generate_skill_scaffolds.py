@@ -137,9 +137,12 @@ PHASE_BY_NAME = {name: phase for phase, names in MVP_PHASES.items() for name in 
 MVP_NAMES = set(PHASE_BY_NAME)
 LEGACY_NAMES = {"voiceover-captions"}
 REAL_SKILLS = {"orchestrator", "script-writer", "script-tester", "voiceover-captions"}
+STATUS_OVERRIDES = {"script-tester": "implemented"}
 
 
 def meta(name: str) -> tuple[str, str]:
+    if name in STATUS_OVERRIDES:
+        return STATUS_OVERRIDES[name], "later"
     if name in LEGACY_NAMES:
         return "legacy", "later"
     if name in MVP_NAMES:
@@ -332,10 +335,13 @@ def main() -> None:
     (ROOT / "docs" / "SKILL-INDEX.md").write_text(build_index(), encoding="utf-8")
     (ROOT / "docs" / "ROADMAP.md").write_text(build_roadmap(), encoding="utf-8")
 
-    counts = {"mvp": 0, "planned": 0, "legacy": 0}
+    counts = {"mvp": 0, "planned": 0, "implemented": 0, "legacy": 0}
     for name in names:
         counts[meta(name)[0]] += 1
-    print(f"\nTotal: {len(names)} | mvp: {counts['mvp']} | planned: {counts['planned']} | legacy: {counts['legacy']}")
+    print(
+        f"\nTotal: {len(names)} | mvp: {counts['mvp']} | planned: {counts['planned']}"
+        f" | implemented: {counts['implemented']} | legacy: {counts['legacy']}"
+    )
 
 
 if __name__ == "__main__":

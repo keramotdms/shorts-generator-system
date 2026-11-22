@@ -72,7 +72,7 @@ Research -> Script -> Voice -> Character -> Scene -> Video -> Edit -> Final Test
 - script-writer — mvp, phase 2
 - retention-pacing-optimizer — planned, phase later
 - loop-cta-designer — planned, phase later
-- script-tester — planned, phase later
+- script-tester — implemented, phase later
 - script-user-tester — planned, phase later
 - localization — planned, phase later
 

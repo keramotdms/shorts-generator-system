@@ -151,8 +151,9 @@ def check_skills() -> None:
         elif not (folder / "SKILL.md").is_file():
             report("FAIL", f"Contract skill has no SKILL.md: {name}")
 
+    known_statuses = ("mvp", "planned", "implemented", "legacy")
     status_counts: Counter[str] = Counter()
-    implemented = 0
+    real_content = 0
     total = 0
     for folder in sorted(SKILLS_DIR.iterdir()):
         if not folder.is_dir():
@@ -174,15 +175,15 @@ def check_skills() -> None:
         status = fields.get("status", "unknown")
         status_counts[status] += 1
         if status != "legacy" and "TODO" not in body:
-            implemented += 1
+            real_content += 1
 
     parts = [f"{total} total"]
-    for status in ("mvp", "planned", "legacy"):
+    for status in known_statuses:
         parts.append(f"{status_counts.get(status, 0)} {status}")
-    parts.append(f"{implemented} implemented")
-    report("PASS", "Skills: " + " | ".join(parts))
+    report("PASS", "Skills by status: " + " | ".join(parts))
+    report("PASS", f"Implemented with real content (non-legacy): {real_content}")
 
-    unknown = sorted(set(status_counts) - {"mvp", "planned", "legacy"})
+    unknown = sorted(set(status_counts) - set(known_statuses))
     if unknown:
         report("WARN", f"Unrecognized skill statuses: {', '.join(unknown)}")
 

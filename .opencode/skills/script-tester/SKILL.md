@@ -2,7 +2,7 @@
 name: script-tester
 description: Audits and scores generated YouTube Shorts scripts (Bangla or English) for hook strength, tone, emotional feel, word count pacing, goal alignment, and visual clarity, then offers an improved rewrite if needed.
 category: script
-status: planned
+status: implemented
 phase: later
 ---
 

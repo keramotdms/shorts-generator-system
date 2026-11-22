@@ -22,7 +22,7 @@ Total skills: 93
 | script-writer | script | - | mvp | 2 |
 | retention-pacing-optimizer | script | - | planned | later |
 | loop-cta-designer | script | - | planned | later |
-| script-tester | script | - | planned | later |
+| script-tester | script | - | implemented | later |
 | script-user-tester | script | - | planned | later |
 | localization | script | - | planned | later |
 | voiceover-organizer | voice | - | planned | later |

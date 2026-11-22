@@ -1,0 +1,8 @@
+{
+  "ffmpeg_path": null,
+  "ffmpeg_env_var": "FFMPEG_PATH",
+  "default_project": "_template",
+  "resolution": "1080x1920",
+  "aspect_ratio": "9:16",
+  "notes": "Set ffmpeg_path here or export FFMPEG_PATH. Leave null while ffmpeg.exe is blocked."
+}

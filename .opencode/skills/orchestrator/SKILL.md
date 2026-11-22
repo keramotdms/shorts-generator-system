@@ -2,9 +2,13 @@
 name: orchestrator
 description: Pipeline Manager that tracks the 10-stage Shorts production workflow and advances one stage at a time.
 category: core
-status: mvp
+status: implemented
 phase: 1
+type: script-backed
+batch: 1
 ---
+
+
 
 # Orchestrator / Pipeline Manager Skill
 
@@ -46,3 +50,18 @@ Keep the whole Shorts production pipeline organized. It remembers which stage we
 3. Run `python scripts/orchestrator.py complete research` — `research` becomes `done`, `script` becomes `current`.
 4. Run `python scripts/orchestrator.py status` again to confirm.
 5. Run `python scripts/orchestrator.py reset` to return to a clean state.
+
+# When to use
+
+
+Use when tracks the 10-stage pipeline and advances one stage at a time for a video in `projects/<project>/`.
+
+# Failure handling
+
+
+If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+
+# Depends on / feeds into
+
+
+channel config -> all pipeline stages

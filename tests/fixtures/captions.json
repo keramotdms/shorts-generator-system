@@ -1,0 +1,10 @@
+{
+  "language": "bn",
+  "captions": [
+    {"text": "প্রথম", "start": 0.0, "end": 0.4, "scene_number": 1},
+    {"text": "ধাপ", "start": 0.4, "end": 0.8, "scene_number": 1},
+    {"text": "একটি", "start": 0.8, "end": 1.2, "scene_number": 1},
+    {"text": "ছোট", "start": 1.2, "end": 1.6, "scene_number": 1},
+    {"text": "আইডিয়া", "start": 1.6, "end": 2.0, "scene_number": 1}
+  ]
+}

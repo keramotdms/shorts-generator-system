@@ -39,7 +39,14 @@ REQUIRED_FILES = [
     "docs/lessons.md",
     "scripts/generate_audio.py",
     "scripts/generate_skill_scaffolds.py",
+    "scripts/generate_skill_contents.py",
+    "scripts/skill_lib.py",
+    "scripts/skill_tools.py",
     "scripts/orchestrator.py",
+    "config/defaults.json",
+    "tests/test_skills.py",
+    "tests/fixtures/latest_script.json",
+    "tests/fixtures/captions.json",
 ]
 
 results: list[tuple[str, str]] = []
@@ -82,6 +89,43 @@ def check_ffmpeg() -> None:
             report("WARN", f"{name} found but cannot run: {exc}")
 
 
+def ffmpeg_usable() -> tuple[bool, str]:
+    """True only when ffmpeg is on PATH and actually executes."""
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        return False, "ffmpeg not on PATH (set FFMPEG_PATH)"
+    try:
+        result = subprocess.run(
+            [ffmpeg, "-version"], capture_output=True, text=True, timeout=20
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return False, str(exc)
+    if result.returncode == 0:
+        return True, "OK"
+    return False, f"exit code {result.returncode}: {result.stderr.strip()[:120]}"
+
+
+def check_blocked_skills() -> None:
+    """Report ffmpeg-dependent skills as BLOCKED, never FAIL."""
+    requires: list[str] = []
+    if SKILLS_DIR.is_dir():
+        for folder in sorted(SKILLS_DIR.iterdir()):
+            skill_md = folder / "SKILL.md"
+            if not folder.is_dir() or not skill_md.is_file():
+                continue
+            fields, _ = parse_frontmatter(skill_md.read_text(encoding="utf-8"))
+            if fields.get("requires", "").lower() == "ffmpeg":
+                requires.append(folder.name)
+    if not requires:
+        return
+    usable, detail = ffmpeg_usable()
+    if usable:
+        report("PASS", f"FFmpeg-required skills available: {len(requires)}")
+        return
+    report("BLOCKED", f"{len(requires)} skills require ffmpeg and are BLOCKED (not FAIL): {detail}")
+    report("BLOCKED", "Blocked skills: " + ", ".join(requires))
+
+
 def check_dirs() -> None:
     for item in REQUIRED_DIRS:
         if (ROOT / item).is_dir():
@@ -99,7 +143,7 @@ def check_files() -> None:
 
 
 def check_json() -> None:
-    for item in ["config/channel.json", "config/skill-contracts.json"]:
+    for item in ["config/channel.json", "config/defaults.json", "config/skill-contracts.json"]:
         path = ROOT / item
         if not path.is_file():
             continue
@@ -210,13 +254,15 @@ def main() -> None:
     check_files()
     check_json()
     check_skills()
+    check_blocked_skills()
     check_gitignore()
 
     passes = sum(1 for status, _ in results if status == "PASS")
     warns = sum(1 for status, _ in results if status == "WARN")
+    blocked = sum(1 for status, _ in results if status == "BLOCKED")
     fails = sum(1 for status, _ in results if status == "FAIL")
     print()
-    print(f"Summary: {passes} PASS | {warns} WARN | {fails} FAIL")
+    print(f"Summary: {passes} PASS | {warns} WARN | {blocked} BLOCKED | {fails} FAIL")
 
     if fails:
         sys.exit(1)

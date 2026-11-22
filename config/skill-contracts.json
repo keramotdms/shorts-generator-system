@@ -47,8 +47,10 @@
       "upstream": "channel config",
       "downstream": "all pipeline stages",
       "category": "core",
-      "status": "mvp",
-      "phase": "1"
+      "status": "implemented",
+      "phase": "1",
+      "type": "script-backed",
+      "batch": 1
     },
     "project-memory": {
       "input": "config/channel.json",
@@ -56,8 +58,10 @@
       "upstream": "channel config",
       "downstream": "script, voice and character stages",
       "category": "core",
-      "status": "mvp",
-      "phase": "1"
+      "status": "implemented",
+      "phase": "1",
+      "type": "script-backed",
+      "batch": 1
     },
     "task-tracker": {
       "input": "pipeline state and task list",
@@ -65,8 +69,10 @@
       "upstream": "orchestrator",
       "downstream": "all stages",
       "category": "core",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "script-backed",
+      "batch": 1
     },
     "asset-manager": {
       "input": "assets/ and projects/<project>/",
@@ -74,8 +80,10 @@
       "upstream": "channel config",
       "downstream": "all stage folders",
       "category": "core",
-      "status": "mvp",
-      "phase": "1"
+      "status": "implemented",
+      "phase": "1",
+      "type": "script-backed",
+      "batch": 1
     },
     "error-log-keeper": {
       "input": "error reports from skills",
@@ -83,8 +91,10 @@
       "upstream": "all stages",
       "downstream": "pipeline-health-checker",
       "category": "core",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "script-backed",
+      "batch": 1
     },
     "pipeline-health-checker": {
       "input": "whole repository and final video",
@@ -92,8 +102,10 @@
       "upstream": "all stages",
       "downstream": "final render gate",
       "category": "core",
-      "status": "mvp",
-      "phase": "1"
+      "status": "implemented",
+      "phase": "1",
+      "type": "checker",
+      "batch": 1
     },
     "book-finder": {
       "input": "config/channel.json",

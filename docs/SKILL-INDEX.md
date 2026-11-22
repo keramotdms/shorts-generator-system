@@ -4,12 +4,12 @@ Total skills: 93
 
 | Name | Category | Subcategory | Status | Phase |
 | --- | --- | --- | --- | --- |
-| orchestrator | core | - | mvp | 1 |
-| project-memory | core | - | mvp | 1 |
-| task-tracker | core | - | planned | later |
-| asset-manager | core | - | mvp | 1 |
-| error-log-keeper | core | - | planned | later |
-| pipeline-health-checker | core | - | mvp | 1 |
+| orchestrator | core | - | implemented | 1 |
+| project-memory | core | - | implemented | 1 |
+| task-tracker | core | - | implemented | later |
+| asset-manager | core | - | implemented | 1 |
+| error-log-keeper | core | - | implemented | later |
+| pipeline-health-checker | core | - | implemented | 1 |
 | book-finder | research | - | mvp | 1 |
 | trend-finder | research | - | mvp | 1 |
 | competitor-analyzer | research | - | planned | later |

@@ -1,0 +1,14 @@
+{
+  "language": "bn",
+  "title": "Dummy fixture script",
+  "hook": "এক মিনিটে শুরু করুন ছোট ব্যবসা",
+  "total_duration_sec": 5,
+  "scenes": [
+    {
+      "scene_number": 1,
+      "narration": "প্রথম ধাপ: একটি ছোট আইডিয়া বাছুন।",
+      "visual_prompt": "A flat 2D illustration of a notebook and a coin, English prompt",
+      "duration_sec": 5
+    }
+  ]
+}

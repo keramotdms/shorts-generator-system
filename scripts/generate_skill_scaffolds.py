@@ -316,7 +316,9 @@ def main() -> None:
         folder = SKILLS_DIR / name
         folder.mkdir(parents=True, exist_ok=True)
         skill_md = folder / "SKILL.md"
-        if name in REAL_SKILLS and skill_md.is_file():
+        if skill_md.is_file() and "TODO" not in skill_md.read_text(encoding="utf-8"):
+            print(f"keep     {name} (implemented)")
+        elif name in REAL_SKILLS and skill_md.is_file():
             patch_real_frontmatter(skill_md, name, category)
             print(f"patched  {name}")
         else:

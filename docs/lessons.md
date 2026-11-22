@@ -14,6 +14,12 @@
 - **Skill-relative path mismatch:** `shorts-script-writer` saved `scripts/latest_script.json` inside its own skill folder, while `shorts-voiceover-captions` expects it at the repo root.
   Lesson/fix planned: generated project data should live under `projects/<project>/<stage>/`, not inside skill folders. Migrate the existing script when the Asset & Version Manager skill is built.
 
+## 2026-11-22 — Python installation and Orchestrator test
+
+- **Windows `python` was a Microsoft Store stub, not a real interpreter.**
+  Fix: installed portable Python 3.15.2 (embeddable build) under `AppData\Local\Programs\Python\Python315-embed` and prepended it to the user PATH. Verified `python --version` returns `Python 3.15.2`.
+- **Orchestrator smoke test passed:** `init`, `status`, `complete research`, `status`, `reset` all behaved as expected. Note: `status` with no state file exits with code 1 by design, so a shell script will report a non-zero exit on that last check even though it is correct behavior.
+
 ## Rules for future mistakes
 
 - Log the mistake, why it happened, and the fix here immediately.

@@ -356,8 +356,10 @@
       "upstream": "script and voice",
       "downstream": "character-designer",
       "category": "character",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 5
     },
     "character-organizer": {
       "input": "character ideas + assets",
@@ -365,8 +367,10 @@
       "upstream": "character-thinker-counter",
       "downstream": "character-designer",
       "category": "character",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 5
     },
     "character-designer": {
       "input": "config/style-bible.json",
@@ -374,8 +378,10 @@
       "upstream": "style bible",
       "downstream": "collector",
       "category": "character",
-      "status": "mvp",
-      "phase": "3"
+      "status": "implemented",
+      "phase": "3",
+      "type": "prompt-only",
+      "batch": 5
     },
     "character-setup-manager": {
       "input": "character design files",
@@ -383,8 +389,10 @@
       "upstream": "character-designer",
       "downstream": "video-maker",
       "category": "character",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 5
     },
     "expression-pose-library": {
       "input": "character setup assets",
@@ -392,8 +400,10 @@
       "upstream": "character-designer",
       "downstream": "video-maker",
       "category": "character",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 5
     },
     "consistency-guardian": {
       "input": "rendered scenes + character references",
@@ -401,8 +411,10 @@
       "upstream": "video-maker",
       "downstream": "final-test",
       "category": "character",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "checker",
+      "batch": 5
     },
     "character-qa-tester": {
       "input": "character assets",
@@ -410,8 +422,10 @@
       "upstream": "character-designer",
       "downstream": "final-test",
       "category": "character",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "checker",
+      "batch": 5
     },
     "element-designer": {
       "input": "style bible + final script",
@@ -419,8 +433,10 @@
       "upstream": "character and voice",
       "downstream": "scenario-designer",
       "category": "scene",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 5
     },
     "element-organizer": {
       "input": "scene elements",
@@ -428,8 +444,10 @@
       "upstream": "element-designer",
       "downstream": "scenario-designer",
       "category": "scene",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 5
     },
     "scenario-designer": {
       "input": "collector output + style bible",
@@ -437,8 +455,10 @@
       "upstream": "collector",
       "downstream": "video-maker",
       "category": "scene",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 5
     },
     "script-voice-character-collector": {
       "input": "script + voiceover + character references",

@@ -45,8 +45,10 @@ REQUIRED_FILES = [
     "scripts/orchestrator.py",
     "config/defaults.json",
     "tests/test_skills.py",
+    "tests/smoke/run_dummy_pipeline.py",
     "tests/fixtures/latest_script.json",
     "tests/fixtures/captions.json",
+    "docs/HOW-TO-USE.md",
 ]
 
 results: list[tuple[str, str]] = []

@@ -3,9 +3,18 @@ name: beat-sync-editor
 description: Syncs cuts to music beats.
 category: video-editing
 subcategory: audio-sync
-status: planned
+status: implemented
 phase: later
+type: script-backed
+batch: 7
+requires: ffmpeg
 ---
+
+> Context is always loaded via project-memory; all generated data lives under projects/<project>/.
+
+# When to use
+
+Use when syncs cuts to music beats for a video in `projects/<project>/`.
 
 # Purpose
 
@@ -13,20 +22,33 @@ Syncs cuts to music beats.
 
 # Input
 
-video + music track
+- `video + music track`
+- `config/channel.json` and `config/style-bible.json`, read through project-memory
+- `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-beat-synced video
+- `beat-synced video`
+- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 
-TODO
+1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
+2. Validate the input at `video + music track`; if it is missing or malformed, follow Failure handling and stop.
+3. Run `python scripts/skill_tools.py beat-sync-editor run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
+4. Write the result to `beat-synced video` under `projects/<project>/`; create parent folders first.
+5. Re-open `beat-synced video` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED beat-sync-editor: ffmpeg ...` and exit 0 without a FAIL.
 
 # How to test
 
-TODO
+- `python scripts/skill_tools.py beat-sync-editor --self-test` → expected `PASS beat-sync-editor: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `beat-synced video` exists and is non-empty after a real run.
+- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into
 
 audio-mixer -> final-test
+
+# Failure handling
+
+If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.

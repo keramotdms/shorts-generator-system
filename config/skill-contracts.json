@@ -466,8 +466,10 @@
       "upstream": "script, voice and character",
       "downstream": "video-maker",
       "category": "video-making",
-      "status": "mvp",
-      "phase": "3"
+      "status": "implemented",
+      "phase": "3",
+      "type": "script-backed",
+      "batch": 6
     },
     "lipsync-motion-planner": {
       "input": "voice timings + character references",
@@ -475,8 +477,10 @@
       "upstream": "collector",
       "downstream": "video-maker",
       "category": "video-making",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "prompt-only",
+      "batch": 6
     },
     "video-maker": {
       "input": "projects/<project>/05-scene/collection.json",
@@ -484,8 +488,11 @@
       "upstream": "collector",
       "downstream": "rough-cut-assembler",
       "category": "video-making",
-      "status": "mvp",
-      "phase": "3"
+      "status": "implemented",
+      "phase": "3",
+      "type": "script-backed",
+      "batch": 6,
+      "requires": "ffmpeg"
     },
     "video-quality-checker": {
       "input": "rendered scene videos",
@@ -493,8 +500,11 @@
       "upstream": "video-maker",
       "downstream": "rough-cut-assembler",
       "category": "video-making",
-      "status": "planned",
-      "phase": "later"
+      "status": "implemented",
+      "phase": "later",
+      "type": "checker",
+      "batch": 6,
+      "requires": "ffmpeg"
     },
     "script-video-voice-collector": {
       "input": "script + rendered scenes + voiceover",

@@ -42,10 +42,10 @@ Total skills: 93
 | element-designer | scene | - | implemented | later |
 | element-organizer | scene | - | implemented | later |
 | scenario-designer | scene | - | implemented | later |
-| script-voice-character-collector | video-making | - | mvp | 3 |
-| lipsync-motion-planner | video-making | - | planned | later |
-| video-maker | video-making | - | mvp | 3 |
-| video-quality-checker | video-making | - | planned | later |
+| script-voice-character-collector | video-making | - | implemented | 3 |
+| lipsync-motion-planner | video-making | - | implemented | later |
+| video-maker | video-making | - | implemented | 3 |
+| video-quality-checker | video-making | - | implemented | later |
 | script-video-voice-collector | video-editing | core | planned | later |
 | rough-cut-assembler | video-editing | core | mvp | 4 |
 | video-editor | video-editing | core | planned | later |

@@ -71,12 +71,29 @@ def validate(path: Path) -> list[str]:
     return errors
 
 
+def test_schemas() -> list[str]:
+    """Check every schema has at least one conforming fixture."""
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import schema_validator
+
+    errors: list[str] = []
+    valid = ROOT / "tests" / "fixtures" / "valid"
+    for name in (
+        "story", "hook", "latest_script", "captions", "collection", "character"
+    ):
+        target = valid / f"{name}.json"
+        problems = schema_validator.validate_file(name, target)
+        if problems:
+            errors.append(f"schema fixture {name}: " + "; ".join(problems))
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--batch", type=int)
     args = parser.parse_args()
 
-    errors: list[str] = []
+    errors: list[str] = test_schemas()
     checked = 0
     script_backed: list[str] = []
     for folder in sorted(SKILLS.iterdir()):

@@ -241,12 +241,34 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--gender", choices=("male", "female"), default="male")
     parser.add_argument("--script", type=Path, default=DEFAULT_SCRIPT)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "output")
+    parser.add_argument(
+        "--project",
+        default=None,
+        help="Write voiceover.mp3 and captions.json into projects/<project>/03-voice/",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    data, script_path = load_script(args.script)
+    script_path = args.script
+    output_dir: Path = args.output_dir
+    if args.project:
+        script_path = (
+            ROOT / "projects" / args.project / "02-script" / "latest_script.json"
+            if script_path == DEFAULT_SCRIPT else script_path
+        )
+        output_dir = ROOT / "projects" / args.project / "03-voice"
+
+    import schema_validator
+
+    schema_errors = schema_validator.validate_file("latest_script", script_path)
+    if schema_errors:
+        sys.exit(
+            f"FAIL latest_script schema for {script_path}: " + "; ".join(schema_errors)
+        )
+
+    data, script_path = load_script(script_path)
 
     language = str(data.get("language", "bn")).strip().lower()
     if language not in VOICES:
@@ -257,7 +279,6 @@ def main() -> None:
     expected = build_expected_words(segments)
     combined_text = " ".join(segment["text"] for segment in segments)
 
-    output_dir: Path = args.output_dir
     audio_path = output_dir / "voiceover.mp3"
     captions_path = output_dir / "captions.json"
 
@@ -279,6 +300,13 @@ def main() -> None:
         "captions": captions,
     }
 
+    schema_errors = schema_validator.validate(
+        payload, schema_validator.load_schema("captions")
+    )
+    if schema_errors:
+        sys.exit("FAIL captions schema: " + "; ".join(schema_errors))
+
+    output_dir.mkdir(parents=True, exist_ok=True)
     with captions_path.open("w", encoding="utf-8") as handle:
         json.dump(payload, handle, ensure_ascii=False, indent=2)
         handle.write("\n")

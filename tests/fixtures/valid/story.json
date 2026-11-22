@@ -1,0 +1,11 @@
+{
+  "niche": "Personal finance / side hustles",
+  "audience": "Bangladesh / Bangla-speaking",
+  "angle": "Start a side hustle with almost no money",
+  "hook_seed": "আপনার পকেটে টাকা না থাকলেও শুরু করা যায়",
+  "beats": [
+    {"beat": 1, "purpose": "show the problem"},
+    {"beat": 2, "purpose": "give one small action"},
+    {"beat": 3, "purpose": "end with a loop"}
+  ]
+}

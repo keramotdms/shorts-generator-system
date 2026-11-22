@@ -61,7 +61,7 @@ Writes the full script with scenes and timings.
 3. Write `title`, `hook`, `narration` and `highlight_words` in the project language; keep `visual_prompt` in clear English for renderers.
 4. Apply the original real rules: hook at 0-3 s, fast body at 3-45 s with 8-12-word sentences, strong CTA/loop in the last 3-5 s.
 5. Save `projects/<project>/02-script/latest_script.json` with `language`, `title`, `hook`, `total_duration_sec` (30-60) and `scenes[].scene_number/narration/visual_prompt/highlight_words`.
-6. Re-open the JSON, confirm it parses and every scene has a renderable visual prompt; show a readable summary in chat and log problems to `projects/<project>/08-final-test/error-log.jsonl`.
+6. Re-open the JSON, confirm it parses and every scene has a renderable visual prompt; validate it with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json` before accepting it, then show a readable summary in chat and log problems to `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 

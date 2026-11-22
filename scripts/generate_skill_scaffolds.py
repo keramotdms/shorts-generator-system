@@ -42,7 +42,7 @@ SKILLS: list[tuple[str, str, str, str, str, str, str]] = [
     # ---- voice ----
     ("voiceover-organizer", "voice", "", "Plans voice style, gender and scene order.", "final script + style bible", "voice plan", "script-writer -> voiceover-generator"),
     ("pronunciation-emotion-director", "voice", "", "Sets pronunciation and emotion for each line.", "voice plan + final script", "pronunciation and emotion notes", "voice plan -> voiceover-generator"),
-    ("voiceover-generator", "voice", "", "Generates natural speech audio only.", "projects/<project>/02-script/latest_script.json", "projects/<project>/03-voice/voiceover.mp3", "script-writer -> collector"),
+    ("voiceover-generator", "voice", "", "Generates natural speech audio and word timings.", "projects/<project>/02-script/latest_script.json", "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/captions.json", "script-writer -> collector"),
     ("voiceover-tester", "voice", "", "Checks voice clarity, speed and duration.", "voiceover.mp3 + final script", "voice QA report", "voiceover-generator -> final-test"),
     ("music-sfx-selector", "voice", "", "Chooses background music and sound effects.", "video mood + style bible", "music and SFX selection list", "scene plan -> audio-mixer"),
     ("audio-mixer", "voice", "", "Mixes voice, music and sound effect levels.", "voice + music + SFX files", "mixed audio track", "voice and music -> video-editing"),
@@ -82,7 +82,7 @@ SKILLS: list[tuple[str, str, str, str, str, str, str]] = [
     ("color-grading-keeper", "video-editing", "visual", "Keeps color style consistent.", "edited video + style bible", "color-graded video", "rough-cut-assembler -> final-test"),
     ("broll-variety-planner", "video-editing", "visual", "Adds visual variety with B-roll.", "final script + stock assets", "B-roll plan", "video-making -> video-editor"),
     # ---- video-editing / text-graphics ----
-    ("caption-maker", "video-editing", "text-graphics", "Creates word-level caption timings and burns captions.", "voice timings + rough cut", "projects/<project>/07-edit/captions.json + captioned video", "voice and rough cut -> safe-zone-checker"),
+    ("caption-maker", "video-editing", "text-graphics", "Creates word-level caption timings and burns captions.", "projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4", "projects/<project>/07-edit/captions.json + captioned video", "voice and rough cut -> safe-zone-checker"),
     ("kinetic-text-animator", "video-editing", "text-graphics", "Animates on-screen text.", "caption data + video", "video with kinetic text", "caption-maker -> final-test"),
     ("emphasis-sticker-placer", "video-editing", "text-graphics", "Places emphasis stickers and highlights.", "final script + video", "video with emphasis graphics", "caption-maker -> final-test"),
     ("intro-outro-manager", "video-editing", "text-graphics", "Adds intro and outro cards.", "video + brand assets", "video with intro and outro", "rough-cut-assembler -> final-test"),
@@ -216,13 +216,13 @@ def build_contracts() -> dict:
                 "voiceover-generator": {
                     "phase": 3,
                     "input": "projects/<project>/02-script/latest_script.json",
-                    "output": "projects/<project>/03-voice/voiceover.mp3",
-                    "job": "Generate natural Bangla/English speech only.",
+                    "output": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/captions.json",
+                    "job": "Generate natural Bangla/English speech and word-level timing metadata.",
                     "maps_to": ["voiceover-captions"],
                 },
                 "caption-maker": {
                     "phase": 4,
-                    "input": "projects/<project>/03-voice/voiceover.mp3 plus word-boundary timings and rough-cut.mp4",
+                    "input": "projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4",
                     "output": "projects/<project>/07-edit/captions.json + captioned video",
                     "job": "Create word/phrase caption timings and safe-zone-ready caption data only.",
                     "maps_to": ["voiceover-captions"],

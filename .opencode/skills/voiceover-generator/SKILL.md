@@ -1,6 +1,6 @@
 ---
 name: voiceover-generator
-description: Generates natural speech audio only.
+description: Generates natural speech audio and word timings.
 category: voice
 status: implemented
 phase: 3
@@ -12,11 +12,11 @@ batch: 4
 
 # When to use
 
-Use when generates natural speech audio only for a video in `projects/<project>/`.
+Use when generates natural speech audio and word timings for a video in `projects/<project>/`.
 
 # Purpose
 
-Generates natural speech audio only.
+Generates natural speech audio and word timings.
 
 # Input
 
@@ -26,20 +26,20 @@ Generates natural speech audio only.
 
 # Output
 
-- `projects/<project>/03-voice/voiceover.mp3`
+- `projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/captions.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `projects/<project>/02-script/latest_script.json`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py voiceover-generator run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/03-voice/voiceover.mp3` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/03-voice/voiceover.mp3` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+2. Validate the input at `projects/<project>/02-script/latest_script.json`; if it is missing or malformed, follow Failure handling and stop. Validate `projects/<project>/02-script/latest_script.json` against `config/schemas/latest_script.json` with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`.
+3. Run `python scripts/generate_audio.py --project <project> --gender <male|female>`; it validates the script, writes `03-voice/voiceover.mp3` plus `03-voice/captions.json`, and reports the exact duration.
+4. Write `projects/<project>/03-voice/voiceover.mp3` and `projects/<project>/03-voice/captions.json`; create parent folders first.
+5. Re-open both files, confirm the MP3 is non-empty and report its exact duration; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. Validate `projects/<project>/03-voice/captions.json` against `config/schemas/captions.json` with `python scripts/schema_validator.py captions projects/<project>/03-voice/captions.json` before accepting it.
 
 # How to test
 
-- `python scripts/skill_tools.py voiceover-generator --self-test` → expected `PASS voiceover-generator: ...`. Then confirm `projects/<project>/03-voice/voiceover.mp3` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py voiceover-generator --self-test` → expected `PASS voiceover-generator: ...`. Then confirm `projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/captions.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

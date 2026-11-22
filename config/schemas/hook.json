@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "hook.json",
+  "title": "3-second hook",
+  "type": "object",
+  "required": ["text", "type", "duration_sec", "visual_prompt"],
+  "properties": {
+    "text": {"type": "string", "minLength": 5},
+    "type": {"type": "string", "enum": ["question", "shock", "relatable", "promise", "contrarian"]},
+    "duration_sec": {"type": "number", "minimum": 2, "maximum": 3.5},
+    "visual_prompt": {"type": "string", "minLength": 8},
+    "language": {"type": "string", "enum": ["bn", "en"]}
+  }
+}

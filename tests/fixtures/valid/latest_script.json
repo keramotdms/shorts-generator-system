@@ -1,0 +1,29 @@
+{
+  "language": "bn",
+  "title": "টাকা ছাড়াই সাইড হাসল",
+  "hook": "আপনার পকেটে টাকা না থাকলেও শুরু করা যায়",
+  "total_duration_sec": 40,
+  "scenes": [
+    {
+      "scene_number": 1,
+      "narration": "অনেকের মনে হয় পুঁজি না থাকলে কিছু করা যাবে না।",
+      "visual_prompt": "Flat 2D illustration of a worried person looking at an empty wallet, bold shapes",
+      "highlight_words": ["পুঁজি", "কিছু"],
+      "duration_sec": 12
+    },
+    {
+      "scene_number": 2,
+      "narration": "শুরু করুন এক ছোট কাজ দিয়ে, যার খরচ প্রায় শূন্য।",
+      "visual_prompt": "Flat 2D illustration of a phone and a notebook on a desk, warm amber accent",
+      "highlight_words": ["ছোট"],
+      "duration_sec": 14
+    },
+    {
+      "scene_number": 3,
+      "narration": "আজই একটার নাম লিখুন, কালকে শুরু করুন।",
+      "visual_prompt": "Flat 2D illustration of a checklist with one item ticked, green accent",
+      "highlight_words": ["আজই"],
+      "duration_sec": 14
+    }
+  ]
+}

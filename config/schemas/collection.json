@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "collection.json",
+  "title": "Script + voice + character collection",
+  "type": "object",
+  "required": ["project", "context", "script", "voiceover", "characters", "status"],
+  "properties": {
+    "project": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "enum": ["PASS", "WARN", "FAIL"]},
+    "context": {"type": "object", "required": ["niche", "language", "audience_location"]},
+    "script": {"type": "object"},
+    "voiceover": {"type": ["string", "null"]},
+    "characters": {"type": "object"}
+  }
+}

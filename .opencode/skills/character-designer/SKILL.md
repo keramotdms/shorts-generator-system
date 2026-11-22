@@ -35,7 +35,7 @@ Designs the 2D character look.
 2. Validate the input at `config/style-bible.json`; if it is missing or malformed, follow Failure handling and stop.
 3. Follow this skill's prompt instructions to designs the 2d character look, using only the context loaded in step 1.
 4. Write the result to `assets/characters/<character-id>.json` at the repository root (do not add a projects/<project>/ prefix); create parent folders first.
-5. Re-open `assets/characters/<character-id>.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+5. Re-open `assets/characters/<character-id>.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. Validate `assets/characters/<character-id>.json` against `config/schemas/character.json` with `python scripts/schema_validator.py character assets/characters/<character-id>.json` before accepting it.
 
 # How to test
 

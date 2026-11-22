@@ -1,0 +1,19 @@
+{
+  "project": "_template",
+  "status": "PASS",
+  "context": {
+    "niche": "Personal finance / side hustles",
+    "language": "bn",
+    "audience_location": "Bangladesh / Bangla-speaking"
+  },
+  "script": {
+    "language": "bn",
+    "title": "টাকা ছাড়াই সাইড হাসল",
+    "total_duration_sec": 40,
+    "scenes": []
+  },
+  "voiceover": "projects/_template/03-voice/voiceover.mp3",
+  "characters": {
+    "default": "friendly young Bangla-speaking creator"
+  }
+}

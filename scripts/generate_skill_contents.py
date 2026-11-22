@@ -77,6 +77,26 @@ SCRIPT_BACKED = {
     "variant-batch-renderer", "audio-mixer",
 }
 
+SCHEMA_INPUTS = {
+    "script-tester": ("latest_script", "projects/<project>/02-script/latest_script.json"),
+    "voiceover-generator": ("latest_script", "projects/<project>/02-script/latest_script.json"),
+    "voiceover-captions": ("latest_script", "projects/<project>/02-script/latest_script.json"),
+    "script-voice-character-collector": ("latest_script", "projects/<project>/02-script/latest_script.json"),
+    "video-maker": ("collection", "projects/<project>/05-scene/collection.json"),
+    "caption-maker": ("captions", "projects/<project>/03-voice/captions.json"),
+    "handover": ("captions", "projects/<project>/07-edit/captions.json"),
+}
+
+SCHEMA_OUTPUTS = {
+    "story-thinker": ("story", "projects/<project>/02-script/story.json"),
+    "hook-writer": ("hook", "projects/<project>/02-script/hook.json"),
+    "script-writer": ("latest_script", "projects/<project>/02-script/latest_script.json"),
+    "character-designer": ("character", "assets/characters/<character-id>.json"),
+    "voiceover-generator": ("captions", "projects/<project>/03-voice/captions.json"),
+    "script-voice-character-collector": ("collection", "projects/<project>/05-scene/collection.json"),
+    "caption-maker": ("captions", "projects/<project>/07-edit/captions.json"),
+}
+
 REQUIRES_FFMPEG = {
     "video-maker", "video-quality-checker", "av-sync-checker", "rough-cut-assembler",
     "video-editor", "animator", "motion-graphic-editor", "branding-manager",
@@ -163,6 +183,10 @@ def build_body(name: str, purpose: str, input_text: str, output: str, depends: s
         "`scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them."
     )
     run_line = (
+        "Run `python scripts/generate_audio.py --project <project> --gender <male|female>`; "
+        "it validates the script, writes `03-voice/voiceover.mp3` plus "
+        "`03-voice/captions.json`, and reports the exact duration."
+        if name == "voiceover-generator" else
         f"Run `python scripts/skill_tools.py {name} run` with `PROJECT=<project>`; "
         "the helper reads context through `scripts/skill_lib.py::style_context()`."
         if kind in {"script-backed", "checker"} else
@@ -184,6 +208,40 @@ def build_body(name: str, purpose: str, input_text: str, output: str, depends: s
         f"Type: `Use the {name} skill with PROJECT=<project>`. Expected: `{output}` "
         "exists, parses cleanly, and contains no hardcoded niche or language value."
     )
+    schema_in = SCHEMA_INPUTS.get(name)
+    schema_out = SCHEMA_OUTPUTS.get(name)
+    step2 = (
+        f"2. Validate the input at `{input_text}`; if it is missing or malformed, follow Failure handling and stop."
+        + (
+            f" Validate `{schema_in[1]}` against `config/schemas/{schema_in[0]}.json` with "
+            f"`python scripts/schema_validator.py {schema_in[0]} {schema_in[1]}`."
+            if schema_in else ""
+        )
+    )
+    if name == "voiceover-generator":
+        step4 = (
+            "4. Write `projects/<project>/03-voice/voiceover.mp3` and "
+            "`projects/<project>/03-voice/captions.json`; create parent folders first."
+        )
+        step5 = (
+            "5. Re-open both files, confirm the MP3 is non-empty and report its exact duration; "
+            "record any problem via error-log-keeper at "
+            "`projects/<project>/08-final-test/error-log.jsonl`. Validate "
+            "`projects/<project>/03-voice/captions.json` against "
+            "`config/schemas/captions.json` with "
+            "`python scripts/schema_validator.py captions projects/<project>/03-voice/captions.json` "
+            "before accepting it."
+        )
+    else:
+        step4 = f"4. Write the result to `{output}` {location_hint(output)}; create parent folders first."
+        step5 = (
+            f"5. Re-open `{output}` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`."
+            + (
+                f" Validate `{schema_out[1]}` against `config/schemas/{schema_out[0]}.json` with "
+                f"`python scripts/schema_validator.py {schema_out[0]} {schema_out[1]}` before accepting it."
+                if schema_out else ""
+            )
+        )
     lines = [
         f"> Context is always loaded via project-memory; all generated data lives under projects/<project>/.",
         "",
@@ -209,10 +267,10 @@ def build_body(name: str, purpose: str, input_text: str, output: str, depends: s
         "# Steps",
         "",
         step1,
-        f"2. Validate the input at `{input_text}`; if it is missing or malformed, follow Failure handling and stop.",
+        step2,
         f"3. {run_line}",
-        f"4. Write the result to `{output}` {location_hint(output)}; create parent folders first.",
-        f"5. Re-open `{output}` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.",
+        step4,
+        step5,
     ]
     if ffmpeg_step:
         lines.append(ffmpeg_step)
@@ -248,7 +306,7 @@ def patch_real(name: str, purpose: str, input_text: str, output: str, depends: s
     set_field(header, "batch", str(BATCH_OF[name]))
     if name in REQUIRES_FFMPEG:
         set_field(header, "requires", "ffmpeg")
-    if name == "voiceover-captions":
+    if name == "voiceover-captions" and not any(line.startswith("note:") for line in header):
         set_field(header, "note", "legacy pointer to voiceover-generator and caption-maker")
 
     standard = build_body(name, purpose, input_text, output, depends, kind)
@@ -308,6 +366,12 @@ def update_registry(names: list[str]) -> None:
             skills[name]["output"] = canonical_output(
                 name, skills[name].get("category", ""), skills[name]["output"]
             )
+            if name == "voiceover-generator" and "captions.json" not in skills[name]["output"]:
+                skills[name]["output"] += " + projects/<project>/03-voice/captions.json"
+            if name == "caption-maker":
+                skills[name]["input"] = (
+                    "projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4"
+                )
             if name in REQUIRES_FFMPEG:
                 skills[name]["requires"] = "ffmpeg"
     CONTRACTS.write_text(json.dumps(contracts, ensure_ascii=False, indent=2) + "\n",

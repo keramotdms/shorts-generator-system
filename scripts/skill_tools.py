@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import skill_lib as lib
 
 FIXTURES = lib.ROOT / "tests" / "fixtures"
+VALID = FIXTURES / "valid"
 
 
 def cmd_project_memory(args: argparse.Namespace) -> None:
@@ -95,6 +96,7 @@ def cmd_error_log(args: argparse.Namespace) -> None:
 
 def cmd_caption_maker(args: argparse.Namespace) -> None:
     source = lib.stage(3, "captions.json")
+    lib.validate_schema("captions", source)
     data = lib.read_json(source)
     captions = data.get("captions", []) if isinstance(data, dict) else data
     if not isinstance(captions, list) or not captions:
@@ -115,10 +117,12 @@ def cmd_caption_maker(args: argparse.Namespace) -> None:
             }
         )
     out = lib.write_json(lib.stage(7, "captions.json"), {"captions": safe, "source": lib.relative(source)})
+    lib.validate_schema("captions", out)
     lib.ok("caption-maker", f"{len(safe)} safe-zone captions written", out)
 
 
 def cmd_collector(args: argparse.Namespace) -> None:
+    lib.validate_schema("latest_script", lib.stage(2, "latest_script.json"))
     script_data = lib.read_json(lib.stage(2, "latest_script.json"))
     voice = lib.stage(3, "voiceover.mp3")
     characters = lib.read_json(lib.CONFIG_DIR / "style-bible.json", required=False) or {}
@@ -131,6 +135,7 @@ def cmd_collector(args: argparse.Namespace) -> None:
         "status": "PASS" if voice.is_file() else "WARN",
     }
     out = lib.write_json(lib.stage(5, "collection.json"), collection)
+    lib.validate_schema("collection", out)
     lib.ok("script-voice-character-collector", "collection built", out)
 
 
@@ -195,6 +200,8 @@ def cmd_handover(args: argparse.Namespace) -> None:
         lib.stage(10, "handover.md"),
     ]
     missing = [lib.relative(path) for path in files if not path.is_file()]
+    if files[1].is_file():
+        lib.validate_schema("captions", files[1])
     report = {"ready": not missing, "missing": missing, "project": lib.project_name()}
     out = lib.write_json(lib.stage(10, "handover-check.json"), report)
     lib.ok("handover", "ready" if not missing else "not ready: " + ", ".join(missing), out)
@@ -218,13 +225,19 @@ def self_test(skill: str) -> int:
     elif skill in {"task-tracker", "error-log-keeper"}:
         print(f"PASS {skill}: helper functions importable")
     elif skill == "caption-maker":
-        data = lib.read_json(FIXTURES / "captions.json")
-        assert len(data["captions"]) > 0
-        print("PASS caption-maker: fixture captions parsed")
+        lib.validate_schema("captions", VALID / "captions.json")
+        print("PASS caption-maker: caption schema verified")
     elif skill == "script-voice-character-collector":
-        data = lib.read_json(FIXTURES / "latest_script.json")
-        assert "scenes" in data
-        print("PASS collector: fixture script parsed")
+        lib.validate_schema("latest_script", VALID / "latest_script.json")
+        lib.validate_schema("collection", VALID / "collection.json")
+        print("PASS collector: script and collection schemas verified")
+    elif skill == "voiceover-generator":
+        lib.validate_schema("latest_script", VALID / "latest_script.json")
+        lib.validate_schema("captions", VALID / "captions.json")
+        print("PASS voiceover-generator: script and caption schemas verified")
+    elif skill == "script-tester":
+        lib.validate_schema("latest_script", VALID / "latest_script.json")
+        print("PASS script-tester: script schema verified")
     elif skill == "safe-zone-checker":
         print("PASS safe-zone-checker: validation function importable")
     elif skill in {

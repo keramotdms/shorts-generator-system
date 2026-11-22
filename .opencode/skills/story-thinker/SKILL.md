@@ -35,7 +35,7 @@ Turns research into a short story concept.
 2. Validate the input at `research/niche-report.md + config/channel.json`; if it is missing or malformed, follow Failure handling and stop.
 3. Follow this skill's prompt instructions to turns research into a short story concept, using only the context loaded in step 1.
 4. Write the result to `projects/<project>/02-script/story.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/02-script/story.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+5. Re-open `projects/<project>/02-script/story.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. Validate `projects/<project>/02-script/story.json` against `config/schemas/story.json` with `python scripts/schema_validator.py story projects/<project>/02-script/story.json` before accepting it.
 
 # How to test
 

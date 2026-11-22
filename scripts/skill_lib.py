@@ -55,6 +55,17 @@ def ensure(path: Path) -> Path:
     return path
 
 
+def validate_schema(schema_name: str, path: Path) -> None:
+    """Validate a JSON file against config/schemas/<schema_name>.json."""
+    import schema_validator
+
+    errors = schema_validator.validate_file(schema_name, path)
+    if errors:
+        raise SkillError(
+            f"Schema validation failed for {relative(path)}: " + "; ".join(errors)
+        )
+
+
 def read_json(path: Path, *, required: bool = True) -> Any:
     if not path.is_file():
         if required:

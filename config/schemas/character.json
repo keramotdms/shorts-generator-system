@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "character.json",
+  "title": "2D character design",
+  "type": "object",
+  "required": ["id", "name", "appearance", "voice", "style_source"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "name": {"type": "string", "minLength": 1},
+    "style_source": {"type": "string"},
+    "appearance": {
+      "type": "object",
+      "required": ["body", "hair", "clothing", "palette"],
+      "properties": {
+        "body": {"type": "string", "minLength": 2},
+        "hair": {"type": "string", "minLength": 2},
+        "clothing": {"type": "string", "minLength": 2},
+        "palette": {"type": "array", "minItems": 2, "items": {"type": "string"}}
+      }
+    },
+    "voice": {
+      "type": "object",
+      "required": ["gender", "tone"],
+      "properties": {
+        "gender": {"type": "string", "enum": ["male", "female"]},
+        "tone": {"type": "string", "minLength": 2}
+      }
+    }
+  }
+}

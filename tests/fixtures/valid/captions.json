@@ -1,0 +1,13 @@
+{
+  "language": "bn",
+  "total_duration_sec": 40,
+  "source": "tests/fixtures/valid/latest_script.json",
+  "audio_file": "projects/_template/03-voice/voiceover.mp3",
+  "captions": [
+    {"text": "আপনার", "start": 0.0, "end": 0.4, "scene_number": 0},
+    {"text": "পকেটে", "start": 0.4, "end": 0.8, "scene_number": 0},
+    {"text": "অনেকের", "start": 1.2, "end": 1.6, "scene_number": 1},
+    {"text": "মনে", "start": 1.6, "end": 1.9, "scene_number": 1},
+    {"text": "শুরু", "start": 14.0, "end": 14.4, "scene_number": 2}
+  ]
+}

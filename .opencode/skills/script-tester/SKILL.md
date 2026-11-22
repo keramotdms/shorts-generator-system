@@ -55,7 +55,7 @@ Audits script quality across five pillars.
 # Steps
 
 1. Read language and style through project-memory (`config/channel.json` + `config/style-bible.json`); use that language for all pacing estimates.
-2. Load `projects/<project>/02-script/latest_script.json`; stop if it is missing or malformed.
+2. Load `projects/<project>/02-script/latest_script.json`; stop if it is missing or malformed. Validate it first with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`.
 3. Count words in every `narration`, estimate speaking time from the project language (Bangla ~110-130 wpm, English ~140-160 wpm), compare with `total_duration_sec`, and flag scenes over 15 words.
 4. Score hook power, tone/naturalness, goal alignment and visual readiness on 1-10 with a short reason for each, keeping the original 5-pillar rubric above.
 5. Write the scorecard to `projects/<project>/08-final-test/script-audit.json`; if any pillar scores below 8, also write an improved script to `projects/<project>/02-script/latest_script.optimized.json`.

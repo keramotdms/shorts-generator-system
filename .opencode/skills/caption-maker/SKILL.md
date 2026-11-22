@@ -21,7 +21,7 @@ Creates word-level caption timings and burns captions.
 
 # Input
 
-- `voice timings + rough cut`
+- `projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4`
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
@@ -33,10 +33,10 @@ Creates word-level caption timings and burns captions.
 # Steps
 
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `voice timings + rough cut`; if it is missing or malformed, follow Failure handling and stop.
+2. Validate the input at `projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4`; if it is missing or malformed, follow Failure handling and stop. Validate `projects/<project>/03-voice/captions.json` against `config/schemas/captions.json` with `python scripts/schema_validator.py captions projects/<project>/03-voice/captions.json`.
 3. Run `python scripts/skill_tools.py caption-maker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
 4. Write the result to `projects/<project>/07-edit/captions.json + projects/<project>/07-edit/caption-maker.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/captions.json + projects/<project>/07-edit/caption-maker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+5. Re-open `projects/<project>/07-edit/captions.json + projects/<project>/07-edit/caption-maker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. Validate `projects/<project>/07-edit/captions.json` against `config/schemas/captions.json` with `python scripts/schema_validator.py captions projects/<project>/07-edit/captions.json` before accepting it.
 
 # How to test
 

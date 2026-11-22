@@ -296,7 +296,7 @@
     },
     "voiceover-generator": {
       "input": "projects/<project>/02-script/latest_script.json",
-      "output": "projects/<project>/03-voice/voiceover.mp3",
+      "output": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/captions.json",
       "upstream": "script-writer",
       "downstream": "collector",
       "category": "voice",
@@ -673,7 +673,7 @@
       "requires": "ffmpeg"
     },
     "caption-maker": {
-      "input": "voice timings + rough cut",
+      "input": "projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4",
       "output": "projects/<project>/07-edit/captions.json + projects/<project>/07-edit/caption-maker.json",
       "upstream": "voice and rough cut",
       "downstream": "safe-zone-checker",

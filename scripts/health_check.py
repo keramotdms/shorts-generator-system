@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -52,10 +53,28 @@ def check_python() -> None:
 
 
 def check_ffmpeg() -> None:
-    if shutil.which("ffmpeg"):
-        report("PASS", "FFmpeg found on PATH")
-    else:
-        report("WARN", "FFmpeg not found on PATH (need approval before installing)")
+    """Verify ffmpeg/ffprobe are on PATH AND can actually execute."""
+    ffmpeg = shutil.which("ffmpeg")
+    ffprobe = shutil.which("ffprobe")
+    if not ffmpeg or not ffprobe:
+        report("WARN", "FFmpeg/ffprobe not found on PATH (need approval before installing)")
+        return
+
+    for name, executable in (("ffmpeg", ffmpeg), ("ffprobe", ffprobe)):
+        try:
+            result = subprocess.run(
+                [executable, "-version"],
+                capture_output=True,
+                text=True,
+                timeout=20,
+            )
+            if result.returncode == 0:
+                first_line = result.stdout.splitlines()[0] if result.stdout else "no output"
+                report("PASS", f"{name} runs: {first_line}")
+            else:
+                report("WARN", f"{name} found but exited with code {result.returncode}")
+        except (OSError, subprocess.SubprocessError) as exc:
+            report("WARN", f"{name} found but cannot run: {exc}")
 
 
 def check_dirs() -> None:

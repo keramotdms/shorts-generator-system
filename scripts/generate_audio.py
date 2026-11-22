@@ -18,9 +18,7 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SCRIPT = ROOT / "scripts" / "latest_script.json"
-FALLBACK_SCRIPT = (
-    ROOT / ".opencode" / "skills" / "shorts-script-writer" / "scripts" / "latest_script.json"
-)
+FALLBACK_SCRIPT = ROOT / "projects" / "_template" / "02-script" / "latest_script.json"
 
 VOICES = {
     "bn": {"male": "bn-BD-PradeepNeural", "female": "bn-BD-NabanitaNeural"},
@@ -36,7 +34,7 @@ def normalize(token: str) -> str:
 
 
 def load_script(path: Path) -> tuple[dict[str, Any], Path]:
-    """Load the script, falling back to the shorts-script-writer output if needed."""
+    """Load the script, falling back to the script-writer output if needed."""
     if not path.exists() and FALLBACK_SCRIPT.exists():
         path = FALLBACK_SCRIPT
     if not path.exists():

@@ -15,10 +15,10 @@ STATE_PATH = ROOT / "projects" / "_template" / "pipeline-state.json"
 
 STAGES = [
     ("research", "Research", "book-finder / trend-finder"),
-    ("script", "Script", "story-thinker / hook-writer / shorts-script-writer"),
-    ("voice", "Voice", "shorts-voiceover-captions"),
+    ("script", "Script", "story-thinker / hook-writer / script-writer"),
+    ("voice", "Voice", "voice-over-generator / caption-maker"),
     ("character", "Character", "character-designer"),
-    ("scene", "Scene", "collector"),
+    ("scene", "Scene", "script-voice-character-collector"),
     ("video", "Video", "video-maker"),
     ("edit", "Edit", "rough-cut-assembler / caption-maker / safe-zone-checker"),
     ("final_test", "Final Test", "bug-finder / pipeline-health-checker"),

@@ -38,6 +38,17 @@ build/
 *.psd
 *.aep
 *.prproj
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.aac
+*.m4a
+
+# Generated videos inside per-project stage folders
+projects/*/0[3-8]-*/*.mp4
+projects/*/0[3-8]-*/*.mov
+projects/*/0[3-8]-*/*.webm
 
 # ===== Generated / temporary files =====
 cache/

@@ -1,0 +1,12 @@
+{
+  "niche": "Personal finance / side hustles",
+  "language": "bn",
+  "audience_location": "Bangladesh / Bangla-speaking",
+  "video": {
+    "length_sec": [30, 60],
+    "aspect_ratio": "9:16",
+    "resolution": "1080x1920"
+  },
+  "editing_tool": "FFmpeg + Python",
+  "platforms": ["YouTube Shorts", "Facebook Reels"]
+}

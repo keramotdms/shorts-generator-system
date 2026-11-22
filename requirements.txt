@@ -1,0 +1,5 @@
+# Python packages used by this project.
+# Install only after approval: pip install -r requirements.txt
+
+# Voiceover generation (used by scripts/generate_audio.py)
+edge-tts>=7.0

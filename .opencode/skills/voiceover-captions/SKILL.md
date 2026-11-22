@@ -1,5 +1,5 @@
 ---
-name: shorts-voiceover-captions
+name: voiceover-captions
 description: Generates natural Bangla or English voiceover audio (MP3) and exact word/phrase-level caption timestamps (JSON) from scripts/latest_script.json using free edge-tts.
 ---
 

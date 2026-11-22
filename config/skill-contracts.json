@@ -1,0 +1,123 @@
+{
+  "naming_rule": "lowercase-kebab-case, no 'shorts-' prefix",
+  "notes": [
+    "Skill folders live under .opencode/skills/<skill-name>/SKILL.md.",
+    "Generated project data lives under projects/<project>/<stage>/, never inside skill folders.",
+    "A skill's output must exactly match the next skill's input."
+  ],
+  "voiceover_captions_split_proposal": {
+    "problem": "The existing 'voiceover-captions' skill does two jobs: audio generation and caption timing generation.",
+    "decision": "Keep it as a legacy compatibility skill for now, but map it to two future skills. Do not write those skill contents until Phase 3 and Phase 4.",
+    "mapping": {
+      "voice-over-generator": {
+        "phase": 3,
+        "input": "projects/<project>/02-script/latest_script.json",
+        "output": "projects/<project>/03-voice/voiceover.mp3",
+        "job": "Generate natural Bangla/English speech only."
+      },
+      "caption-maker": {
+        "phase": 4,
+        "input": "projects/<project>/03-voice/voiceover.mp3 plus word-boundary timings",
+        "output": "projects/<project>/07-edit/captions.json",
+        "job": "Create word/phrase caption timings and safe-zone-ready caption data only."
+      },
+      "voiceover-captions": {
+        "status": "legacy-compat",
+        "maps_to": ["voice-over-generator", "caption-maker"],
+        "current_helper": "scripts/generate_audio.py",
+        "output_today": "output/voiceover.mp3 + output/captions.json",
+        "migration": "When the two future skills are built, keep this skill as a thin wrapper that calls both, then deprecate it."
+      }
+    }
+  },
+  "skills": {
+    "orchestrator": {
+      "input": "projects/_template/pipeline-state.json",
+      "output": "updated pipeline-state.json"
+    },
+    "project-memory": {
+      "input": "config/channel.json",
+      "output": "config/style-bible.json"
+    },
+    "asset-manager": {
+      "input": "assets/ and projects/<project>/",
+      "output": "validated folder structure and naming report"
+    },
+    "book-finder": {
+      "input": "config/channel.json",
+      "output": "research/niche-report.md"
+    },
+    "trend-finder": {
+      "input": "config/channel.json + research/trend-cache/",
+      "output": "research/trend-cache/*.json"
+    },
+    "pipeline-health-checker": {
+      "input": "whole repository",
+      "output": "PASS / WARN / FAIL report"
+    },
+    "story-thinker": {
+      "input": "research/niche-report.md + config/channel.json",
+      "output": "projects/<project>/02-script/story.json"
+    },
+    "hook-writer": {
+      "input": "projects/<project>/02-script/story.json",
+      "output": "projects/<project>/02-script/hook.json"
+    },
+    "script-writer": {
+      "input": "story.json + hook.json + config/channel.json",
+      "output": "projects/<project>/02-script/latest_script.json"
+    },
+    "script-tester": {
+      "input": "projects/<project>/02-script/latest_script.json",
+      "output": "audit report + optional optimized script"
+    },
+    "voiceover-captions": {
+      "input": "projects/<project>/02-script/latest_script.json",
+      "output": "output/voiceover.mp3 + output/captions.json"
+    },
+    "voice-over-generator": {
+      "input": "projects/<project>/02-script/latest_script.json",
+      "output": "projects/<project>/03-voice/voiceover.mp3"
+    },
+    "caption-maker": {
+      "input": "voiceover.mp3 + word-boundary timings + projects/<project>/07-edit/rough-cut.mp4",
+      "output": "projects/<project>/07-edit/captions.json + captioned video"
+    },
+    "character-designer": {
+      "input": "config/style-bible.json",
+      "output": "assets/characters/<character-id>.json"
+    },
+    "script-voice-character-collector": {
+      "input": "script + voiceover + character references",
+      "output": "projects/<project>/05-scene/collection.json"
+    },
+    "video-maker": {
+      "input": "projects/<project>/05-scene/collection.json",
+      "output": "projects/<project>/06-video/scenes/"
+    },
+    "rough-cut-assembler": {
+      "input": "projects/<project>/06-video/scenes/",
+      "output": "projects/<project>/07-edit/rough-cut.mp4"
+    },
+    "caption-maker": {
+      "input": "projects/<project>/07-edit/captions.json",
+      "output": "captioned video"
+    },
+    "safe-zone-checker": {
+      "input": "captioned video",
+      "output": "safe-zone report"
+    },
+    "bug-finder": {
+      "input": "final video + reports",
+      "output": "bug report"
+    },
+    "description-maker": {
+      "input": "final script + channel config",
+      "output": "projects/<project>/09-description/description.md"
+    },
+    "handover": {
+      "input": "all final assets",
+      "output": "projects/<project>/10-publish/handover.md"
+    }
+  }
+}

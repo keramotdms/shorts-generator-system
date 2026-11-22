@@ -92,6 +92,39 @@ REQUIRES_FFMPEG = {
 REAL_SKILLS = {"orchestrator", "script-writer", "script-tester", "voiceover-captions"}
 BATCH_OF = {name: number for number, names in BATCHES.items() for name in names}
 
+ROOT_PREFIXES = ("config/", "assets/", "research/", "output/")
+STAGE_BY_CATEGORY = {
+    "core": "", "research": "01-research", "script": "02-script",
+    "voice": "03-voice", "character": "04-character", "scene": "05-scene",
+    "video-making": "06-video", "video-editing": "07-edit",
+    "final-test": "08-final-test", "marketing": "09-description",
+    "growth": "10-publish",
+}
+
+
+def canonical_output(name: str, category: str, output: str) -> str:
+    """Return exact paths: root paths stay root, project paths stay in projects/<project>/."""
+    parts = [part.strip() for part in output.split(" + ") if part.strip()]
+    fixed: list[str] = []
+    for part in parts:
+        if part.startswith("projects/<project>/") or part.startswith(ROOT_PREFIXES):
+            fixed.append(part)
+            continue
+        stage = STAGE_BY_CATEGORY.get(category, "")
+        ext = ".md" if category == "marketing" else (
+            ".jsonl" if name == "error-log-keeper" else ".json"
+        )
+        base = f"projects/<project>/{stage}/{name}{ext}" if stage else f"projects/<project>/{name}{ext}"
+        fixed.append(base)
+    return " + ".join(fixed)
+
+
+def location_hint(output: str) -> str:
+    parts = [part.strip() for part in output.split(" + ") if part.strip()]
+    if all(part.startswith(ROOT_PREFIXES) for part in parts):
+        return "at the repository root (do not add a projects/<project>/ prefix)"
+    return "inside the current project under projects/<project>/"
+
 
 def skill_type(name: str) -> str:
     if name in CHECKERS:
@@ -122,6 +155,13 @@ def set_field(lines: list[str], key: str, value: str) -> None:
 def build_body(name: str, purpose: str, input_text: str, output: str, depends: str,
                kind: str) -> str:
     short_purpose = purpose.rstrip(".").lower()
+    step1 = (
+        "1. Read `config/channel.json` directly as the source of truth; if niche, "
+        "language or location is null, ask the user once and save the answer back there."
+        if name == "project-memory" else
+        "1. Read niche, language, location and style through project-memory (or "
+        "`scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them."
+    )
     run_line = (
         f"Run `python scripts/skill_tools.py {name} run` with `PROJECT=<project>`; "
         "the helper reads context through `scripts/skill_lib.py::style_context()`."
@@ -168,10 +208,10 @@ def build_body(name: str, purpose: str, input_text: str, output: str, depends: s
         "",
         "# Steps",
         "",
-        "1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.",
+        step1,
         f"2. Validate the input at `{input_text}`; if it is missing or malformed, follow Failure handling and stop.",
         f"3. {run_line}",
-        f"4. Write the result to `{output}` under `projects/<project>/`; create parent folders first.",
+        f"4. Write the result to `{output}` {location_hint(output)}; create parent folders first.",
         f"5. Re-open `{output}` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.",
     ]
     if ffmpeg_step:
@@ -230,6 +270,7 @@ def write_skill(name: str, category: str, subcategory: str, purpose: str,
     path = folder / "SKILL.md"
     kind = skill_type(name)
     status, phase = meta(name)
+    output = canonical_output(name, category, output)
 
     if name in REAL_SKILLS and path.is_file():
         text = patch_real(name, purpose, input_text, output, depends, kind)
@@ -264,6 +305,9 @@ def update_registry(names: list[str]) -> None:
             skills[name]["status"] = "legacy" if name == "voiceover-captions" else "implemented"
             skills[name]["type"] = skill_type(name)
             skills[name]["batch"] = BATCH_OF[name]
+            skills[name]["output"] = canonical_output(
+                name, skills[name].get("category", ""), skills[name]["output"]
+            )
             if name in REQUIRES_FFMPEG:
                 skills[name]["requires"] = "ffmpeg"
     CONTRACTS.write_text(json.dumps(contracts, ensure_ascii=False, indent=2) + "\n",

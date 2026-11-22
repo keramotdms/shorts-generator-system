@@ -26,7 +26,7 @@ Tracks tasks and progress across the pipeline.
 
 # Output
 
-- `task status report`
+- `projects/<project>/task-tracker.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -34,12 +34,12 @@ Tracks tasks and progress across the pipeline.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `pipeline state and task list`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py task-tracker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `task status report` under `projects/<project>/`; create parent folders first.
-5. Re-open `task status report` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/task-tracker.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/task-tracker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- `python scripts/skill_tools.py task-tracker --self-test` → expected `PASS task-tracker: ...`. Then confirm `task status report` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py task-tracker --self-test` → expected `PASS task-tracker: ...`. Then confirm `projects/<project>/task-tracker.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

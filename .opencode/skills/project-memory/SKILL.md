@@ -31,10 +31,10 @@ Stores tone, colors, fonts, character look and voice choices.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
+1. Read `config/channel.json` directly as the source of truth; if niche, language or location is null, ask the user once and save the answer back there.
 2. Validate the input at `config/channel.json`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py project-memory run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `config/style-bible.json` under `projects/<project>/`; create parent folders first.
+4. Write the result to `config/style-bible.json` at the repository root (do not add a projects/<project>/ prefix); create parent folders first.
 5. Re-open `config/style-bible.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test

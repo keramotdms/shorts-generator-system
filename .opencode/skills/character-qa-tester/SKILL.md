@@ -26,7 +26,7 @@ Tests character outputs for errors.
 
 # Output
 
-- `character QA report`
+- `projects/<project>/04-character/character-qa-tester.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -34,12 +34,12 @@ Tests character outputs for errors.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `character assets`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py character-qa-tester run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `character QA report` under `projects/<project>/`; create parent folders first.
-5. Re-open `character QA report` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/04-character/character-qa-tester.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/04-character/character-qa-tester.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- `python scripts/skill_tools.py character-qa-tester --self-test` → expected `PASS character-qa-tester: ...`. Then confirm `character QA report` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py character-qa-tester --self-test` → expected `PASS character-qa-tester: ...`. Then confirm `projects/<project>/04-character/character-qa-tester.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

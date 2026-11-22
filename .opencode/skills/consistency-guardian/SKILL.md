@@ -26,7 +26,7 @@ Checks character consistency across scenes.
 
 # Output
 
-- `consistency report`
+- `projects/<project>/04-character/consistency-guardian.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -34,12 +34,12 @@ Checks character consistency across scenes.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `rendered scenes + character references`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py consistency-guardian run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `consistency report` under `projects/<project>/`; create parent folders first.
-5. Re-open `consistency report` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/04-character/consistency-guardian.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/04-character/consistency-guardian.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- `python scripts/skill_tools.py consistency-guardian --self-test` → expected `PASS consistency-guardian: ...`. Then confirm `consistency report` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py consistency-guardian --self-test` → expected `PASS consistency-guardian: ...`. Then confirm `projects/<project>/04-character/consistency-guardian.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

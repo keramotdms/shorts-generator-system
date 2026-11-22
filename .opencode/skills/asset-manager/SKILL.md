@@ -26,7 +26,7 @@ Validates folder structure, naming and backups.
 
 # Output
 
-- `validated structure and naming report`
+- `projects/<project>/asset-manager.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -34,12 +34,12 @@ Validates folder structure, naming and backups.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `assets/ and projects/<project>/`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py asset-manager run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `validated structure and naming report` under `projects/<project>/`; create parent folders first.
-5. Re-open `validated structure and naming report` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/asset-manager.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/asset-manager.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- `python scripts/skill_tools.py asset-manager --self-test` → expected `PASS asset-manager: ...`. Then confirm `validated structure and naming report` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py asset-manager --self-test` → expected `PASS asset-manager: ...`. Then confirm `projects/<project>/asset-manager.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

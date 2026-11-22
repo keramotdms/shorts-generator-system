@@ -26,7 +26,7 @@ Builds scene layouts and visual plans.
 
 # Output
 
-- `scene layout specs`
+- `projects/<project>/05-scene/scenario-designer.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -34,12 +34,12 @@ Builds scene layouts and visual plans.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `collector output + style bible`; if it is missing or malformed, follow Failure handling and stop.
 3. Follow this skill's prompt instructions to builds scene layouts and visual plans, using only the context loaded in step 1.
-4. Write the result to `scene layout specs` under `projects/<project>/`; create parent folders first.
-5. Re-open `scene layout specs` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/05-scene/scenario-designer.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/05-scene/scenario-designer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- Type: `Use the scenario-designer skill with PROJECT=<project>`. Expected: `scene layout specs` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Type: `Use the scenario-designer skill with PROJECT=<project>`. Expected: `projects/<project>/05-scene/scenario-designer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

@@ -34,7 +34,7 @@ Finds niche and topic ideas for the channel.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `config/channel.json`; if it is missing or malformed, follow Failure handling and stop.
 3. Follow this skill's prompt instructions to finds niche and topic ideas for the channel, using only the context loaded in step 1.
-4. Write the result to `research/niche-report.md` under `projects/<project>/`; create parent folders first.
+4. Write the result to `research/niche-report.md` at the repository root (do not add a projects/<project>/ prefix); create parent folders first.
 5. Re-open `research/niche-report.md` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test

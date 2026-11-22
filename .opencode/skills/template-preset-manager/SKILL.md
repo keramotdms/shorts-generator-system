@@ -27,7 +27,7 @@ Stores reusable editing templates.
 
 # Output
 
-- `template library`
+- `projects/<project>/07-edit/template-preset-manager.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -35,12 +35,12 @@ Stores reusable editing templates.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `style bible + edit presets`; if it is missing or malformed, follow Failure handling and stop.
 3. Follow this skill's prompt instructions to stores reusable editing templates, using only the context loaded in step 1.
-4. Write the result to `template library` under `projects/<project>/`; create parent folders first.
-5. Re-open `template library` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/07-edit/template-preset-manager.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/07-edit/template-preset-manager.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- Type: `Use the template-preset-manager skill with PROJECT=<project>`. Expected: `template library` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Type: `Use the template-preset-manager skill with PROJECT=<project>`. Expected: `projects/<project>/07-edit/template-preset-manager.json` exists, parses cleanly, and contains no hardcoded niche or language value.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

@@ -34,7 +34,7 @@ Finds location-based YouTube and Facebook trends.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `config/channel.json + research/trend-cache/`; if it is missing or malformed, follow Failure handling and stop.
 3. Follow this skill's prompt instructions to finds location-based youtube and facebook trends, using only the context loaded in step 1.
-4. Write the result to `research/trend-cache/*.json` under `projects/<project>/`; create parent folders first.
+4. Write the result to `research/trend-cache/*.json` at the repository root (do not add a projects/<project>/ prefix); create parent folders first.
 5. Re-open `research/trend-cache/*.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test

@@ -36,7 +36,7 @@ Assembles the first cut of all scenes.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `projects/<project>/06-video/scenes/`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py rough-cut-assembler run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/rough-cut.mp4` under `projects/<project>/`; create parent folders first.
+4. Write the result to `projects/<project>/07-edit/rough-cut.mp4` inside the current project under projects/<project>/; create parent folders first.
 5. Re-open `projects/<project>/07-edit/rough-cut.mp4` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED rough-cut-assembler: ffmpeg ...` and exit 0 without a FAIL.
 

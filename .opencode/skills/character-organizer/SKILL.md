@@ -26,7 +26,7 @@ Organizes character files and references.
 
 # Output
 
-- `character reference index`
+- `projects/<project>/04-character/character-organizer.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -34,12 +34,12 @@ Organizes character files and references.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `character ideas + assets`; if it is missing or malformed, follow Failure handling and stop.
 3. Follow this skill's prompt instructions to organizes character files and references, using only the context loaded in step 1.
-4. Write the result to `character reference index` under `projects/<project>/`; create parent folders first.
-5. Re-open `character reference index` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/04-character/character-organizer.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/04-character/character-organizer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- Type: `Use the character-organizer skill with PROJECT=<project>`. Expected: `character reference index` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Type: `Use the character-organizer skill with PROJECT=<project>`. Expected: `projects/<project>/04-character/character-organizer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

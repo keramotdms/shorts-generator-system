@@ -26,7 +26,7 @@ Plans topics and posting dates.
 
 # Output
 
-- `content calendar`
+- `projects/<project>/01-research/content-calendar.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -34,12 +34,12 @@ Plans topics and posting dates.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `niche and trend reports`; if it is missing or malformed, follow Failure handling and stop.
 3. Follow this skill's prompt instructions to plans topics and posting dates, using only the context loaded in step 1.
-4. Write the result to `content calendar` under `projects/<project>/`; create parent folders first.
-5. Re-open `content calendar` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/01-research/content-calendar.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/01-research/content-calendar.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- Type: `Use the content-calendar skill with PROJECT=<project>`. Expected: `content calendar` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Type: `Use the content-calendar skill with PROJECT=<project>`. Expected: `projects/<project>/01-research/content-calendar.json` exists, parses cleanly, and contains no hardcoded niche or language value.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

@@ -26,7 +26,7 @@ Checks tools, skills, handoffs and final output.
 
 # Output
 
-- `PASS / WARN / FAIL report`
+- `projects/<project>/pipeline-health-checker.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -34,12 +34,12 @@ Checks tools, skills, handoffs and final output.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `whole repository and final video`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py pipeline-health-checker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `PASS / WARN / FAIL report` under `projects/<project>/`; create parent folders first.
-5. Re-open `PASS / WARN / FAIL report` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/pipeline-health-checker.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/pipeline-health-checker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- `python scripts/skill_tools.py pipeline-health-checker --self-test` → expected `PASS pipeline-health-checker: ...`. Then confirm `PASS / WARN / FAIL report` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py pipeline-health-checker --self-test` → expected `PASS pipeline-health-checker: ...`. Then confirm `projects/<project>/pipeline-health-checker.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

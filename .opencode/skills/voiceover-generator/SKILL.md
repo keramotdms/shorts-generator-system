@@ -34,7 +34,7 @@ Generates natural speech audio only.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `projects/<project>/02-script/latest_script.json`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py voiceover-generator run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/03-voice/voiceover.mp3` under `projects/<project>/`; create parent folders first.
+4. Write the result to `projects/<project>/03-voice/voiceover.mp3` inside the current project under projects/<project>/; create parent folders first.
 5. Re-open `projects/<project>/03-voice/voiceover.mp3` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test

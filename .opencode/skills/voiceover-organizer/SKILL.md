@@ -26,7 +26,7 @@ Plans voice style, gender and scene order.
 
 # Output
 
-- `voice plan`
+- `projects/<project>/03-voice/voiceover-organizer.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -34,12 +34,12 @@ Plans voice style, gender and scene order.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `final script + style bible`; if it is missing or malformed, follow Failure handling and stop.
 3. Follow this skill's prompt instructions to plans voice style, gender and scene order, using only the context loaded in step 1.
-4. Write the result to `voice plan` under `projects/<project>/`; create parent folders first.
-5. Re-open `voice plan` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/03-voice/voiceover-organizer.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/03-voice/voiceover-organizer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test
 
-- Type: `Use the voiceover-organizer skill with PROJECT=<project>`. Expected: `voice plan` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Type: `Use the voiceover-organizer skill with PROJECT=<project>`. Expected: `projects/<project>/03-voice/voiceover-organizer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

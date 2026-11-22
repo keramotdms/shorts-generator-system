@@ -28,7 +28,7 @@ Places the channel watermark or logo.
 
 # Output
 
-- `branded video`
+- `projects/<project>/07-edit/watermark-logo-placer.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -36,13 +36,13 @@ Places the channel watermark or logo.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `video + logo asset`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py watermark-logo-placer run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `branded video` under `projects/<project>/`; create parent folders first.
-5. Re-open `branded video` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/07-edit/watermark-logo-placer.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/07-edit/watermark-logo-placer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED watermark-logo-placer: ffmpeg ...` and exit 0 without a FAIL.
 
 # How to test
 
-- `python scripts/skill_tools.py watermark-logo-placer --self-test` → expected `PASS watermark-logo-placer: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `branded video` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py watermark-logo-placer --self-test` → expected `PASS watermark-logo-placer: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `projects/<project>/07-edit/watermark-logo-placer.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

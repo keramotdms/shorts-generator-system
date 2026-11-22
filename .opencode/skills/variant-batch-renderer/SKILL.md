@@ -28,7 +28,7 @@ Renders multiple variants in batch.
 
 # Output
 
-- `batch rendered videos`
+- `projects/<project>/07-edit/variant-batch-renderer.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -36,13 +36,13 @@ Renders multiple variants in batch.
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `template + variant list`; if it is missing or malformed, follow Failure handling and stop.
 3. Run `python scripts/skill_tools.py variant-batch-renderer run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `batch rendered videos` under `projects/<project>/`; create parent folders first.
-5. Re-open `batch rendered videos` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+4. Write the result to `projects/<project>/07-edit/variant-batch-renderer.json` inside the current project under projects/<project>/; create parent folders first.
+5. Re-open `projects/<project>/07-edit/variant-batch-renderer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED variant-batch-renderer: ffmpeg ...` and exit 0 without a FAIL.
 
 # How to test
 
-- `python scripts/skill_tools.py variant-batch-renderer --self-test` → expected `PASS variant-batch-renderer: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `batch rendered videos` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py variant-batch-renderer --self-test` → expected `PASS variant-batch-renderer: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `projects/<project>/07-edit/variant-batch-renderer.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

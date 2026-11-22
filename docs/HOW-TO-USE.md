@@ -19,11 +19,11 @@ Optional: when FFmpeg is usable, set `FFMPEG_PATH` to the executable before any 
 ## 1. New video idea → research
 
 ```text
-Use the book-finder skill with PROJECT=my-video. Find 3 niche ideas from config/channel.json via project-memory and write projects/my-video/01-research/niche-report.md.
+Use the book-finder skill with PROJECT=my-video. Find 3 niche ideas from config/channel.json via project-memory and write research/niche-report.md.
 ```
 
 ```text
-Use the trend-finder skill with PROJECT=my-video. Check Bangladesh / Bangla-speaking trends from project-memory and write projects/my-video/01-research/trend-report.json.
+Use the trend-finder skill with PROJECT=my-video. Check Bangladesh / Bangla-speaking trends from project-memory and write research/trend-cache/trend-report.json.
 ```
 
 Optional depth: `competitor-analyzer`, `audience-persona-builder`, `fact-checker`, `content-calendar` use the same pattern.
@@ -31,7 +31,7 @@ Optional depth: `competitor-analyzer`, `audience-persona-builder`, `fact-checker
 ## 2. Story → hook → script
 
 ```text
-Use the story-thinker skill with PROJECT=my-video. Turn projects/my-video/01-research/niche-report.md into projects/my-video/02-script/story.json using the cached niche/language/style.
+Use the story-thinker skill with PROJECT=my-video. Turn research/niche-report.md into projects/my-video/02-script/story.json using the cached niche/language/style.
 ```
 
 ```text

@@ -1,0 +1,68 @@
+{
+  "language": "bn",
+  "title": "৯০% মানুষ পার্সোনাল ব্র্যান্ডিং ছেড়ে দেয় কেন?",
+  "hook": "৯০% মানুষই ৩০ দিনেই হার মানে।",
+  "total_duration_sec": 45,
+  "scenes": [
+    {
+      "scene_number": 1,
+      "narration": "কারণ তারা ভাবে, ব্র্যান্ডিং মানে রোজ পোস্ট।",
+      "visual_prompt": "Fast split screen: a calendar flipping rapidly with endless post icons, then a frustrated face staring at a glowing phone.",
+      "highlight_words": ["রোজ পোস্ট"]
+    },
+    {
+      "scene_number": 2,
+      "narration": "কিন্তু পোস্ট নয়, আস্থা তৈরি করে।",
+      "visual_prompt": "Bold text overlay 'POSTS ≠ TRUST' while a trust meter slowly fills from empty to full.",
+      "highlight_words": ["আস্থা"]
+    },
+    {
+      "scene_number": 3,
+      "narration": "দ্বিতীয় কারণ: ফলোয়ারের সংখ্যা তাড়া।",
+      "visual_prompt": "A follower counter spinning wildly upward, then suddenly dropping to zero with a glitch effect.",
+      "highlight_words": ["ফলোয়ারের সংখ্যা"]
+    },
+    {
+      "scene_number": 4,
+      "narration": "১০০০ ফলোয়ার থাকলেও বিক্রি হয় না।",
+      "visual_prompt": "A large glowing '1000' badge beside an empty shopping cart, with a red 'NO SALES' stamp slamming down.",
+      "highlight_words": ["বিক্রি"]
+    },
+    {
+      "scene_number": 5,
+      "narration": "তৃতীয় কারণ: নিজের গল্প লুকিয়ে রাখা, তাই কেউ চিনতে পারে না।",
+      "visual_prompt": "A silhouette hidden behind frosted glass; the glass clears to reveal a person, with text 'REAL STORY HIDDEN'.",
+      "highlight_words": ["নিজের গল্প"]
+    },
+    {
+      "scene_number": 6,
+      "narration": "মানুষ মুখোশ নয়, সত্যতা খোঁজে।",
+      "visual_prompt": "A blank mask cracking open to reveal a warm, genuine smile; soft golden light expands outward.",
+      "highlight_words": ["সত্যতা"]
+    },
+    {
+      "scene_number": 7,
+      "narration": "চতুর্থ কারণ: প্রতিদিন নতুন করে শুরু করা।",
+      "visual_prompt": "A rewind icon looping over a messy desk while clock hands spin fast, showing plans being discarded each morning.",
+      "highlight_words": ["নতুন করে শুরু"]
+    },
+    {
+      "scene_number": 8,
+      "narration": "ধারাবাহিকতা ব্র্যান্ডের আসল শক্তি।",
+      "visual_prompt": "A single glowing thread weaving scattered dots into a strong, bright rope; text 'CONSISTENCY = POWER'.",
+      "highlight_words": ["ধারাবাহিকতা"]
+    },
+    {
+      "scene_number": 9,
+      "narration": "পঞ্চম কারণ: সবকিছু একসাথে চাই।",
+      "visual_prompt": "A person juggling five glowing balls labeled reach, trust, sales, story, and consistency, then dropping them.",
+      "highlight_words": ["একসাথে"]
+    },
+    {
+      "scene_number": 10,
+      "narration": "৯০% হার মানে। তুমি কি ১০% হবে? আজই শুরু করো।",
+      "visual_prompt": "Split screen: a fading gray '90%' crowd on the left, a glowing gold '10%' on the right; bold text 'JOIN THE 10%'.",
+      "highlight_words": ["১০%"]
+    }
+  ]
+}

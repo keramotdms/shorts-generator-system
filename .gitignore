@@ -1,0 +1,72 @@
+# ===== Secrets / API keys =====
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*.json
+*secret*.json
+*secret*.yaml
+*secret*.yml
+secrets/
+config/secrets.*
+auth.json
+token.json
+
+# ===== Large video / media renders =====
+renders/
+render/
+output/
+outputs/
+dist/
+build/
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.m4v
+*.wmv
+*.flv
+*.mpeg
+*.mpg
+*.3gp
+*.ts
+*.gif
+*.psd
+*.aep
+*.prproj
+
+# ===== Generated / temporary files =====
+cache/
+.tmp/
+tmp/
+temp/
+*.tmp
+*.log
+*.part
+*.crdownload
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+
+# ===== Node =====
+node_modules/
+.npm/
+.yarn/
+
+# ===== OS / editor =====
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

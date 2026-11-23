@@ -53,6 +53,13 @@
 - **Final verification:** health check `40 PASS | 1 WARN | 0 BLOCKED | 0 FAIL` (the WARN is `ffprobe` unavailable); `tests/test_skills.py` -> `PASS: 93 skills validated, 47 self-tests passed or blocked`; dummy pipeline -> `93 PASS | 0 FAIL | 0 BLOCKED`. All 28 ffmpeg-required skills are unblocked.
 - **Created `config/style-bible.json` with the `project-memory` skill** from `config/channel.json`. Fixed doc drift: README now says 93 skills are implemented, ROADMAP niche/language are resolved, and both `AGENTS.md` occurrences use `voiceover-generator`.
 
+## 2026-11-23 — FFmpeg routing and checker upgrades
+
+- **Audit finding: `audio-ducking-controller` declared `requires: ffmpeg` but had no run branch.** Fix: it now has its own `sidechaincompress` command in `scripts/skill_tools.py`.
+- **Audit finding: 10 important FFmpeg skills either shared one generic concat command or had no burn-in/check logic.** Fix: `rough-cut-assembler`, `caption-maker`, `safe-zone-checker`, `format-converter`, `render-export-optimizer`, `audio-mixer`, `audio-ducking-controller`, `video-maker`, `kinetic-text-animator` and `transition-designer` now have purpose-matching helpers with `ffprobe` reports.
+- **Audit finding: 8 checker skills only validated fixtures in self-test.** Fix: their self-tests now generate real media with the already-installed FFmpeg and check duration, resolution and audio with `ffprobe` where relevant.
+- **The remaining FFmpeg skills are intentionally generic for now — needs real logic later:** `animator`, `beat-sync-editor`, `branding-manager`, `broll-variety-planner`, `color-grading-keeper`, `cut-rhythm-editor`, `emphasis-sticker-placer`, `hook-visual-editor`, `intro-outro-manager`, `motion-graphic-editor`, `pattern-interrupt-inserter`, `preview-frame-extractor`, `seamless-loop-editor`, `sfx-timing-placer`, `thumbnail-designer`, `variant-batch-renderer`, `video-editor`, `watermark-logo-placer`. Do not claim these have finished, purpose-specific FFmpeg logic yet.
+
 ## Rules for future mistakes
 
 - Log the mistake, why it happened, and the fix here immediately.

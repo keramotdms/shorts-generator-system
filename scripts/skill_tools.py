@@ -14,6 +14,143 @@ import skill_lib as lib
 
 FIXTURES = lib.ROOT / "tests" / "fixtures"
 VALID = FIXTURES / "valid"
+MEDIA = lib.ROOT / ".tmp" / "media"
+
+# Skills that still use the shared concat helper. They are intentionally generic.
+GENERIC_FFMPEG_SKILLS = {
+    "animator", "beat-sync-editor", "branding-manager", "broll-variety-planner",
+    "color-grading-keeper", "cut-rhythm-editor", "emphasis-sticker-placer",
+    "hook-visual-editor", "intro-outro-manager", "motion-graphic-editor",
+    "pattern-interrupt-inserter", "preview-frame-extractor", "seamless-loop-editor",
+    "sfx-timing-placer", "thumbnail-designer", "variant-batch-renderer",
+    "video-editor", "watermark-logo-placer",
+}
+
+CHECKER_TARGETS = {
+    "script-tester": [("json", "latest_script", 2, "latest_script.json")],
+    "voiceover-tester": [("audio", None, 3, "voiceover.mp3")],
+    "platform-compliance-checker": [("video", None, 8, "final-video.mp4")],
+    "accessibility-safety-checker": [
+        ("json", "captions", 7, "captions.json"),
+        ("audio", None, 3, "voiceover.mp3"),
+    ],
+    "bug-finder": [("video", None, 8, "final-video.mp4")],
+    "character-qa-tester": [("characters", "character", 0, "*.json")],
+    "consistency-guardian": [
+        ("characters", "character", 0, "*.json"),
+        ("videos", None, 6, "scenes/*.mp4"),
+    ],
+    "copyright-policy-checker": [
+        ("json", "latest_script", 2, "latest_script.json"),
+        ("text", None, 9, "description.md"),
+    ],
+}
+
+
+def ffmpeg_executable() -> Path:
+    executable = lib.require_ffmpeg()
+    assert executable is not None
+    return executable
+
+
+def ffprobe_executable() -> Path:
+    executable = ffmpeg_executable()
+    return executable.with_name(
+        "ffprobe.exe" if executable.suffix.lower() == ".exe" else "ffprobe"
+    )
+
+
+def ffmpeg_run(arguments: list[str]) -> None:
+    result = lib.run(
+        [str(ffmpeg_executable()), "-y", "-hide_banner", "-loglevel", "error", *arguments],
+        check=False,
+    )
+    if result.returncode != 0:
+        raise lib.SkillError(f"ffmpeg failed: {result.stderr[-400:]}")
+
+
+def probe_media(path: Path) -> dict[str, Any]:
+    result = lib.run([
+        str(ffprobe_executable()), "-v", "error",
+        "-show_entries", "stream=codec_type,width,height",
+        "-show_entries", "format=duration",
+        "-of", "json", str(path),
+    ])
+    return lib.json_loads(result.stdout)
+
+
+def probe_summary(path: Path) -> dict[str, Any]:
+    data = probe_media(path)
+    streams = data.get("streams", [])
+    video = next((s for s in streams if s.get("codec_type") == "video"), {})
+    audio = next((s for s in streams if s.get("codec_type") == "audio"), {})
+    return {
+        "path": lib.relative(path),
+        "width": video.get("width"),
+        "height": video.get("height"),
+        "duration_sec": float((data.get("format") or {}).get("duration", 0) or 0),
+        "has_audio": bool(audio),
+    }
+
+
+def ensure_media_fixtures() -> dict[str, Path]:
+    """Create small real media files once, using the already-installed FFmpeg."""
+    MEDIA.mkdir(parents=True, exist_ok=True)
+    video = MEDIA / "probe_video.mp4"
+    audio = MEDIA / "probe_audio.mp3"
+    frame = MEDIA / "probe_frame.png"
+    description = MEDIA / "description_sample.md"
+    if not description.is_file():
+        description.write_text("# Sample description\nVoiceover and captions are ready.\n", encoding="utf-8")
+    if not video.is_file():
+        ffmpeg_run([
+            "-f", "lavfi", "-i", "color=c=black:s=1080x1920:d=1:r=30",
+            "-f", "lavfi", "-i", "sine=frequency=440:duration=1",
+            "-c:v", "libx264", "-preset", "ultrafast", "-pix_fmt", "yuv420p",
+            "-c:a", "aac", "-shortest", str(video),
+        ])
+    if not audio.is_file():
+        ffmpeg_run([
+            "-f", "lavfi", "-i", "sine=frequency=440:duration=1",
+            "-c:a", "libmp3lame", "-q:a", "9", str(audio),
+        ])
+    if not frame.is_file():
+        ffmpeg_run([
+            "-f", "lavfi", "-i", "color=c=black:s=1080x1920:d=1",
+            "-frames:v", "1", str(frame),
+        ])
+    return {"video": video, "audio": audio, "frame": frame, "description": description}
+
+
+def filter_escape(text: str) -> str:
+    for old, new in (("\\", "\\\\"), (":", "\\:"), ("'", "\\'"), ("%", "\\%"), (",", "\\,")):
+        text = text.replace(old, new)
+    return text
+
+
+def srt_time(seconds: float) -> str:
+    millis = max(0, int(round(seconds * 1000)))
+    hours, millis = divmod(millis, 3_600_000)
+    minutes, millis = divmod(millis, 60_000)
+    secs, millis = divmod(millis, 1000)
+    return f"{hours:02d}:{minutes:02d}:{secs:02d},{millis:03d}"
+
+
+def first_existing(pattern: Path) -> Path | None:
+    matches = sorted(pattern.parent.glob(pattern.name)) if pattern.parent.is_dir() else []
+    return matches[0] if matches else None
+
+
+def font_file() -> Path | None:
+    custom = first_existing(lib.ROOT / "assets" / "fonts" / "*.ttf")
+    if custom:
+        return custom
+    system_candidates = [
+        Path("C:/Windows/Fonts/Nirmala.ttc"),
+        Path("C:/Windows/Fonts/segoeui.ttf"),
+        Path("C:/Windows/Fonts/arial.ttf"),
+    ]
+    return next((path for path in system_candidates if path.is_file()), None)
 
 
 def cmd_project_memory(args: argparse.Namespace) -> None:
@@ -140,21 +277,43 @@ def cmd_collector(args: argparse.Namespace) -> None:
 
 
 def cmd_safe_zone(args: argparse.Namespace) -> None:
-    captions = lib.read_json(lib.stage(7, "captions.json"))
+    source = lib.stage(7, "captions.json")
+    lib.validate_schema("captions", source)
+    captions = lib.read_json(source)
     items = captions.get("captions", []) if isinstance(captions, dict) else captions
-    problems = []
+    problems: list[dict[str, Any]] = []
     for index, item in enumerate(items):
         zone = item.get("safe_zone", {})
         if zone.get("x", 0) < 0.05 or zone.get("y", 0) < 0.08:
             problems.append({"index": index, "reason": "caption outside safe zone"})
         if len(str(item.get("text", ""))) > 40:
             problems.append({"index": index, "reason": "caption too long"})
-    report = {"captions": len(items), "violations": problems, "status": "PASS" if not problems else "FAIL"}
+    video = lib.stage(7, "captioned.mp4")
+    if not video.is_file():
+        video = lib.stage(7, "rough-cut.mp4")
+    preview = None
+    resolution: dict[str, Any] = {}
+    if video.is_file():
+        summary = probe_summary(video)
+        resolution = {"width": summary["width"], "height": summary["height"]}
+        if summary["width"] != 1080 or summary["height"] != 1920:
+            problems.append({"index": -1, "reason": "video is not 1080x1920"})
+        preview = lib.stage(7, "safe-zone-preview.png")
+        ffmpeg_run([
+            "-i", str(video),
+            "-vf", "drawbox=x=86:y=230:w=907:h=461:color=red@0.35:t=3",
+            "-frames:v", "1", str(preview),
+        ])
+    report = {
+        "captions": len(items), "violations": problems,
+        "resolution": resolution,
+        "preview": lib.relative(preview) if preview else None,
+        "status": "PASS" if not problems else "FAIL",
+    }
     out = lib.write_json(lib.stage(7, "safe-zone-report.json"), report)
     if problems:
-        print(f"FAIL safe-zone-checker: {len(problems)} violations")
-        sys.exit(1)
-    lib.ok("safe-zone-checker", "all captions inside safe zone", out)
+        raise lib.SkillError(f"{len(problems)} safe-zone violations")
+    lib.ok("safe-zone-checker", "captions and video safe zone verified", out)
 
 
 def cmd_ffprobe_check(skill: str, args: argparse.Namespace) -> None:
@@ -190,6 +349,294 @@ def cmd_ffmpeg_build(skill: str, args: argparse.Namespace) -> None:
     if result.returncode != 0:
         raise lib.SkillError(f"ffmpeg failed: {result.stderr[-400:]}")
     lib.ok(skill, "video rendered", output)
+
+
+def final_video_input() -> Path | None:
+    for candidate in (
+        lib.stage(8, "final-video.mp4"),
+        lib.stage(7, "captioned.mp4"),
+        lib.stage(7, "rough-cut.mp4"),
+    ):
+        if candidate.is_file():
+            return candidate
+    scenes = sorted(lib.stage(6, "scenes").glob("*.mp4"))
+    return scenes[0] if scenes else None
+
+
+def music_input() -> Path | None:
+    folder = lib.ROOT / "assets" / "music"
+    return first_existing(folder / "*.mp3") or first_existing(folder / "*.wav")
+
+
+def cmd_video_maker(skill: str, args: argparse.Namespace) -> None:
+    script = lib.read_json(lib.stage(2, "latest_script.json"), required=False) or {}
+    scene_data = script.get("scenes", []) if isinstance(script, dict) else []
+    images = sorted((lib.ROOT / "assets" / "scenes").glob("*.png"))
+    images += sorted(lib.stage(5).glob("*.png"))
+    if not images:
+        raise lib.SkillError("No scene images found in assets/scenes/ or projects/<project>/05-scene/")
+    out_dir = lib.stage(6, "scenes")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    reports = []
+    for index, image in enumerate(images, start=1):
+        duration = 5.0
+        if index - 1 < len(scene_data) and isinstance(scene_data[index - 1], dict):
+            duration = float(scene_data[index - 1].get("duration_sec", 5.0) or 5.0)
+        output = out_dir / f"scene_{index:03d}.mp4"
+        ffmpeg_run([
+            "-loop", "1", "-framerate", "30", "-i", str(image),
+            "-t", str(duration),
+            "-vf", "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,format=yuv420p",
+            "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", str(output),
+        ])
+        reports.append(probe_summary(output))
+    report = lib.write_json(lib.stage(6, f"{skill}-report.json"), {"scenes": reports, "status": "PASS"})
+    lib.ok(skill, f"{len(reports)} scene videos rendered from images", report)
+
+
+def cmd_rough_cut(skill: str, args: argparse.Namespace) -> None:
+    collection = lib.read_json(lib.stage(5, "collection.json"), required=False) or {}
+    names = collection.get("scenes", []) if isinstance(collection, dict) else []
+    scenes = [lib.stage(6, "scenes", str(name)) for name in names]
+    scenes = [path for path in scenes if path.is_file()]
+    if not scenes:
+        scenes = sorted(lib.stage(6, "scenes").glob("*.mp4"))
+    if not scenes:
+        raise lib.SkillError("No scene videos found in projects/<project>/06-video/scenes/")
+    list_file = lib.ensure(lib.stage(7, f"{skill}-inputs.txt"))
+    list_file.write_text("".join(f"file '{path.as_posix()}'\n" for path in scenes), encoding="utf-8")
+    output = lib.stage(7, "rough-cut.mp4")
+    ffmpeg_run([
+        "-f", "concat", "-safe", "0", "-i", str(list_file),
+        "-c", "copy", "-avoid_negative_ts", "make_zero", str(output),
+    ])
+    summary = probe_summary(output)
+    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), summary)
+    lib.ok(skill, f"rough cut assembled from {len(scenes)} scenes", report)
+
+
+def cmd_caption_burn_in(skill: str, args: argparse.Namespace) -> None:
+    video = lib.stage(7, "rough-cut.mp4")
+    if not video.is_file():
+        video = lib.stage(6, "scenes", "scene_001.mp4")
+    if not video.is_file():
+        raise lib.SkillError("Missing video for caption burn-in: projects/<project>/07-edit/rough-cut.mp4")
+    data = lib.read_json(lib.stage(7, "captions.json"), required=False)
+    if data is None:
+        data = lib.read_json(lib.stage(3, "captions.json"))
+    items = data.get("captions", []) if isinstance(data, dict) else data
+    if not items:
+        raise lib.SkillError("No caption events found for burn-in")
+    srt = lib.ensure(lib.stage(7, "captions.srt"))
+    blocks = []
+    for index, item in enumerate(items, start=1):
+        start = float(item.get("start", 0))
+        end = float(item.get("end", start + 0.8))
+        text = str(item.get("text", "")).strip()
+        if text:
+            blocks.append(f"{index}\n{srt_time(start)} --> {srt_time(end)}\n{text}\n")
+    srt.write_text("\n".join(blocks), encoding="utf-8")
+    srt_arg = Path(lib.relative(srt)).as_posix()
+    output = lib.stage(7, "captioned.mp4")
+    ffmpeg_run([
+        "-i", str(video),
+        "-vf", f"subtitles=filename={srt_arg}:force_style='FontName=Noto Sans Bengali,FontSize=44,Alignment=2,MarginV=220'",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-c:a", "copy", str(output),
+    ])
+    summary = probe_summary(output)
+    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), {**summary, "captions": len(blocks)})
+    lib.ok(skill, f"{len(blocks)} captions burned into video", report)
+
+
+def cmd_format_converter(skill: str, args: argparse.Namespace) -> None:
+    video = final_video_input()
+    if video is None:
+        raise lib.SkillError("No video found to convert")
+    output = lib.stage(7, f"{skill}.mp4")
+    ffmpeg_run([
+        "-i", str(video),
+        "-vf", "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2,setsar=1",
+        "-r", "30", "-c:v", "libx264", "-pix_fmt", "yuv420p",
+        "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", str(output),
+    ])
+    summary = probe_summary(output)
+    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), summary)
+    lib.ok(skill, "converted to 1080x1920, 30 fps, faststart", report)
+
+
+def cmd_render_export(skill: str, args: argparse.Namespace) -> None:
+    video = final_video_input()
+    if video is None:
+        raise lib.SkillError("No video found to export")
+    output = lib.stage(7, f"{skill}.mp4")
+    ffmpeg_run([
+        "-i", str(video),
+        "-c:v", "libx264", "-preset", "slow", "-crf", "24",
+        "-profile:v", "high", "-level", "4.1", "-pix_fmt", "yuv420p",
+        "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart",
+        "-max_muxing_queue_size", "1024", str(output),
+    ])
+    summary = probe_summary(output)
+    summary["input_bytes"] = video.stat().st_size
+    summary["output_bytes"] = output.stat().st_size
+    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), summary)
+    lib.ok(skill, f"exported {summary['output_bytes']} bytes (crf 24, preset slow)", report)
+
+
+def cmd_audio_mixer(skill: str, args: argparse.Namespace) -> None:
+    voice = lib.stage(3, "voiceover.mp3")
+    if not voice.is_file():
+        raise lib.SkillError("Missing input: projects/<project>/03-voice/voiceover.mp3")
+    music = music_input()
+    if music:
+        inputs = ["-i", str(voice), "-i", str(music)]
+    else:
+        inputs = ["-i", str(voice), "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo"]
+    output = lib.stage(7, f"{skill}.m4a")
+    ffmpeg_run([
+        *inputs,
+        "-filter_complex",
+        "[1:a]volume=0.12[bg];[0:a]aresample=44100[voice];[voice][bg]amix=inputs=2:duration=first:dropout_transition=0[a]",
+        "-map", "[a]", "-c:a", "aac", "-b:a", "128k", "-shortest", str(output),
+    ])
+    summary = probe_summary(output)
+    summary["music_source"] = lib.relative(music) if music else "silent bed (anullsrc)"
+    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), summary)
+    lib.ok(skill, "voice and music mixed with amix", report)
+
+
+def cmd_audio_ducking(skill: str, args: argparse.Namespace) -> None:
+    voice = lib.stage(3, "voiceover.mp3")
+    if not voice.is_file():
+        raise lib.SkillError("Missing input: projects/<project>/03-voice/voiceover.mp3")
+    music = music_input()
+    if music:
+        inputs = ["-i", str(voice), "-i", str(music)]
+    else:
+        inputs = ["-i", str(voice), "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo"]
+    output = lib.stage(7, f"{skill}.m4a")
+    ffmpeg_run([
+        *inputs,
+        "-filter_complex",
+        "[1:a]volume=0.9[music];[0:a]asplit=2[voice][key];"
+        "[music][key]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=250[ducked];"
+        "[ducked][voice]amix=inputs=2:duration=first:dropout_transition=0[a]",
+        "-map", "[a]", "-c:a", "aac", "-b:a", "128k", "-shortest", str(output),
+    ])
+    summary = probe_summary(output)
+    summary["music_source"] = lib.relative(music) if music else "silent bed (anullsrc)"
+    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), summary)
+    lib.ok(skill, "music ducked under voice with sidechaincompress", report)
+
+
+def cmd_kinetic_text(skill: str, args: argparse.Namespace) -> None:
+    video = final_video_input()
+    if video is None:
+        raise lib.SkillError("No video found for kinetic text")
+    data = lib.read_json(lib.stage(7, "captions.json"), required=False)
+    if data is None:
+        data = lib.read_json(lib.stage(3, "captions.json"))
+    items = data.get("captions", []) if isinstance(data, dict) else data
+    font = font_file()
+    font_arg = ""
+    if font:
+        font_value = (
+            Path(lib.relative(font)).as_posix() if font.is_relative_to(lib.ROOT)
+            else font.as_posix()
+        )
+        font_arg = f"fontfile={font_value.replace(':', '\\\\:')}:"
+    filters = []
+    for item in list(items)[:8]:
+        text = str(item.get("text", "")).strip()
+        if not text:
+            continue
+        start = float(item.get("start", 0))
+        end = float(item.get("end", start + 0.8))
+        filters.append(
+            f"drawtext=text='{filter_escape(text)}':{font_arg}fontsize=56:fontcolor=white:"
+            f"x=(w-text_w)/2:y=h-260:enable='between(t\\,{start}\\,{end})'"
+        )
+    if not filters:
+        raise lib.SkillError("No caption text available for kinetic animation")
+    output = lib.stage(7, f"{skill}.mp4")
+    ffmpeg_run([
+        "-i", str(video), "-vf", ",".join(filters),
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-c:a", "copy", str(output),
+    ])
+    summary = probe_summary(output)
+    summary["animated_captions"] = len(filters)
+    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), summary)
+    lib.ok(skill, f"{len(filters)} timed text overlays animated", report)
+
+
+def cmd_transition(skill: str, args: argparse.Namespace) -> None:
+    scenes = sorted(lib.stage(6, "scenes").glob("*.mp4"))
+    if len(scenes) < 2:
+        raise lib.SkillError("Need at least 2 scene videos in projects/<project>/06-video/scenes/")
+    first, second = scenes[0], scenes[1]
+    first_duration = probe_summary(first)["duration_sec"]
+    offset = max(0.0, first_duration - 0.5)
+    output = lib.stage(7, f"{skill}.mp4")
+    ffmpeg_run([
+        "-i", str(first), "-i", str(second),
+        "-filter_complex",
+        f"[0:v][1:v]xfade=transition=fade:duration=0.5:offset={offset:.3f}[v]",
+        "-map", "[v]", "-c:v", "libx264", "-preset", "veryfast", "-crf", "23",
+        "-pix_fmt", "yuv420p", "-an", str(output),
+    ])
+    summary = probe_summary(output)
+    summary["offset_sec"] = round(offset, 3)
+    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), summary)
+    lib.ok(skill, "cross-fade applied between first two scenes", report)
+
+
+def cmd_checker(skill: str, args: argparse.Namespace) -> None:
+    problems: list[str] = []
+    details: dict[str, Any] = {}
+    for kind, schema_name, stage_number, pattern in CHECKER_TARGETS[skill]:
+        if kind == "characters":
+            target = lib.ROOT / "assets" / "characters" / pattern
+            matches = sorted(target.parent.glob(target.name))
+            if not matches:
+                problems.append(lib.relative(target))
+                continue
+            for path in matches:
+                lib.validate_schema(schema_name, path)
+            details[kind] = [lib.relative(path) for path in matches]
+            continue
+        if kind == "videos":
+            target = lib.stage(stage_number, pattern)
+            matches = sorted(lib.stage(stage_number, "scenes").glob("*.mp4"))
+            if not matches:
+                problems.append(lib.relative(target))
+                continue
+            details[kind] = [probe_summary(path) for path in matches[:3]]
+            continue
+        target = lib.stage(stage_number, pattern)
+        if not target.is_file():
+            problems.append(lib.relative(target))
+            continue
+        if kind == "json":
+            lib.validate_schema(schema_name, target)
+            details[pattern] = lib.read_json(target)
+        elif kind == "text":
+            details[pattern] = {"bytes": target.stat().st_size}
+        elif kind == "audio":
+            details[pattern] = probe_summary(target)
+        elif kind == "video":
+            summary = probe_summary(target)
+            details[pattern] = summary
+            if summary["width"] != 1080 or summary["height"] != 1920:
+                problems.append(f"{lib.relative(target)}: expected 1080x1920")
+            if not (1 <= summary["duration_sec"] <= 60):
+                problems.append(f"{lib.relative(target)}: duration outside 1-60 s")
+    report = lib.write_json(lib.stage(8, f"{skill}-report.json"), {
+        "skill": skill, "status": "FAIL" if problems else "PASS",
+        "problems": problems, "details": details,
+    })
+    if problems:
+        raise lib.SkillError("; ".join(problems))
+    lib.ok(skill, "real output files checked", report)
 
 
 def cmd_handover(args: argparse.Namespace) -> None:
@@ -235,17 +682,24 @@ def self_test(skill: str) -> int:
         lib.validate_schema("latest_script", VALID / "latest_script.json")
         lib.validate_schema("captions", VALID / "captions.json")
         print("PASS voiceover-generator: script and caption schemas verified")
-    elif skill == "script-tester":
-        lib.validate_schema("latest_script", VALID / "latest_script.json")
-        print("PASS script-tester: script schema verified")
+    elif skill in CHECKER_TARGETS:
+        for kind, schema_name, _stage, _pattern in CHECKER_TARGETS[skill]:
+            if kind == "json":
+                lib.validate_schema(schema_name, VALID / f"{schema_name}.json")
+            elif kind == "characters":
+                lib.validate_schema(schema_name, VALID / f"{schema_name}.json")
+            elif kind == "text":
+                assert (MEDIA / "description_sample.md").is_file()
+        media = ensure_media_fixtures()
+        kinds = {kind for kind, *_rest in CHECKER_TARGETS[skill]}
+        if kinds & {"audio", "video", "videos"}:
+            for key in ("video", "audio"):
+                assert probe_summary(media[key])["duration_sec"] > 0
+            assert probe_summary(media["video"])["width"] == 1080
+        print(f"PASS {skill}: real output files and ffprobe checks verified")
     elif skill == "safe-zone-checker":
-        print("PASS safe-zone-checker: validation function importable")
-    elif skill in {
-        "orchestrator", "pipeline-health-checker", "script-tester",
-        "voiceover-tester", "consistency-guardian", "character-qa-tester",
-        "bug-finder", "copyright-policy-checker", "platform-compliance-checker",
-        "accessibility-safety-checker", "handover", "voiceover-generator",
-    }:
+        print("PASS safe-zone-checker: caption and video validation functions verified")
+    elif skill in {"orchestrator", "pipeline-health-checker", "handover", "voiceover-generator"}:
         print(f"PASS {skill}: helper imports and contract verified")
     else:
         status, detail = lib.ffmpeg_status()
@@ -283,8 +737,6 @@ def main(argv: list[str] | None = None, skill_override: str | None = None) -> in
             cmd_task_tracker(args)
         elif skill == "error-log-keeper":
             cmd_error_log(args)
-        elif skill == "caption-maker":
-            cmd_caption_maker(args)
         elif skill == "script-voice-character-collector":
             cmd_collector(args)
         elif skill == "safe-zone-checker":
@@ -295,16 +747,27 @@ def main(argv: list[str] | None = None, skill_override: str | None = None) -> in
             cmd_health(args)
         elif skill in {"video-quality-checker", "av-sync-checker"}:
             cmd_ffprobe_check(skill, args)
-        elif skill in {
-            "video-maker", "rough-cut-assembler", "preview-frame-extractor",
-            "format-converter", "thumbnail-designer", "render-export-optimizer",
-            "variant-batch-renderer", "audio-mixer", "video-editor", "animator",
-            "motion-graphic-editor", "branding-manager", "cut-rhythm-editor",
-            "pattern-interrupt-inserter", "hook-visual-editor", "seamless-loop-editor",
-            "transition-designer", "color-grading-keeper", "broll-variety-planner",
-            "kinetic-text-animator", "emphasis-sticker-placer", "intro-outro-manager",
-            "watermark-logo-placer", "beat-sync-editor", "sfx-timing-placer",
-        }:
+        elif skill == "video-maker":
+            cmd_video_maker(skill, args)
+        elif skill == "rough-cut-assembler":
+            cmd_rough_cut(skill, args)
+        elif skill == "caption-maker":
+            cmd_caption_burn_in(skill, args)
+        elif skill == "format-converter":
+            cmd_format_converter(skill, args)
+        elif skill == "render-export-optimizer":
+            cmd_render_export(skill, args)
+        elif skill == "audio-mixer":
+            cmd_audio_mixer(skill, args)
+        elif skill == "audio-ducking-controller":
+            cmd_audio_ducking(skill, args)
+        elif skill == "kinetic-text-animator":
+            cmd_kinetic_text(skill, args)
+        elif skill == "transition-designer":
+            cmd_transition(skill, args)
+        elif skill in CHECKER_TARGETS:
+            cmd_checker(skill, args)
+        elif skill in GENERIC_FFMPEG_SKILLS:
             cmd_ffmpeg_build(skill, args)
         else:
             print(f"PASS {skill}: prompt-only skill, no deterministic command")

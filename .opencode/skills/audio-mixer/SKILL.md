@@ -31,13 +31,12 @@ Mixes voice, music and sound effect levels.
 - `projects/<project>/03-voice/audio-mixer.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `voice + music + SFX files`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py audio-mixer run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/03-voice/audio-mixer.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/03-voice/audio-mixer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED audio-mixer: ffmpeg ...` and exit 0 without a FAIL.
+1. Load `projects/<project>/03-voice/voiceover.mp3` and the cue list at `projects/<project>/03-voice/music-sfx-selector.json`.
+2. Set narration bus to 0 dB, music bed to -18 dB and SFX peaks to -6 dB relative to narration.
+3. Render one mix and probe it for one audio stream and duration matching the voice track within 0.20 seconds.
+4. Measure integrated loudness and keep it between -16 and -14 LUFS.
+5. Store bus gains, measured loudness and any block reason in `projects/<project>/03-voice/audio-mixer.json`.
+6. Re-open the report and assert the three gain values are numbers no greater than zero.
 
 # How to test
 

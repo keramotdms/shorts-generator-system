@@ -29,12 +29,12 @@ Records errors and fixes for every stage.
 - `projects/<project>/08-final-test/error-log.jsonl`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `error reports from skills`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py error-log-keeper run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/error-log-keeper.jsonl` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/error-log-keeper.jsonl` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Create `projects/<project>/08-final-test/error-log.jsonl` if absent; never truncate an existing log.
+2. Accept only entries with skill, stage, status and reason keys; reject an empty reason.
+3. Append one JSON object per line with an ISO timestamp and the exact failing path when available.
+4. De-duplicate a repeat only when skill, stage and reason are all identical.
+5. Read back the last line and assert it parses as JSON with the same skill name.
+6. Report the number of entries added; never print a fixed PASS without this round-trip check.
 
 # How to test
 

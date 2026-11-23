@@ -29,12 +29,17 @@ Checks YouTube and Facebook rules.
 - `projects/<project>/08-final-test/platform-compliance-checker.json`
 
 # Steps
+1. Probe `projects/<project>/08-final-test/final-video.mp4` and confirm 1080x1920 frames with a 30-60 second runtime.
+2. Check the cover frame for captions inside the safe inset and record any crop risk.
+3. Verify H.264 video and AAC audio, the pair accepted by both YouTube Shorts and Facebook Reels.
+4. Scan the script title for misleading claims and record any claim lacking a source as WARN.
+5. Write measured values, crop notes and an ALLOW/WARN/BLOCK verdict to `projects/<project>/08-final-test/platform-compliance-checker.json`.
+6. Assert the verdict string is one of those three allowed values.
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final video + metadata`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py platform-compliance-checker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/08-final-test/platform-compliance-checker.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/08-final-test/platform-compliance-checker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+# Bangla rules
+
+1. Confirm Bangla captions use Noto Sans Bengali and that ৳ plus Bengali numerals survive export.
+2. Reject a cover frame with romanised Bangla or missing Bengali glyphs.
 
 # How to test
 

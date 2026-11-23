@@ -31,13 +31,12 @@ Renders vertical scene videos.
 - `projects/<project>/06-video/video-maker-report.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `projects/<project>/05-scene/collection.json`; if it is missing or malformed, follow Failure handling and stop. Validate `projects/<project>/05-scene/collection.json` against `config/schemas/collection.json` with `python scripts/schema_validator.py collection projects/<project>/05-scene/collection.json`.
-3. Run `python scripts/skill_tools.py video-maker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/06-video/scenes/` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/06-video/scenes/` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED video-maker: ffmpeg ...` and exit 0 without a FAIL.
+1. Open `projects/<project>/05-scene/collection.json` and require matching `scene_images[]` and `scenes[]` arrays.
+2. For each image path, confirm the PNG exists at 1080x1920; stop on the first missing file.
+3. Use the matching script scene's duration_sec, clamped to 1-15 seconds, when encoding the still into an MP4.
+4. Write each clip to the exact name in `scenes[]` under `projects/<project>/06-video/scenes/`.
+5. Probe every produced clip and save dimensions, duration and filenames to `projects/<project>/06-video/video-maker-report.json`.
+6. Assert the clip count equals the declared array length before reporting PASS.
 
 # How to test
 

@@ -31,13 +31,11 @@ Converts to platform-ready formats.
 - `projects/<project>/07-edit/format-converter.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py format-converter run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/format-converter.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/format-converter.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED format-converter: ffmpeg ...` and exit 0 without a FAIL.
+1. Read `projects/<project>/08-final-test/final-video.mp4` and note its current codec, pixel format and bitrate.
+2. Choose the delivery preset: vertical 1080x1920, H.264, yuv420p and AAC; do not upscale past the source frame.
+3. Convert with ffmpeg to a temporary file, then rename it only after ffprobe confirms the preset.
+4. Record source and output byte counts, codec names and duration delta in `projects/<project>/07-edit/format-converter.json`.
+5. Assert the output still has one video stream and one audio stream, and that duration delta stays below 0.10 seconds.
 
 # How to test
 

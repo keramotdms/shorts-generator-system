@@ -33,13 +33,12 @@ Optimizes render settings and file size.
 - `projects/<project>/07-edit/render-export-optimizer.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `edit project + video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py render-export-optimizer run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Export the final video to the canonical path `projects/<project>/08-final-test/final-video.mp4` (create `08-final-test/` first). Every checker, handover and publish skill reads this exact path; do not write a second final video elsewhere.
-5. Write the probe report to `projects/<project>/07-edit/render-export-optimizer.json` and re-open it to verify it is valid, non-empty and has `canonical_path` equal to that exact video path. Record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED render-export-optimizer: ffmpeg ...` and exit 0 without a FAIL.
+1. Take `projects/<project>/07-edit/captioned.mp4` as the source and read target length from `config/channel.json` through project-memory.
+2. Encode H.264 with CRF 23, preset veryfast, yuv420p and AAC audio; keep 1080x1920.
+3. Write the one canonical deliverable to `projects/<project>/08-final-test/final-video.mp4`; never create a second final file elsewhere.
+4. Probe the result and require one video stream, one audio stream and duration equal to the source within 0.20 seconds.
+5. Record source bytes, output bytes, codec settings and `canonical_path` in `projects/<project>/07-edit/render-export-optimizer.json`.
+6. Assert `canonical_path` equals `projects/<project>/08-final-test/final-video.mp4` before reporting PASS.
 
 # How to test
 

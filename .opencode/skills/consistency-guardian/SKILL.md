@@ -30,12 +30,12 @@ Checks character consistency across scenes.
 - `projects/<project>/04-character/consistency-guardian.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `rendered scenes + character references`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py consistency-guardian run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/04-character/consistency-guardian.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/04-character/consistency-guardian.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Build a reference fingerprint from `assets/characters/creator-01.json`: palette, hair, clothing and voice tone.
+2. Inspect every MP4 in `projects/<project>/06-video/scenes/` and extract its first frame with ffmpeg.
+3. Compare each frame with the fingerprint; flag a changed shirt colour or missing palette colour as FAIL.
+4. Count scene files and compare that number with the collector scene list; a gap is WARN.
+5. Save frame indexes, mismatch reasons and a continuity verdict to `projects/<project>/04-character/consistency-guardian.json`.
+6. Assert the report lists every scene filename that was examined.
 
 # How to test
 

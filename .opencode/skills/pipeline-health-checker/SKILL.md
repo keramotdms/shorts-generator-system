@@ -30,12 +30,12 @@ Checks tools, skills, handoffs and final output.
 - `projects/<project>/pipeline-health-checker.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `whole repository and final video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py pipeline-health-checker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/pipeline-health-checker.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/pipeline-health-checker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Count the 93 skill folders and confirm every entry in `config/skill-contracts.json` has both an input and output path.
+2. Verify `projects/<project>/08-final-test/final-video.mp4` exists and ffprobe reports 1080x1920 with a positive duration.
+3. Check that the four required harness scripts are registered in health_check.py.
+4. Confirm no SKILL.md still carries the generic template phrase or an unresolved `<character-id>` path.
+5. Write PASS/WARN/BLOCKED totals and the checked file list to `projects/<project>/pipeline-health-checker.json`.
+6. Assert the totals add up to the number of checks actually executed.
 
 # How to test
 

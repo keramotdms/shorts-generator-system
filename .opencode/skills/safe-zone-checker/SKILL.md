@@ -31,12 +31,18 @@ Checks captions stay inside platform safe zones.
 - `projects/<project>/07-edit/safe-zone-checker.json`
 
 # Steps
+1. Load `projects/<project>/07-edit/captions.json` and validate it against the captions schema; reject any block whose `end` precedes its `start`.
+2. Probe `projects/<project>/07-edit/captioned.mp4` and record the real 1080x1920 frame size.
+3. Reserve a 72 px left/right inset and a 180 px top/bottom inset; test every caption box against those margins.
+4. Mark a caption WARN when two Bengali lines exceed 32 characters per line; keep ৳ amounts intact.
+5. Write the margin measurements, WARN list and overall verdict to `projects/<project>/07-edit/safe-zone-checker.json`.
+6. Re-read the report and assert the number of inspected blocks equals the total caption count.
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `captioned video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py safe-zone-checker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/safe-zone-checker.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/safe-zone-checker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+# Bangla rules
+
+1. Measure Bengali glyph insets with Noto Sans Bengali; allow 12 px extra bottom room for vowel signs.
+2. Keep ৳ and Bengali numerals ০-৯ fully inside the safe rectangle and at most 2 lines.
+3. Flag any caption where Bengali text touches the 72 px side inset.
 
 # How to test
 

@@ -33,13 +33,12 @@ Assembles the first cut of all scenes.
 - `projects/<project>/07-edit/rough-cut-assembler-report.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `projects/<project>/06-video/scenes/`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py rough-cut-assembler run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/rough-cut.mp4` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/rough-cut.mp4` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED rough-cut-assembler: ffmpeg ...` and exit 0 without a FAIL.
+1. Read `projects/<project>/05-scene/collection.json` and take its `scenes[]` array in declared order.
+2. Verify each named MP4 exists under `projects/<project>/06-video/scenes/`; stop at the first missing name instead of globbing.
+3. Build an ffmpeg concat list from that verified order and join clips without re-encoding unless durations disagree.
+4. Probe the joined file and assert one video stream plus a duration within 0.30 seconds of the summed clip lengths.
+5. Save the exact concat order and probe values to `projects/<project>/07-edit/rough-cut-assembler-report.json`.
+6. Copy the final joined media to `projects/<project>/07-edit/rough-cut.mp4` only after the probe passes.
 
 # How to test
 

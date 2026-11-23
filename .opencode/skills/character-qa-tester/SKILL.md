@@ -29,12 +29,12 @@ Tests character outputs for errors.
 - `projects/<project>/04-character/character-qa-tester.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `character assets`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py character-qa-tester run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/04-character/character-qa-tester.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/04-character/character-qa-tester.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Open `assets/characters/creator-01.json` and validate it against the character schema.
+2. Confirm the palette has exactly 4 hex colours and the expression set contains neutral, smile and surprised.
+3. Check each SVG and PNG sidecar under `assets/characters/` parses and measures exactly 1080x1920.
+4. Compare hair, clothing and voice fields with `config/style-bible.json`; report any contradiction as FAIL.
+5. Write field-by-field findings to `projects/<project>/04-character/character-qa-tester.json`.
+6. Assert the report holds at least 3 checked fields and one explicit PASS or FAIL verdict.
 
 # How to test
 

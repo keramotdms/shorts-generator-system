@@ -31,12 +31,18 @@ Checks captions, audio and viewer safety.
 - `projects/<project>/08-final-test/accessibility-safety-checker.json`
 
 # Steps
+1. Validate `projects/<project>/07-edit/captions.json` and confirm every cue has start, end and Bangla text.
+2. Probe `projects/<project>/03-voice/voiceover.mp3` and `projects/<project>/08-final-test/final-video.mp4`; require durations above 0.
+3. Reject any caption shown for under 0.8 seconds or over 7 seconds.
+4. Scan the frame sequence for flashes above 3 Hz and record the first offending timestamp.
+5. Save cue counts, flash findings, duration values and verdict to `projects/<project>/08-final-test/accessibility-safety-checker.json`.
+6. Assert the report has at least one checked caption and one measured duration.
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py accessibility-safety-checker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/08-final-test/accessibility-safety-checker.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/08-final-test/accessibility-safety-checker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+# Bangla rules
+
+1. Read every caption as Bengali script; do not accept romanised Bangla or garbled glyphs.
+2. Require Noto Sans Bengali for on-screen text and preserve ৳ and Bengali numerals such as ০-৯.
+3. Reject a cue that hides the ৳ symbol or splits a Bengali word across lines.
 
 # How to test
 

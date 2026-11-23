@@ -81,6 +81,12 @@ Schema: `config/schemas/media-effect.json`
 5. Probe the result and compare duration against the source clip.
 6. Write projects/<project>/07-edit/hook-visual-editor.json and validate the media-effect schema.
 
+# Bangla rules
+
+1. Hook overlay text must be Bengali script in Noto Sans Bengali, not romanised words.
+2. Limit the overlay to 2 lines and 32 characters so ৳ signs and Bengali numerals stay readable.
+3. Check the first frame for correct Bengali glyph shaping before exporting.
+
 # How to test
 
 - `python scripts/skill_tools.py hook-visual-editor --self-test` runs the push-in on generated media and checks the output with ffprobe.

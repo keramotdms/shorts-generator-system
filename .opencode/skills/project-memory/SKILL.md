@@ -6,6 +6,7 @@ status: implemented
 phase: 1
 type: script-backed
 batch: 1
+schema: project-memory
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.

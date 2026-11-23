@@ -6,6 +6,7 @@ status: implemented
 phase: 5
 type: script-backed
 batch: 8
+schema: handover
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
@@ -46,18 +47,26 @@ Packages final files for publishing.
 - `ready` is true only when all three upstream assets are present; otherwise the command exits non-zero.
 
 **Output format (short example)**
-```markdown
-# Handover — my-video
-Niche: Personal finance / side hustles | Language: bn
 
-## Assets
-- PASS projects/my-video/08-final-test/final-video.mp4
-- PASS projects/my-video/07-edit/captions.json
-- PASS projects/my-video/09-description/description.md
+    # Handover — my-video
+    Niche: Personal finance / side hustles | Language: bn
 
-## Publish
-Path: projects/my-video/08-final-test/final-video.mp4
-Ready: yes
+    ## Assets
+    - PASS projects/my-video/08-final-test/final-video.mp4
+    - PASS projects/my-video/07-edit/captions.json
+    - PASS projects/my-video/09-description/description.md
+
+    ## Publish
+    Path: projects/my-video/08-final-test/final-video.mp4
+    Ready: yes
+
+**handover-check.json example**
+```json
+{
+  "ready": true,
+  "missing": [],
+  "project": "my-video"
+}
 ```
 
 **Quality rules**

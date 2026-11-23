@@ -31,12 +31,12 @@ Checks copyright and policy risks.
 - `projects/<project>/08-final-test/copyright-policy-checker.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final script + assets + video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py copyright-policy-checker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/08-final-test/copyright-policy-checker.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/08-final-test/copyright-policy-checker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read `projects/<project>/02-script/latest_script.json` and extract narration, visual_prompt and highlight_words for source tracing.
+2. Compare `assets/characters/creator-01.json` with the drawing in `projects/<project>/08-final-test/final-video.mp4`; flag an unlicensed look-alike as WARN.
+3. Check that music and SFX cue names in the script match the licensed list in `music-sfx-selector.json`; an absent cue id is FAIL.
+4. Look for third-party brand names in narration and require a clearance note for each one.
+5. Save each finding with its source line and risk level to `projects/<project>/08-final-test/copyright-policy-checker.json`.
+6. Assert the report holds at least one checked script field and one explicit risk level.
 
 # How to test
 

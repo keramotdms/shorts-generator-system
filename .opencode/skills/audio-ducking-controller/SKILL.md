@@ -32,13 +32,12 @@ Ducks music under the voice.
 - `projects/<project>/07-edit/audio-ducking-controller.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `voice track + music track`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py audio-ducking-controller run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/audio-ducking-controller.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/audio-ducking-controller.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED audio-ducking-controller: ffmpeg ...` and exit 0 without a FAIL.
+1. Load the voice track from `projects/<project>/03-voice/voiceover.mp3` and cues from `projects/<project>/03-voice/music-sfx-selector.json`.
+2. Measure voice loudness in LUFS and set the music bed 12 dB below it during speech windows.
+3. Apply a 150 ms attack and a 300 ms release so the bed returns smoothly between lines.
+4. Keep the true-peak ceiling at -1 dBTP and reject clipping above that level.
+5. Save measured loudness, gain reduction and ceiling to `projects/<project>/07-edit/audio-ducking-controller.json`.
+6. Re-open the report and assert the gain-reduction value is a negative number.
 
 # How to test
 

@@ -29,12 +29,11 @@ Tracks tasks and progress across the pipeline.
 - `projects/<project>/task-tracker.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `pipeline state and task list`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py task-tracker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/task-tracker.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/task-tracker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Open `projects/<project>/pipeline-state.json` and read the current stage name.
+2. Load the per-task ledger at `projects/<project>/task-tracker.json`; create it with an empty `tasks` array if absent.
+3. Add one row for the active skill with status pending, start time and owner stage; never mark done before its test passes.
+4. When a test passes, flip only that row to done and leave pipeline-state.json untouched here.
+5. Write the ledger back and assert one row per active skill with no duplicate skill names.
 
 # How to test
 

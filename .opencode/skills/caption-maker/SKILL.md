@@ -33,12 +33,18 @@ Creates word-level caption timings and burns captions.
 - `projects/<project>/07-edit/captioned.mp4`
 
 # Steps
+1. Validate `projects/<project>/03-voice/captions.json` and take its caption blocks plus total duration.
+2. Read `projects/<project>/07-edit/rough-cut.mp4` duration and reject blocks whose start or end exceeds it.
+3. Plan each caption as at most 2 lines of 32 characters using Noto Sans Bengali; preserve Bengali numerals and ৳ exactly.
+4. Burn the planned blocks into `projects/<project>/07-edit/captioned.mp4` with the ffmpeg subtitles filter.
+5. Write safe-zone-ready blocks to `projects/<project>/07-edit/captions.json` and the burn report to `projects/<project>/07-edit/caption-maker.json`.
+6. Re-open both JSON files and assert the caption count is identical in each and greater than zero.
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4`; if it is missing or malformed, follow Failure handling and stop. Validate `projects/<project>/03-voice/captions.json` against `config/schemas/captions.json` with `python scripts/schema_validator.py captions projects/<project>/03-voice/captions.json`.
-3. Run `python scripts/skill_tools.py caption-maker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/captions.json + projects/<project>/07-edit/caption-maker.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/captions.json + projects/<project>/07-edit/caption-maker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. Validate `projects/<project>/07-edit/captions.json` against `config/schemas/captions.json` with `python scripts/schema_validator.py captions projects/<project>/07-edit/captions.json` before accepting it.
+# Bangla rules
+
+1. Render caption text in Bengali script using Noto Sans Bengali only.
+2. Keep each caption to at most 2 lines of 32 characters; expand ৳ amounts instead of replacing them with BDT.
+3. Preserve Bengali numerals ০-৯ from the voice caption source and never transliterate them.
 
 # How to test
 

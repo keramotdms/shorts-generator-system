@@ -6,6 +6,7 @@ status: implemented
 phase: 1
 type: prompt-only
 batch: 2
+schema: trend-report
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.

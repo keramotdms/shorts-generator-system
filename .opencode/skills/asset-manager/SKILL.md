@@ -30,12 +30,12 @@ Validates folder structure, naming and backups.
 - `projects/<project>/asset-manager.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `assets/ and projects/<project>/`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py asset-manager run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/asset-manager.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/asset-manager.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Inventory the starter folders `assets/`, `config/` and the current `projects/<project>/` tree; list every missing required folder by exact path.
+2. Compare declared character and scene seeds against `config/style-bible.json` values loaded through project-memory; never invent a new style value.
+3. Create only the absent directories under `projects/<project>/`; use lowercase-kebab-case for any new filename.
+4. Copy approved SVG and PNG seeds into their expected asset folders without renaming the `creator-01` or `scene-warm-desk-smile` stems.
+5. Save the inventory with counts, missing paths and a PASS/WARN/FAIL verdict to `projects/<project>/asset-manager.json`.
+6. Re-open that JSON and assert every listed `present` path exists on disk; log any mismatch to error-log-keeper.
 
 # How to test
 

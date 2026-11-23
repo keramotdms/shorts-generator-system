@@ -31,12 +31,12 @@ Finds bugs in the final video.
 - `projects/<project>/08-final-test/bug-finder.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final video + reports`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py bug-finder run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/08-final-test/bug-finder.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/08-final-test/bug-finder.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Probe `projects/<project>/08-final-test/final-video.mp4` and reject a file with no moov atom, no video stream or zero duration.
+2. Read the attack notes in `projects/<project>/08-final-test/red-team.json` and `ruthless-team.json`; carry unresolved items forward.
+3. Check pixel dimensions, codec names and byte size against the 1080x1920 Shorts target.
+4. Rank findings as FAIL, WARN or INFO with the exact evidence path proving each one.
+5. Write the ranked list and final gate verdict to `projects/<project>/08-final-test/bug-finder.json`.
+6. Re-open the JSON and assert every FAIL entry has a non-empty evidence field.
 
 # How to test
 

@@ -32,13 +32,18 @@ Animates on-screen text.
 - `projects/<project>/07-edit/kinetic-text-animator.json`
 
 # Steps
+1. Pair each caption block from `projects/<project>/07-edit/captions.json` with its exact start and end time.
+2. Assign one motion style per emphasis word — pop, slide or fade — and never cut inside a Bengali consonant cluster.
+3. Render with Noto Sans Bengali at 56 px minimum over frames from `projects/<project>/07-edit/captioned.mp4`.
+4. Cap each animated phrase at 2 lines and 32 characters so ৳ signs and Bengali numerals remain readable.
+5. Save timing offsets, style names and output path to `projects/<project>/07-edit/kinetic-text-animator.json`.
+6. Re-open the report and assert the styled-phrase count equals the caption-block count.
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `caption data + video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py kinetic-text-animator run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/kinetic-text-animator.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/kinetic-text-animator.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED kinetic-text-animator: ffmpeg ...` and exit 0 without a FAIL.
+# Bangla rules
+
+1. Animate Bengali text only with Noto Sans Bengali and never split a consonant cluster across frames.
+2. Cap each phrase at 2 lines and 32 characters; keep ৳ and numerals ০-৯ on the same line as the amount.
+3. Verify that motion does not clip Bengali vowel signs at 1080x1920.
 
 # How to test
 

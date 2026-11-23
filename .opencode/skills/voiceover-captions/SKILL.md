@@ -48,6 +48,12 @@ Legacy combined voiceover and caption generator.
 4. Verify `projects/<project>/03-voice/voiceover.mp3` and `projects/<project>/03-voice/captions.json` were created and report exact audio duration in seconds.
 5. Tell the user to use `voiceover-generator` + `caption-maker` for new projects; do not duplicate their logic here.
 
+# Bangla rules
+
+1. Generate caption text in Bengali script with Noto Sans Bengali and Bengali numerals ০-৯.
+2. Keep ৳ before the amount; never convert it to BDT or TK in the caption text.
+3. Limit each phrase to 2 lines of 32 characters and check TTS pronunciation of amounts aloud.
+
 # How to test
 
 - Prompt: `Use the voiceover-captions skill with PROJECT=<project>` on a legacy project only.

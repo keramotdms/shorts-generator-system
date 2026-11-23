@@ -30,12 +30,18 @@ Checks voice clarity, speed and duration.
 - `projects/<project>/03-voice/voiceover-tester.json`
 
 # Steps
+1. Validate `projects/<project>/02-script/latest_script.json` and read its total_duration_sec.
+2. Probe `projects/<project>/03-voice/voiceover.mp3`; reject audio shorter than 30 seconds or longer than 60 seconds.
+3. Verify language `bn` metadata and flag misread Bengali numerals or spoken ৳ amounts in the listen notes.
+4. Compare word count against the 110-130 wpm Bangla range and mark too-fast delivery as WARN.
+5. Record measured seconds, WPM estimate and verdict in `projects/<project>/03-voice/voiceover-tester.json`.
+6. Re-open the report and assert the measured duration is a number greater than 0.
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `voiceover.mp3 + final script`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py voiceover-tester run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/03-voice/voiceover-tester.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/03-voice/voiceover-tester.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+# Bangla rules
+
+1. Listen for mispronounced Bengali numerals and ৳ amounts in the `bn` take.
+2. Confirm spoken line length stays within 8-12 words at 110-130 wpm.
+3. Flag English bridging words or romanised pronunciation as WARN with the exact timestamp.
 
 # How to test
 

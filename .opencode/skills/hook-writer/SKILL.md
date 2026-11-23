@@ -59,6 +59,12 @@ Writes the first 3-second attention hook.
 2. Do not promise unrealistic money; keep the outcome reachable in 7 days.
 3. The visual prompt must not require a photo, logo, or FFmpeg effect.
 
+# Bangla rules
+
+1. Write the 3-second hook in natural Bangla with 8-12 spoken words.
+2. Use Bengali numerals and ৳ for any amount; read the hook aloud once to catch awkward pronunciation.
+3. Do not mix English connector words into the Bangla hook.
+
 # How to test
 
 - Type: `Use the hook-writer skill with PROJECT=<project>`. Expected: `projects/<project>/02-script/hook.json` exists, parses cleanly, and contains no hardcoded niche or language value.

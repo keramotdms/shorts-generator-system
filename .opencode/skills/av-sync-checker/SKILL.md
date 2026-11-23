@@ -31,13 +31,11 @@ Checks audio and video synchronization.
 - `projects/<project>/07-edit/av-sync-checker.json`
 
 # Steps
-
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py av-sync-checker run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/av-sync-checker.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/av-sync-checker.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED av-sync-checker: ffmpeg ...` and exit 0 without a FAIL.
+1. Probe the audio and video streams of `projects/<project>/08-final-test/final-video.mp4` with ffprobe.
+2. Compare stream durations; allow at most 0.20 seconds of drift between the first audio sample and the first video frame.
+3. Flag a silent track, an absent audio stream, or video longer than audio by over 0.20 seconds as FAIL.
+4. Record both measured durations, the drift value and a PASS/WARN/FAIL verdict in `projects/<project>/07-edit/av-sync-checker.json`.
+5. Re-open the report and assert the drift field is a finite number, not a fixed PASS string.
 
 # How to test
 

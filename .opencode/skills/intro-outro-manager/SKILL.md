@@ -81,6 +81,12 @@ Schema: `config/schemas/media-effect.json`
 5. Probe the concatenated file and check the one-second duration increase.
 6. Write projects/<project>/07-edit/intro-outro-manager.json and validate its schema.
 
+# Bangla rules
+
+1. Intro and outro cards must use Bengali script with Noto Sans Bengali.
+2. Keep each card to 2 lines and 32 characters; leave ৳ amounts and Bengali numerals unbroken.
+3. Check the rendered PNG for missing glyphs before adding it to the cut.
+
 # How to test
 
 - `python scripts/skill_tools.py intro-outro-manager --self-test` prepends a card to generated media and verifies duration with ffprobe.

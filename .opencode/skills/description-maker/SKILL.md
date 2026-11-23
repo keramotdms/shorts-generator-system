@@ -62,6 +62,12 @@ HASHTAGS:
 2. No keyword stuffing — the niche keyword appears at most twice.
 3. Keep hashtags specific to the video; drop any tag unrelated to the niche.
 
+# Bangla rules
+
+1. Write the Bangla description in natural spoken Bengali, not word-for-word English translation.
+2. Use Bengali numerals ০-৯ and the ৳ sign for money; keep the first line under 100 characters.
+3. Read aloud any line containing ৳ to confirm the amount is unambiguous.
+
 # How to test
 
 - Type: `Use the description-maker skill with PROJECT=<project>`. Expected: `projects/<project>/09-description/description.md` exists, parses cleanly, and contains no hardcoded niche or language value.

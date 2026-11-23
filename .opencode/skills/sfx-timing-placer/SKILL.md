@@ -6,7 +6,8 @@ subcategory: audio-sync
 status: implemented
 phase: later
 type: script-backed
-batch: 7
+batch: C
+schema: media-effect
 requires: ffmpeg
 ---
 
@@ -14,36 +15,79 @@ requires: ffmpeg
 
 # When to use
 
-Use when places sound effects at exact moments for a video in `projects/<project>/`.
+Use after audio-mixer and before final-test, when music-sfx-selector has chosen a licensed local cue and it needs a precise timestamp.
 
 # Purpose
 
-Places sound effects at exact moments.
+Mix one local sound effect 1.2 seconds into a video at 0.35 volume so a payoff accent lands without drowning the narration.
 
 # Input
 
-- `video + SFX list`
+- `projects/<project>/07-edit/rough-cut.mp4`
+- `assets/sfx/*.mp3` local owned cues
+- `projects/<project>/05-scene/music-sfx-selector.json`
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/sfx-timing-placer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `video with SFX`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# SFX placement parameters
+
+1. Delay the effect by exactly 1200 milliseconds using adelay on both channels.
+2. Lower the effect to 0.35 volume before mixing.
+3. Mix with the original audio using amix duration=first so the video length does not change.
+4. Use only a cue file listed in music-sfx-selector.json and present under assets/sfx/.
+5. Verify with ffprobe that audio is present and duration matches the source within 0.1 seconds.
+
+# Output format (short example)
+
+Schema: `config/schemas/media-effect.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "sfx-timing-placer",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "video": "projects/<project>/07-edit/sfx-timing-placer.mp4",
+  "duration_sec": 3.0,
+  "width": 1080,
+  "height": 1920,
+  "has_audio": true,
+  "parameters": {
+    "delay_ms": 1200,
+    "sfx_volume": 0.35,
+    "mix": "amix duration=first",
+    "source": "music-sfx-selector.json"
+  },
+  "summary": "One local cue delayed 1.2 seconds and mixed at 0.35 volume with narration intact."
+}
+```
+
+# Quality rules
+
+1. Report records a 1200 ms delay and 0.35 volume.
+2. The cue path appears in the selection report before it is used.
+3. ffprobe confirms audio=True and unchanged duration.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `video + SFX list`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py sfx-timing-placer run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/sfx-timing-placer.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/sfx-timing-placer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED sfx-timing-placer: ffmpeg ...` and exit 0 without a FAIL.
+1. Open the selected cue id from projects/<project>/05-scene/music-sfx-selector.json via project-memory.
+2. Confirm ffmpeg is configured and the cue file exists locally before building the filter.
+3. Apply adelay and volume to the cue stream and amix it with the source audio.
+4. Map the original video stream unchanged and encode audio as AAC 128k.
+5. Probe duration and audio presence on the mixed output.
+6. Write projects/<project>/07-edit/sfx-timing-placer.json and validate the media-effect schema.
 
 # How to test
 
-- `python scripts/skill_tools.py sfx-timing-placer --self-test` → expected `PASS sfx-timing-placer: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `projects/<project>/07-edit/sfx-timing-placer.json` exists and is non-empty after a real run.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- `python scripts/skill_tools.py sfx-timing-placer --self-test` mixes a generated cue at 1.2 seconds and verifies audio with ffprobe.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/media-effect.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -51,4 +95,4 @@ audio-mixer -> final-test
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If no cue was selected, skip mixing, copy the input and write a WARN. Never download a sound effect or use an unlicensed file.

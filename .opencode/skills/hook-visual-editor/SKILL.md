@@ -6,7 +6,8 @@ subcategory: pacing
 status: implemented
 phase: later
 type: script-backed
-batch: 7
+batch: C
+schema: media-effect
 requires: ffmpeg
 ---
 
@@ -14,36 +15,79 @@ requires: ffmpeg
 
 # When to use
 
-Use when enhances the opening hook visually for a video in `projects/<project>/`.
+Use after story-organizer and before final edit, when the hook script is strong but the first frames are visually flat.
 
 # Purpose
 
-Enhances the opening hook visually.
+Add a two-second opening push-in on the hook frame so the promise lands before the viewer can scroll away.
 
 # Input
 
-- `rough cut + hook plan`
+- `projects/<project>/07-edit/rough-cut.mp4`
+- `projects/<project>/02-script/hook.json`
+- `config/defaults.json` resolution
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/hook-visual-editor.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `hook-enhanced video`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Opening push-in parameters
+
+1. Hold a 1.10 zoom for the first 60 frames, then return to 1.0.
+2. Run zoompan at 30 fps and scale every output frame to the configured resolution.
+3. Keep the original audio with AAC 128k and trim with -shortest.
+4. Do not alter scenes after the second 2; the command must affect the opening only.
+5. Require ffprobe to confirm resolution, audio and a duration within the style-bible range.
+
+# Output format (short example)
+
+Schema: `config/schemas/media-effect.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "hook-visual-editor",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "video": "projects/<project>/07-edit/hook-visual-editor.mp4",
+  "duration_sec": 3.0,
+  "width": 1080,
+  "height": 1920,
+  "has_audio": true,
+  "parameters": {
+    "opening_zoom": 1.1,
+    "opening_frames": 60,
+    "fps": 30,
+    "affected_seconds": 2
+  },
+  "summary": "First 60 frames pushed in at 1.10 zoom, then returned to normal with audio intact."
+}
+```
+
+# Quality rules
+
+1. The report names the 60-frame opening window.
+2. Resolution matches config/defaults.json exactly.
+3. No criterion asks for changes after second 2.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `rough cut + hook plan`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py hook-visual-editor run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/hook-visual-editor.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/hook-visual-editor.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED hook-visual-editor: ffmpeg ...` and exit 0 without a FAIL.
+1. Open hook.json through project-memory and note the first promise second.
+2. Check ffmpeg availability and emit BLOCKED when it cannot be found.
+3. Build a zoompan expression that caps zoom at 1.10 for the first 60 frames.
+4. Scale the filtered frames to the configured size and carry audio as AAC.
+5. Probe the result and compare duration against the source clip.
+6. Write projects/<project>/07-edit/hook-visual-editor.json and validate the media-effect schema.
 
 # How to test
 
-- `python scripts/skill_tools.py hook-visual-editor --self-test` → expected `PASS hook-visual-editor: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `projects/<project>/07-edit/hook-visual-editor.json` exists and is non-empty after a real run.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- `python scripts/skill_tools.py hook-visual-editor --self-test` runs the push-in on generated media and checks the output with ffprobe.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/media-effect.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -51,4 +95,4 @@ rough-cut-assembler -> final-test
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If hook.json is missing, report the path and stop. If the clip is under 2 seconds, apply the zoom for the whole clip and record a WARN in the report.

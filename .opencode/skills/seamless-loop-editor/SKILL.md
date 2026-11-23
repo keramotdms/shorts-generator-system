@@ -6,7 +6,8 @@ subcategory: pacing
 status: implemented
 phase: later
 type: script-backed
-batch: 7
+batch: C
+schema: media-effect
 requires: ffmpeg
 ---
 
@@ -14,36 +15,79 @@ requires: ffmpeg
 
 # When to use
 
-Use when makes the ending loop smoothly for a video in `projects/<project>/`.
+Use after loop-cta-designer and before final-test, when a Short must replay without a visible cut at the seam.
 
 # Purpose
 
-Makes the ending loop smoothly.
+Reverse the final 0.4 seconds of a clip and append it so the last frame walks back into the preceding motion instead of jumping on replay.
 
 # Input
 
-- `rough cut + loop plan`
+- `projects/<project>/07-edit/rough-cut.mp4`
+- `projects/<project>/02-script/loop-cta-designer.json`
+- `config/defaults.json` resolution
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/seamless-loop-editor.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `loop-ready video`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Loop seam parameters
+
+1. Take a tail of at most 0.4 seconds, or half the clip if it is shorter.
+2. Reverse only that tail with the reverse filter, never the whole video.
+3. Concatenate the kept head and the reversed tail into one silent video stream.
+4. Keep the total duration equal to the source duration within 0.1 seconds.
+5. Probe the result with ffprobe for unchanged resolution and no audio stream.
+
+# Output format (short example)
+
+Schema: `config/schemas/media-effect.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "seamless-loop-editor",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "video": "projects/<project>/07-edit/seamless-loop-editor.mp4",
+  "duration_sec": 3.0,
+  "width": 1080,
+  "height": 1920,
+  "has_audio": false,
+  "parameters": {
+    "tail_sec": 0.4,
+    "tail_filter": "reverse",
+    "segments": 2,
+    "audio": "dropped"
+  },
+  "summary": "Last 0.4 seconds reversed and re-appended to make a 3-second clip loop without a hard cut."
+}
+```
+
+# Quality rules
+
+1. Tail length never exceeds 0.4 seconds or half the source duration.
+2. Concatenation uses exactly two segments.
+3. ffprobe confirms unchanged frame size and no audio.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `rough cut + loop plan`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py seamless-loop-editor run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/seamless-loop-editor.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/seamless-loop-editor.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED seamless-loop-editor: ffmpeg ...` and exit 0 without a FAIL.
+1. Read the loop window from project-memory sources and probe the source duration.
+2. Verify ffmpeg is available or return BLOCKED with the FFMPEG_PATH hint.
+3. Compute the split point by subtracting the capped tail from the measured duration.
+4. Build two trim branches, apply reverse to the tail branch and join them.
+5. Encode with libx264 veryfast and probe the loop-ready file.
+6. Write projects/<project>/07-edit/seamless-loop-editor.json and validate the media-effect schema.
 
 # How to test
 
-- `python scripts/skill_tools.py seamless-loop-editor --self-test` → expected `PASS seamless-loop-editor: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `projects/<project>/07-edit/seamless-loop-editor.json` exists and is non-empty after a real run.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- `python scripts/skill_tools.py seamless-loop-editor --self-test` reverses the tail of generated media and verifies the loop with ffprobe.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/media-effect.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -51,4 +95,4 @@ rough-cut-assembler -> final-test
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the clip is under 0.5 seconds, copy the input and write a WARN because no useful tail exists. If ffmpeg is unavailable, print BLOCKED only.

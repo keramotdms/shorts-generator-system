@@ -6,7 +6,8 @@ subcategory: core
 status: implemented
 phase: later
 type: script-backed
-batch: 7
+batch: C
+schema: media-effect
 requires: ffmpeg
 ---
 
@@ -14,36 +15,79 @@ requires: ffmpeg
 
 # When to use
 
-Use when adds motion and animation to elements for a video in `projects/<project>/`.
+Use after rough-cut-assembler when a static scene needs motion and no new artwork is available.
 
 # Purpose
 
-Adds motion and animation to elements.
+Turn one flat scene PNG into a short animated clip with a gentle zoompan so a still prop feels alive without needing frame-by-frame art.
 
 # Input
 
-- `rough cut + scene elements`
+- `assets/scenes/*.png` or the generated media fixture
+- `config/defaults.json` resolution
+- `config/style-bible.json` palette
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/animator.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `animated video`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Animation parameters
+
+1. Read width and height from config/defaults.json resolution; never type 1080x1920 by hand.
+2. Use zoompan at 30 fps for 75 frames, which is 2.5 seconds of motion.
+3. Cap the zoom at 1 plus 0.01 times the palette length, so a four-colour bible zooms to 1.04.
+4. Force yuv420p output and drop audio because the source is a still image.
+5. Verify with ffprobe that the clip has the configured resolution and a duration of 2.4–2.6 seconds.
+
+# Output format (short example)
+
+Schema: `config/schemas/media-effect.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "animator",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "video": "projects/<project>/07-edit/animator.mp4",
+  "duration_sec": 2.5,
+  "width": 1080,
+  "height": 1920,
+  "has_audio": false,
+  "parameters": {
+    "zoompan_frames": 75,
+    "fps": 30,
+    "max_zoom": 1.04,
+    "color_source": "config/style-bible.json"
+  },
+  "summary": "One flat PNG animated with a 2.5-second zoompan capped at the palette-derived zoom value."
+}
+```
+
+# Quality rules
+
+1. ffprobe reports the exact resolution stored in config/defaults.json.
+2. Output duration stays between 2.4 and 2.6 seconds.
+3. The report records the palette as the zoom source, not a literal zoom number.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `rough cut + scene elements`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py animator run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/animator.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/animator.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED animator: ffmpeg ...` and exit 0 without a FAIL.
+1. Load the resolution and palette through project-memory before choosing the input PNG.
+2. Require ffmpeg and print BLOCKED with the FFMPEG_PATH hint when it is missing.
+3. Build the zoompan filter from the palette length and the configured frame count.
+4. Encode the still image with libx264 veryfast and yuv420p, then probe the result.
+5. Write the measured effect report to projects/<project>/07-edit/animator.json.
+6. Validate the media-effect schema and confirm the clip has no audio stream.
 
 # How to test
 
-- `python scripts/skill_tools.py animator --self-test` → expected `PASS animator: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `projects/<project>/07-edit/animator.json` exists and is non-empty after a real run.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- `python scripts/skill_tools.py animator --self-test` generates a tiny PNG, runs the zoompan command and checks resolution and duration with ffprobe.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/media-effect.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -51,4 +95,4 @@ rough-cut-assembler -> final-test
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If ffmpeg is unavailable, print BLOCKED and exit without changing Windows settings. If the PNG is missing, fall back to the generated media fixture and note the substitution in the report.

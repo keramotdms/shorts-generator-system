@@ -6,42 +6,94 @@ subcategory: automation-export
 status: implemented
 phase: later
 type: prompt-only
-batch: 7
+batch: C
+schema: selection
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when finds reusable stock footage and images for a video in `projects/<project>/`.
+Use after scenario-designer and before video-maker, when a scene needs a photo-free visual and no new artwork should be drawn.
 
 # Purpose
 
-Finds reusable stock footage and images.
+Shortlist reusable local images and clips from assets/ for a script's visual gaps, with a score that reflects licence clarity and flat-style fit.
 
 # Input
 
-- `final script + asset needs`
+- `assets/scenes/*.png`, `assets/scenes/*.svg`, `assets/video/*.mp4`
+- `projects/<project>/05-scene/scenario-designer.json`
+- `config/style-bible.json` palette
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/stock-asset-finder.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `stock asset list`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Asset scoring
+
+1. List only files already inside assets/; no network lookup is allowed.
+2. Score each candidate 0–10 for flat-style fit, palette match and licence clarity.
+3. Reject any file without a sibling LICENSE note and record the reason.
+4. Choose at most two assets per Short and name the scene that uses each one.
+5. Prefer PNG or SVG over live-action MP4 for this flat 2D channel.
+
+# Output format (short example)
+
+Schema: `config/schemas/selection.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "stock-asset-finder",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "candidates": [
+    {
+      "id": "assets/scenes/warm-desk-background.png",
+      "score": 9,
+      "reason": "flat shapes, palette match, local LICENSE note"
+    },
+    {
+      "id": "assets/video/crowd-street.mp4",
+      "score": 4,
+      "reason": "live action, wrong style, no licence note"
+    },
+    {
+      "id": "assets/scenes/wallet-prop.svg",
+      "score": 8,
+      "reason": "flat wallet prop with licence note"
+    }
+  ],
+  "chosen_id": "assets/scenes/warm-desk-background.png",
+  "rationale": "Highest scoring flat asset with a clear local licence; assigned to the opening desk scene."
+}
+```
+
+# Quality rules
+
+1. Every candidate id is a path that exists under assets/.
+2. Chosen id appears in the candidate list.
+3. At most two assets are marked as chosen in the rationale.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final script + asset needs`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to finds reusable stock footage and images, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/07-edit/stock-asset-finder.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/stock-asset-finder.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read palette and scene needs from project-memory sources before scanning assets/.
+2. Walk assets/scenes/ and assets/video/ for candidate files without following links.
+3. Check for a LICENSE note next to each file and record missing ones as rejections.
+4. Score candidates on style, palette and licence, then pick up to two.
+5. Write the shortlist to projects/<project>/05-scene/stock-asset-finder.json.
+6. Validate the selection schema and verify each id resolves to a real local file.
 
 # How to test
 
-- Type: `Use the stock-asset-finder skill with PROJECT=<project>`. Expected: `projects/<project>/07-edit/stock-asset-finder.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Run `python scripts/svg_scene_builder.py sample`, then validate projects/_template/05-scene/stock-asset-finder.json with the selection schema.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/selection.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -49,4 +101,4 @@ research -> scene and video stages
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If no licensed local asset exists, return a WARN selection with no chosen id and ask the user to add an owned file. Never fetch a stock asset from the internet.

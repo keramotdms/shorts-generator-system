@@ -558,8 +558,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "animator": {
       "input": "rough cut + scene elements",
@@ -570,8 +571,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "motion-graphic-editor": {
       "input": "rough cut + brand assets",
@@ -582,8 +584,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "branding-manager": {
       "input": "style bible + edited video",
@@ -594,8 +597,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "cut-rhythm-editor": {
       "input": "rough cut + script timings",
@@ -619,8 +623,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "hook-visual-editor": {
       "input": "rough cut + hook plan",
@@ -631,8 +636,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "seamless-loop-editor": {
       "input": "rough cut + loop plan",
@@ -643,8 +649,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "virtual-camera-planner": {
       "input": "scene layouts",
@@ -655,7 +662,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 7
+      "batch": "C",
+      "schema": "plan"
     },
     "transition-designer": {
       "input": "rough cut + style bible",
@@ -678,8 +686,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "broll-variety-planner": {
       "input": "final script + stock assets",
@@ -726,8 +735,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "intro-outro-manager": {
       "input": "video + brand assets",
@@ -738,8 +748,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "watermark-logo-placer": {
       "input": "video + logo asset",
@@ -750,8 +761,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "beat-sync-editor": {
       "input": "video + music track",
@@ -762,8 +774,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "audio-ducking-controller": {
       "input": "voice track + music track",
@@ -786,8 +799,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "av-sync-checker": {
       "input": "final video",
@@ -810,7 +824,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 7
+      "batch": "C",
+      "schema": "inventory"
     },
     "safe-zone-checker": {
       "input": "captioned video",
@@ -832,8 +847,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "format-converter": {
       "input": "final video",
@@ -856,8 +872,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "render-export-optimizer": {
       "input": "edit project + video",
@@ -880,8 +897,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "C",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "stock-asset-finder": {
       "input": "final script + asset needs",
@@ -892,7 +910,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 7
+      "batch": "C",
+      "schema": "selection"
     },
     "red-team": {
       "input": "final video + final script",

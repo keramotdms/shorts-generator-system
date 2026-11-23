@@ -6,42 +6,102 @@ subcategory: automation-export
 status: implemented
 phase: later
 type: prompt-only
-batch: 7
+batch: C
+schema: inventory
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when stores reusable editing templates for a video in `projects/<project>/`.
+Use after color-grading-keeper and before variant-batch-renderer, when the same grade and caption layout will be applied to many videos.
 
 # Purpose
 
-Stores reusable editing templates.
+Register the small set of edit presets that may be reused across Shorts and keep exactly one active preset for each effect type.
 
 # Input
 
-- `style bible + edit presets`
+- `config/style-bible.json` palette and font
+- `config/defaults.json` resolution
+- `config/presets/*.json` local preset files
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/template-preset-manager.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `template library`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Preset rules
+
+1. Maintain exactly three preset types: grade, caption and brand.
+2. Only one preset per type may be active; older copies are archive.
+3. Every preset path must be a JSON file under config/presets/.
+4. Bump the version when the preset bytes change and keep the previous file as archive.
+5. Record the resolution source as config/defaults.json in every preset purpose.
+
+# Output format (short example)
+
+Schema: `config/schemas/inventory.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "template-preset-manager",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "entries": [
+    {
+      "path": "config/presets/grade-warm.json",
+      "version": 2,
+      "purpose": "grade preset, defaults.json resolution source",
+      "state": "active"
+    },
+    {
+      "path": "config/presets/grade-warm-v1.json",
+      "version": 1,
+      "purpose": "previous grade preset",
+      "state": "archive"
+    },
+    {
+      "path": "config/presets/caption-bangla.json",
+      "version": 1,
+      "purpose": "caption preset, defaults.json resolution source",
+      "state": "active"
+    },
+    {
+      "path": "config/presets/brand-bar.json",
+      "version": 1,
+      "purpose": "brand preset, defaults.json resolution source",
+      "state": "active"
+    }
+  ],
+  "summary": "Three active preset types registered with one archived earlier grade version."
+}
+```
+
+# Quality rules
+
+1. There is exactly one active entry for each of the three preset types.
+2. All paths start with config/presets/ and end in .json.
+3. Archived versions have a lower version number than their active counterpart.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `style bible + edit presets`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to stores reusable editing templates, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/07-edit/template-preset-manager.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/template-preset-manager.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Load the palette, font and resolution through project-memory before reading preset files.
+2. List JSON files under config/presets/ and group them by preset type.
+3. Compare file bytes with the last known version to decide which entry stays active.
+4. Rename older copies with a -v suffix and mark them archive instead of deleting them.
+5. Write the preset inventory to projects/<project>/07-edit/template-preset-manager.json.
+6. Validate the inventory schema and assert one active entry per preset type.
 
 # How to test
 
-- Type: `Use the template-preset-manager skill with PROJECT=<project>`. Expected: `projects/<project>/07-edit/template-preset-manager.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Validate projects/_template/07-edit/template-preset-manager.json with the inventory schema, then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/inventory.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -49,4 +109,4 @@ style bible -> video-editing
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If a preset type has no file, list it as draft with the expected path and stop before variant-batch-renderer. Never copy a preset from another project.

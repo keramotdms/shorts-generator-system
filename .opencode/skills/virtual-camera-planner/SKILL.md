@@ -6,42 +6,104 @@ subcategory: visual
 status: implemented
 phase: later
 type: prompt-only
-batch: 7
+batch: C
+schema: plan
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when plans virtual camera moves for a video in `projects/<project>/`.
+Use after scenario-designer and before video-maker, when a static layout needs controlled movement instead of random animation.
 
 # Purpose
 
-Plans virtual camera moves.
+Write a timed camera plan that tells the SVG renderer when to pan or zoom a flat scene while keeping every caption inside the safe zone.
 
 # Input
 
-- `scene layouts`
+- `projects/<project>/05-scene/scenario-designer.json`
+- `config/style-bible.json` safe margins
+- `config/defaults.json` resolution
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/virtual-camera-planner.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `camera move plan`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Camera move constraints
+
+1. Allow at most two camera moves per scene.
+2. Keep each move between 2 and 5 seconds.
+3. Cap zoom changes at 8% so flat art does not pixelate.
+4. Never pan the bottom 15% of the frame where captions sit.
+5. Give each move an explicit reason tied to the scene's visual job.
+
+# Output format (short example)
+
+Schema: `config/schemas/plan.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "virtual-camera-planner",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "items": [
+    {
+      "id": 1,
+      "action": "Zoom 4% toward the coffee cup",
+      "start_sec": 0,
+      "end_sec": 3,
+      "reason": "draws attention to the hook object"
+    },
+    {
+      "id": 2,
+      "action": "Pan right across the notebook",
+      "start_sec": 8,
+      "end_sec": 12,
+      "reason": "reveals the side-hustle prop"
+    },
+    {
+      "id": 3,
+      "action": "Hold camera steady",
+      "start_sec": 38,
+      "end_sec": 45,
+      "reason": "keeps the loop line readable"
+    }
+  ],
+  "constraints": [
+    "max 2 moves per scene",
+    "zoom change at most 8%",
+    "bottom 15% protected"
+  ],
+  "summary": "Three timed camera decisions with modest zoom and a protected caption band."
+}
+```
+
+# Quality rules
+
+1. No item duration is under 2 or over 5 seconds except an explicit hold.
+2. Every action names a zoom or pan direction and a magnitude.
+3. Constraints include the bottom 15% protection rule.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `scene layouts`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to plans virtual camera moves, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/07-edit/virtual-camera-planner.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/virtual-camera-planner.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read safe margins and resolution from project-memory before opening the scene layout.
+2. Validate projects/<project>/05-scene/scenario-designer.json and list its scenes.
+3. Assign at most two moves per scene with durations between 2 and 5 seconds.
+4. Check each zoom against the 8% cap and each pan against the caption band.
+5. Write the camera plan to projects/<project>/05-scene/virtual-camera-planner.json.
+6. Validate the plan schema and report any scene that exceeds the move limit.
 
 # How to test
 
-- Type: `Use the virtual-camera-planner skill with PROJECT=<project>`. Expected: `projects/<project>/07-edit/virtual-camera-planner.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Validate projects/_template/05-scene/virtual-camera-planner.json with the plan schema, then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/plan.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -49,4 +111,4 @@ video-making -> video-editor
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the scene layout is missing, stop and name the path. If a move would violate the caption band, replace it with a hold and add a WARN instead of shifting captions.

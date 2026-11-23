@@ -6,7 +6,8 @@ subcategory: automation-export
 status: implemented
 phase: later
 type: script-backed
-batch: 7
+batch: C
+schema: media-effect
 requires: ffmpeg
 ---
 
@@ -14,36 +15,78 @@ requires: ffmpeg
 
 # When to use
 
-Use when extracts preview frames for review for a video in `projects/<project>/`.
+Use after the final edit and before bug-finder, when a human needs a quick visual summary instead of scrubbing the video.
 
 # Purpose
 
-Extracts preview frames for review.
+Build one 2x3 contact sheet from a finished clip so a reviewer can judge six evenly spaced frames in a single image.
 
 # Input
 
-- `final video`
+- `projects/<project>/08-final-test/final-video.mp4`
+- `config/defaults.json` resolution
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/preview-frame-extractor.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `preview frames`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Contact sheet parameters
+
+1. Sample one frame every 2 seconds with fps=1/2.
+2. Scale each sampled frame to half the configured width and one third of the height.
+3. Tile the samples into a 2x3 grid and emit exactly one PNG file.
+4. Do not create an audio stream; the output is a still image.
+5. Verify with ffprobe that the PNG width and height equal the configured resolution.
+
+# Output format (short example)
+
+Schema: `config/schemas/media-effect.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "preview-frame-extractor",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "video": "projects/<project>/07-edit/preview-frame-extractor.png",
+  "duration_sec": 3.0,
+  "width": 1080,
+  "height": 1920,
+  "has_audio": false,
+  "parameters": {
+    "sample_fps": "1/2",
+    "tile": "2x3",
+    "cell": "540x640",
+    "format": "png"
+  },
+  "summary": "Six-frame contact sheet tiled at 2x3 and probed as a 1080x1920 PNG."
+}
+```
+
+# Quality rules
+
+1. The output path ends in .png.
+2. Tile dimensions multiply back to the configured resolution.
+3. ffprobe reports no audio stream and exactly one image output.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py preview-frame-extractor run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/preview-frame-extractor.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/preview-frame-extractor.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED preview-frame-extractor: ffmpeg ...` and exit 0 without a FAIL.
+1. Load the resolution from config/defaults.json through project-memory before computing cell size.
+2. Check ffmpeg availability and print BLOCKED with the setup hint if it is absent.
+3. Build fps, scale and tile filters in that order for the source video.
+4. Limit the command to one output frame and write a PNG under projects/<project>/07-edit/.
+5. Probe the PNG and compare its dimensions to the configured resolution.
+6. Write projects/<project>/07-edit/preview-frame-extractor.json and validate the media-effect schema.
 
 # How to test
 
-- `python scripts/skill_tools.py preview-frame-extractor --self-test` → expected `PASS preview-frame-extractor: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `projects/<project>/07-edit/preview-frame-extractor.json` exists and is non-empty after a real run.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- `python scripts/skill_tools.py preview-frame-extractor --self-test` tiles generated media and checks the PNG with ffprobe.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/media-effect.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -51,4 +94,4 @@ video-editing -> final-test
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the source is shorter than 2 seconds, tile whatever frames exist and note the reduced sample count in the report. If ffmpeg is blocked, produce no image.

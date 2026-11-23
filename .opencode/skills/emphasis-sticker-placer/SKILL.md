@@ -6,7 +6,8 @@ subcategory: text-graphics
 status: implemented
 phase: later
 type: script-backed
-batch: 7
+batch: C
+schema: media-effect
 requires: ffmpeg
 ---
 
@@ -14,36 +15,80 @@ requires: ffmpeg
 
 # When to use
 
-Use when places emphasis stickers and highlights for a video in `projects/<project>/`.
+Use after caption-maker and before final-test, when a number in the hook needs a visual accent but no new artwork is available.
 
 # Purpose
 
-Places emphasis stickers and highlights.
+Flash a translucent palette-coloured highlight behind the first key line of a Short so the money figure reads at a glance.
 
 # Input
 
-- `final script + video`
+- `projects/<project>/07-edit/captioned.mp4`
+- `config/style-bible.json` palette
+- `config/defaults.json` resolution
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/emphasis-sticker-placer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `video with emphasis graphics`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Highlight placement
+
+1. Set the highlight x to 8% of width and y to 12% of height.
+2. Make the box 84% of width and 12% of height so captions below stay readable.
+3. Use the third palette colour at 0.35 alpha and fill the box.
+4. Enable the box only for the first 1.2 seconds or half the clip, whichever is shorter.
+5. Verify the output keeps the source resolution and audio with ffprobe.
+
+# Output format (short example)
+
+Schema: `config/schemas/media-effect.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "emphasis-sticker-placer",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "video": "projects/<project>/07-edit/emphasis-sticker-placer.mp4",
+  "duration_sec": 3.0,
+  "width": 1080,
+  "height": 1920,
+  "has_audio": true,
+  "parameters": {
+    "x_pct": 8,
+    "y_pct": 12,
+    "box_pct": "84x12",
+    "alpha": 0.35,
+    "window_sec": 1.2
+  },
+  "summary": "Palette highlight shown for 1.2 seconds behind the hook text on a 3-second clip."
+}
+```
+
+# Quality rules
+
+1. Report parameters include the 0.35 alpha value.
+2. The enable window is at most half the probed duration.
+3. ffprobe reports unchanged dimensions and audio present.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final script + video`; if it is missing or malformed, follow Failure handling and stop.
-3. Run `python scripts/skill_tools.py emphasis-sticker-placer run` with `PROJECT=<project>`; the helper reads context through `scripts/skill_lib.py::style_context()`.
-4. Write the result to `projects/<project>/07-edit/emphasis-sticker-placer.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/emphasis-sticker-placer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. If `requires: ffmpeg` is set, call `scripts/skill_lib.py::require_ffmpeg()` which reads `FFMPEG_PATH`; on `BLOCKED` print `BLOCKED emphasis-sticker-placer: ffmpeg ...` and exit 0 without a FAIL.
+1. Read palette and resolution from project-memory, then probe the captioned video.
+2. Require ffmpeg and print BLOCKED if the configured executable is absent.
+3. Compute the box geometry from the probed frame size rather than fixed pixels.
+4. Build the drawbox filter with an enable expression limited to the hook window.
+5. Encode with libx264 and AAC, then verify the output stream with ffprobe.
+6. Save the measured report to projects/<project>/07-edit/emphasis-sticker-placer.json.
 
 # How to test
 
-- `python scripts/skill_tools.py emphasis-sticker-placer --self-test` → expected `PASS emphasis-sticker-placer: ...` or `BLOCKED ...: ffmpeg ...` while Smart App Control is active. Then confirm `projects/<project>/07-edit/emphasis-sticker-placer.json` exists and is non-empty after a real run.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- `python scripts/skill_tools.py emphasis-sticker-placer --self-test` draws the highlight on generated media and verifies it with ffprobe.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/media-effect.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -51,4 +96,4 @@ caption-maker -> final-test
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the source is shorter than 0.4 seconds, skip the highlight and copy the input with a WARN. Never use a sticker image that is not already in assets/.

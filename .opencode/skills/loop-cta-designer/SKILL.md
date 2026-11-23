@@ -5,42 +5,104 @@ category: script
 status: implemented
 phase: later
 type: prompt-only
-batch: 3
+batch: B
+schema: plan
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when designs the loop ending and call to action for a video in `projects/<project>/`.
+Use after script-writer and before caption-maker, when the final line is still a plain ending instead of a replay trigger.
 
 # Purpose
 
-Designs the loop ending and call to action.
+Design a last-3-seconds handoff where the ending frame flows back into the opening hook and the call to action stays inside the caption safe zone.
 
 # Input
 
-- `draft script`
+- projects/<project>/02-script/latest_script.json
+- projects/<project>/02-script/hook.json
+- config/style-bible.json safe margins
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/02-script/loop-cta-designer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `loop and CTA plan`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Loop design criteria
+
+1. Use the final 3 seconds only; never extend the video beyond its locked duration.
+2. The last frame must repeat the opening object or colour from hook.json.
+3. Keep the spoken CTA to 8 Bangla words or fewer.
+4. Place the CTA text above the bottom 15% of the frame to protect captions.
+5. Write one explicit replay instruction in Bangla for the on-screen line.
+
+# Output format (short example)
+
+Schema: `config/schemas/plan.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "loop-cta-designer",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "items": [
+    {
+      "id": 1,
+      "action": "Return the coffee cup to the opening position",
+      "start_sec": 42,
+      "end_sec": 43,
+      "reason": "matches the hook object"
+    },
+    {
+      "id": 2,
+      "action": "Show 'আবার দেখুন' above the caption band",
+      "start_sec": 43,
+      "end_sec": 44,
+      "reason": "4 Bangla words, safe zone clear"
+    },
+    {
+      "id": 3,
+      "action": "Freeze on the opening colour",
+      "start_sec": 44,
+      "end_sec": 45,
+      "reason": "seamless replay point"
+    }
+  ],
+  "constraints": [
+    "final 3 seconds",
+    "CTA at most 8 Bangla words",
+    "text above bottom 15%"
+  ],
+  "summary": "Three-second loop returns the cup, shows a short Bangla CTA and freezes on the hook colour."
+}
+```
+
+# Quality rules
+
+1. All items fall inside the final 3 seconds of the script duration.
+2. The CTA item contains a Bangla phrase of at most 8 words.
+3. The constraints include the bottom 15% safe-zone rule.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `draft script`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to designs the loop ending and call to action, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/02-script/loop-cta-designer.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/02-script/loop-cta-designer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read safe margins from config/style-bible.json through project-memory.
+2. Open hook.json and note the opening object and palette colour.
+3. Load the script duration and reserve its last 3 seconds for the loop.
+4. Draft the replay instruction and count its Bangla words.
+5. Write the loop plan to projects/<project>/02-script/loop-cta-designer.json.
+6. Validate the plan schema and assert every item starts after the 42-second mark in a 45-second script.
 
 # How to test
 
-- Type: `Use the loop-cta-designer skill with PROJECT=<project>`. Expected: `projects/<project>/02-script/loop-cta-designer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Validate projects/_template/02-script/loop-cta-designer.json with the plan schema, then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/plan.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +110,4 @@ script-writer -> video-editing
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If hook.json is missing, report the exact path and do not design a loop. If the script is shorter than 10 seconds, return WARN and reuse the whole final frame as the loop point.

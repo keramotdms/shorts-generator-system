@@ -5,42 +5,98 @@ category: research
 status: implemented
 phase: later
 type: prompt-only
-batch: 2
+batch: B
+schema: analysis
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when analyzes competing channels and formats for a video in `projects/<project>/`.
+Use after audience-persona-builder and before story-thinker, when manual notes about competitor videos have been collected in research/competitor-notes.md.
 
 # Purpose
 
-Analyzes competing channels and formats.
+Compare three locally noted competitor Shorts against our own format and return the single format gap worth copying next.
 
 # Input
 
-- `research/niche-report.md`
+- research/competitor-notes.md (manual notes, no API)
+- research/niche-report.md
+- config/style-bible.json video length
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/01-research/competitor-analyzer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `competitor analysis report`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Comparison criteria
+
+1. Score each competitor 0–10 for hook clarity, number specificity and Bangla naturalness.
+2. Compare only Shorts between 30 and 60 seconds; longer videos are excluded with a reason.
+3. Require at least three noted competitors; two or fewer is a WARN.
+4. Name the single lowest-scoring dimension of our own format as the gap to copy.
+5. Never invent view counts; cite only numbers written in the manual notes.
+
+# Output format (short example)
+
+Schema: `config/schemas/analysis.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "competitor-analyzer",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "source_file": "research/competitor-notes.md",
+  "criteria": [
+    {
+      "name": "hook clarity",
+      "score": 8,
+      "evidence": "competitor A shows the salary in second 1"
+    },
+    {
+      "name": "number specificity",
+      "score": 6,
+      "evidence": "only two of three notes include taka amounts"
+    },
+    {
+      "name": "Bangla naturalness",
+      "score": 9,
+      "evidence": "all hooks use spoken Bangla, not translated English"
+    }
+  ],
+  "findings": [
+    "Our hook waits 4 seconds while competitor A pays off in 1.",
+    "Add one taka figure to the first line."
+  ],
+  "summary": "Three manual competitor notes reviewed; number specificity is the format gap to copy next."
+}
+```
+
+# Quality rules
+
+1. Each criterion has a 0–10 score and an evidence string from the notes.
+2. Findings reference a named competitor or a specific second.
+3. No view count appears unless the manual notes contain it.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `research/niche-report.md`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to analyzes competing channels and formats, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/01-research/competitor-analyzer.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/01-research/competitor-analyzer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Load the 30–60 second limit and language from project-memory before opening the notes.
+2. Read research/competitor-notes.md and discard entries outside the length limit.
+3. Score the remaining entries on hook clarity, number specificity and Bangla naturalness.
+4. Compare the averages to our current style bible format and name one gap.
+5. Write the report to projects/<project>/01-research/competitor-analyzer.json.
+6. Validate the analysis schema and confirm every score cites a note.
 
 # How to test
 
-- Type: `Use the competitor-analyzer skill with PROJECT=<project>`. Expected: `projects/<project>/01-research/competitor-analyzer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Write three lines to research/competitor-notes.md, run the skill, then `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/analysis.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +104,4 @@ niche report -> story-thinker
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the manual notes file is missing, report the exact path and stop. If fewer than three eligible Shorts exist, write WARN with the count instead of pretending a full comparison.

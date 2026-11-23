@@ -6,42 +6,102 @@ subcategory: core
 status: implemented
 phase: later
 type: prompt-only
-batch: 7
+batch: B
+schema: inventory
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when gathers script, video clips and voice for editing for a video in `projects/<project>/`.
+Use after video-maker and before rough-cut-assembler, when several scene versions exist and the editor needs one authoritative edit package.
 
 # Purpose
 
-Gathers script, video clips and voice for editing.
+Verify and index the exact script, rendered scene clips and voiceover file that rough-cut-assembler needs, so editing never starts with stale assets.
 
 # Input
 
-- `script + rendered scenes + voiceover`
+- projects/<project>/02-script/latest_script.json
+- projects/<project>/06-video/scenes/*.mp4
+- projects/<project>/03-voice/voiceover.mp3
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/07-edit/script-video-voice-collector.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `edit package`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Edit package rules
+
+1. Require exactly one script file, one voiceover file and at least one scene clip.
+2. Every scene clip must carry the same resolution as config/defaults.json.
+3. Reject any path written as an absolute Windows drive path.
+4. Scene clips must be listed in the numeric order of the script scenes.
+5. Mark any clip whose duration differs from its script scene by more than 1 second as draft.
+
+# Output format (short example)
+
+Schema: `config/schemas/inventory.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "script-video-voice-collector",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "entries": [
+    {
+      "path": "projects/<project>/02-script/latest_script.json",
+      "version": 3,
+      "purpose": "locked script for the edit",
+      "state": "active"
+    },
+    {
+      "path": "projects/<project>/03-voice/voiceover.mp3",
+      "version": 1,
+      "purpose": "narration master",
+      "state": "active"
+    },
+    {
+      "path": "projects/<project>/06-video/scenes/scene-01.mp4",
+      "version": 1,
+      "purpose": "scene 1, 7 seconds",
+      "state": "active"
+    },
+    {
+      "path": "projects/<project>/06-video/scenes/scene-02-old.mp4",
+      "version": 1,
+      "purpose": "superseded scene 2",
+      "state": "archive"
+    }
+  ],
+  "summary": "Four edit inputs indexed in script order; one superseded scene clip kept as archive."
+}
+```
+
+# Quality rules
+
+1. All entry paths are relative and begin with projects/<project>/.
+2. Exactly one voiceover entry is active.
+3. Scene entries appear in ascending numeric order by file name.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `script + rendered scenes + voiceover`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to gathers script, video clips and voice for editing, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/07-edit/script-video-voice-collector.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/07-edit/script-video-voice-collector.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read resolution from config/defaults.json through project-memory before probing clips.
+2. Validate the script with `config/schemas/latest_script.json` and note its scene count.
+3. List scene MP4 files and probe each with ffprobe if it is available.
+4. Compare clip durations to script scenes and flag deviations over 1 second as draft.
+5. Write the edit package to projects/<project>/07-edit/script-video-voice-collector.json.
+6. Validate the inventory schema and assert there is exactly one active voiceover row.
 
 # How to test
 
-- Type: `Use the script-video-voice-collector skill with PROJECT=<project>`. Expected: `projects/<project>/07-edit/script-video-voice-collector.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Validate projects/_template/07-edit/script-video-voice-collector.json with the inventory schema, then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/inventory.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -49,4 +109,4 @@ video-making -> rough-cut-assembler
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the voiceover or script is missing, stop with a FAIL that names both exact paths. If ffprobe is unavailable, record durations as unverified instead of guessing them.

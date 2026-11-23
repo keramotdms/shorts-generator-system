@@ -138,7 +138,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 2
+      "batch": "B",
+      "schema": "analysis"
     },
     "audience-persona-builder": {
       "input": "config/channel.json + niche report",
@@ -149,7 +150,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 2
+      "batch": "B",
+      "schema": "selection"
     },
     "fact-checker": {
       "input": "draft script claims",
@@ -160,7 +162,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 2
+      "batch": "B",
+      "schema": "analysis"
     },
     "content-calendar": {
       "input": "niche and trend reports",
@@ -171,7 +174,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 2
+      "batch": "B",
+      "schema": "plan"
     },
     "story-thinker": {
       "input": "research/niche-report.md + config/channel.json",
@@ -239,7 +243,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 3
+      "batch": "B",
+      "schema": "plan"
     },
     "script-tester": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -273,7 +278,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 3
+      "batch": "B",
+      "schema": "plan"
     },
     "voiceover-organizer": {
       "input": "final script + style bible",
@@ -400,7 +406,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 5
+      "batch": "B",
+      "schema": "inventory"
     },
     "expression-pose-library": {
       "input": "character setup assets",
@@ -527,7 +534,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 7
+      "batch": "B",
+      "schema": "inventory"
     },
     "rough-cut-assembler": {
       "input": "projects/<project>/06-video/scenes/",

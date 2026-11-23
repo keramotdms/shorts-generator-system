@@ -44,20 +44,21 @@ Writes the full script with scenes and timings.
 # Input
 
 
-- `story.json + hook.json + config/channel.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/story.json`
+- `projects/<project>/02-script/hook.json`
+- `config/channel.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 
 - `projects/<project>/02-script/latest_script.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 
 1. Read `config/channel.json` and `config/style-bible.json` through project-memory for language, video length and tone. Read `projects/<project>/02-script/story.json` and `projects/<project>/02-script/hook.json`; stop if either is missing or malformed.
-2. Carry the hook text into the script's `hook` field unchanged. Write `title`, `narration` and `highlight_words` in the project language; keep every `visual_prompt` in plain English so renderers can parse it.
+2. Copy the exact field `hook.json.text` into `latest_script.json.hook` unchanged; never rename it through prose alone. Write `title`, `narration` and `highlight_words` in the project language; keep every `visual_prompt` in plain English so renderers can parse it.
 3. Apply the real pacing rules: hook at 0-3 s, fast body from 3-45 s with sentences of 8-12 words, and a CTA or loop back to the hook in the last 3-5 s. Use the 3 story beats as scenes 1-3.
 4. Save `projects/<project>/02-script/latest_script.json` with `language`, `title`, `hook`, `total_duration_sec` (30-60) and `scenes[].scene_number/narration/visual_prompt/highlight_words`. Give each scene a `duration_sec` whose sum is within 2 seconds of the total.
 5. Run `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`; re-open the file and confirm each `highlight_words` entry appears in its scene narration.

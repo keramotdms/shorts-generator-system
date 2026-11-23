@@ -23,16 +23,14 @@ Overlay a small local logo in the top-right corner of every edited clip so the c
 
 # Input
 
-- `assets/brand/*.png` or `assets/scenes/*.png` local logo
-- `projects/<project>/07-edit/rough-cut.mp4`
-- `config/defaults.json` resolution
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/07-edit/captioned.mp4`
+- `config/style-bible.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `branded video`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/watermark-logo-placer.json`
 
 # Watermark parameters
 

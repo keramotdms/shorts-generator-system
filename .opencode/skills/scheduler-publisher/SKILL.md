@@ -23,16 +23,14 @@ Produce a validated publishing schedule from a manual request file; this skill n
 
 # Input
 
-- projects/<project>/10-publish/inputs/schedule-requests.json (manual export; no API access)
-- projects/<project>/01-research/content-calendar.json
-- projects/<project>/10-publish/handover.md
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/10-publish/inputs/`
+- `projects/<project>/10-publish/handover.md`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `scheduled or published video`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/10-publish/scheduler-publisher.json`
 
 # Schedule checks
 

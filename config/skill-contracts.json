@@ -4,7 +4,8 @@
     "Skill folders live under .opencode/skills/<skill-name>/SKILL.md.",
     "Generated project data lives under projects/<project>/<stage>/, never inside skill folders.",
     "A skill's output must exactly match the next skill's input.",
-    "upstream and downstream mirror the 'Depends on / feeds into' line in each SKILL.md."
+    "upstream and downstream mirror the 'Depends on / feeds into' line in each SKILL.md.",
+    "All input and output strings are exact repository paths; ' + ' separates multiple exact paths."
   ],
   "voiceover_captions_split_proposal": {
     "problem": "The legacy 'voiceover-captions' skill does two jobs: audio generation and caption timing generation.",
@@ -21,8 +22,8 @@
       },
       "caption-maker": {
         "phase": 4,
-        "input": "projects/<project>/03-voice/voiceover.mp3 plus word-boundary timings and rough-cut.mp4",
-        "output": "projects/<project>/07-edit/captions.json + captioned video",
+        "input": "projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4",
+        "output": "projects/<project>/07-edit/captions.json + projects/<project>/07-edit/caption-maker.json + projects/<project>/07-edit/captioned.mp4",
         "job": "Create word/phrase caption timings and safe-zone-ready caption data only.",
         "maps_to": [
           "voiceover-captions"
@@ -35,14 +36,14 @@
           "caption-maker"
         ],
         "current_helper": "scripts/generate_audio.py",
-        "output_today": "output/voiceover.mp3 + output/captions.json",
+        "output_today": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/captions.json",
         "migration": "When both target skills are built, keep this skill as a thin wrapper that calls both, then deprecate it."
       }
     }
   },
   "skills": {
     "orchestrator": {
-      "input": "projects/<project>/pipeline-state.json",
+      "input": "config/channel.json + projects/<project>/pipeline-state.json",
       "output": "projects/<project>/orchestrator.json",
       "upstream": "channel config",
       "downstream": "all pipeline stages",
@@ -64,7 +65,7 @@
       "batch": 1
     },
     "task-tracker": {
-      "input": "pipeline state and task list",
+      "input": "projects/<project>/pipeline-state.json",
       "output": "projects/<project>/task-tracker.json",
       "upstream": "orchestrator",
       "downstream": "all stages",
@@ -75,7 +76,7 @@
       "batch": 1
     },
     "asset-manager": {
-      "input": "assets/ and projects/<project>/",
+      "input": "config/channel.json + projects/<project>/",
       "output": "projects/<project>/asset-manager.json",
       "upstream": "channel config",
       "downstream": "all stage folders",
@@ -86,8 +87,8 @@
       "batch": 1
     },
     "error-log-keeper": {
-      "input": "error reports from skills",
-      "output": "projects/<project>/error-log-keeper.jsonl",
+      "input": "projects/<project>/08-final-test/",
+      "output": "projects/<project>/08-final-test/error-log.jsonl",
       "upstream": "all stages",
       "downstream": "pipeline-health-checker",
       "category": "core",
@@ -97,7 +98,7 @@
       "batch": 1
     },
     "pipeline-health-checker": {
-      "input": "whole repository and final video",
+      "input": "config/skill-contracts.json + projects/<project>/08-final-test/final-video.mp4",
       "output": "projects/<project>/pipeline-health-checker.json",
       "upstream": "all stages",
       "downstream": "final render gate",
@@ -109,7 +110,7 @@
     },
     "book-finder": {
       "input": "config/channel.json",
-      "output": "research/niche-report.md",
+      "output": "projects/<project>/01-research/niche-report.md",
       "upstream": "channel config",
       "downstream": "story-thinker",
       "category": "research",
@@ -119,8 +120,8 @@
       "batch": 2
     },
     "trend-finder": {
-      "input": "config/channel.json + research/trend-cache/",
-      "output": "research/trend-cache/*.json",
+      "input": "config/channel.json + projects/<project>/01-research/trend-cache/",
+      "output": "projects/<project>/01-research/trend-report.json",
       "upstream": "channel config",
       "downstream": "story-thinker",
       "category": "research",
@@ -130,7 +131,7 @@
       "batch": 2
     },
     "competitor-analyzer": {
-      "input": "research/niche-report.md",
+      "input": "projects/<project>/01-research/niche-report.md + config/channel.json",
       "output": "projects/<project>/01-research/competitor-analyzer.json",
       "upstream": "niche report",
       "downstream": "story-thinker",
@@ -142,7 +143,7 @@
       "schema": "analysis"
     },
     "audience-persona-builder": {
-      "input": "config/channel.json + niche report",
+      "input": "projects/<project>/01-research/niche-report.md + config/channel.json",
       "output": "projects/<project>/01-research/audience-persona-builder.json",
       "upstream": "research outputs",
       "downstream": "hook-writer",
@@ -154,7 +155,7 @@
       "schema": "selection"
     },
     "fact-checker": {
-      "input": "draft script claims",
+      "input": "projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/01-research/fact-checker.json",
       "upstream": "draft script",
       "downstream": "final-test",
@@ -166,7 +167,7 @@
       "schema": "analysis"
     },
     "content-calendar": {
-      "input": "niche and trend reports",
+      "input": "projects/<project>/01-research/niche-report.md + projects/<project>/01-research/trend-report.json",
       "output": "projects/<project>/01-research/content-calendar.json",
       "upstream": "research outputs",
       "downstream": "scheduler-publisher",
@@ -178,7 +179,7 @@
       "schema": "plan"
     },
     "story-thinker": {
-      "input": "research/niche-report.md + config/channel.json",
+      "input": "projects/<project>/01-research/niche-report.md + projects/<project>/01-research/trend-report.json + config/channel.json",
       "output": "projects/<project>/02-script/story.json",
       "upstream": "research outputs",
       "downstream": "hook-writer",
@@ -189,7 +190,7 @@
       "batch": 3
     },
     "story-organizer": {
-      "input": "story.json",
+      "input": "projects/<project>/02-script/story.json",
       "output": "projects/<project>/02-script/story-organizer.json",
       "upstream": "story-thinker",
       "downstream": "hook-writer",
@@ -201,7 +202,7 @@
       "schema": "plan"
     },
     "hook-writer": {
-      "input": "story.json + config/channel.json",
+      "input": "projects/<project>/02-script/story.json + config/channel.json",
       "output": "projects/<project>/02-script/hook.json",
       "upstream": "story-thinker",
       "downstream": "script-writer",
@@ -212,7 +213,7 @@
       "batch": 3
     },
     "script-writer": {
-      "input": "story.json + hook.json + config/channel.json",
+      "input": "projects/<project>/02-script/story.json + projects/<project>/02-script/hook.json + config/channel.json",
       "output": "projects/<project>/02-script/latest_script.json",
       "upstream": "story and hook",
       "downstream": "voice stage",
@@ -223,7 +224,7 @@
       "batch": 3
     },
     "retention-pacing-optimizer": {
-      "input": "draft script",
+      "input": "projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/02-script/retention-pacing-optimizer.json",
       "upstream": "script-writer",
       "downstream": "final-test",
@@ -235,7 +236,7 @@
       "schema": "plan"
     },
     "loop-cta-designer": {
-      "input": "draft script",
+      "input": "projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/02-script/loop-cta-designer.json",
       "upstream": "script-writer",
       "downstream": "video-editing",
@@ -248,7 +249,7 @@
     },
     "script-tester": {
       "input": "projects/<project>/02-script/latest_script.json",
-      "output": "projects/<project>/02-script/script-tester.json + projects/<project>/02-script/script-tester.json",
+      "output": "projects/<project>/02-script/script-tester.json",
       "upstream": "script-writer",
       "downstream": "voice stage",
       "category": "script",
@@ -258,7 +259,7 @@
       "batch": 3
     },
     "script-user-tester": {
-      "input": "draft script + test audience",
+      "input": "projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/02-script/script-user-tester.json",
       "upstream": "script-writer",
       "downstream": "script-tester",
@@ -270,7 +271,7 @@
       "schema": "analysis"
     },
     "localization": {
-      "input": "final script + config/channel.json",
+      "input": "projects/<project>/02-script/latest_script.json + config/channel.json",
       "output": "projects/<project>/02-script/localization.json",
       "upstream": "script-writer",
       "downstream": "voice stage",
@@ -282,7 +283,7 @@
       "schema": "plan"
     },
     "voiceover-organizer": {
-      "input": "final script + style bible",
+      "input": "projects/<project>/02-script/latest_script.json + config/style-bible.json",
       "output": "projects/<project>/03-voice/voiceover-organizer.json",
       "upstream": "script-writer",
       "downstream": "voiceover-generator",
@@ -294,7 +295,7 @@
       "schema": "plan"
     },
     "pronunciation-emotion-director": {
-      "input": "voice plan + final script",
+      "input": "projects/<project>/03-voice/voiceover-organizer.json + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/03-voice/pronunciation-emotion-director.json",
       "upstream": "voice plan",
       "downstream": "voiceover-generator",
@@ -317,7 +318,7 @@
       "batch": 4
     },
     "voiceover-tester": {
-      "input": "voiceover.mp3 + final script",
+      "input": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/03-voice/voiceover-tester.json",
       "upstream": "voiceover-generator",
       "downstream": "final-test",
@@ -328,7 +329,7 @@
       "batch": 4
     },
     "music-sfx-selector": {
-      "input": "video mood + style bible",
+      "input": "config/style-bible.json + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/03-voice/music-sfx-selector.json",
       "upstream": "scene plan",
       "downstream": "audio-mixer",
@@ -340,7 +341,7 @@
       "schema": "selection"
     },
     "audio-mixer": {
-      "input": "voice + music + SFX files",
+      "input": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/music-sfx-selector.json",
       "output": "projects/<project>/03-voice/audio-mixer.json",
       "upstream": "voice and music",
       "downstream": "video-editing",
@@ -353,7 +354,7 @@
     },
     "voiceover-captions": {
       "input": "projects/<project>/02-script/latest_script.json",
-      "output": "output/voiceover.mp3 + output/captions.json",
+      "output": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/captions.json",
       "upstream": "script",
       "downstream": "legacy split targets",
       "category": "voice",
@@ -363,7 +364,7 @@
       "batch": 4
     },
     "character-thinker-counter": {
-      "input": "style bible + final script",
+      "input": "config/style-bible.json + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/04-character/character-thinker-counter.json",
       "upstream": "script and voice",
       "downstream": "character-designer",
@@ -375,7 +376,7 @@
       "schema": "selection"
     },
     "character-organizer": {
-      "input": "character ideas + assets",
+      "input": "projects/<project>/04-character/character-thinker-counter.json",
       "output": "projects/<project>/04-character/character-organizer.json",
       "upstream": "character-thinker-counter",
       "downstream": "character-designer",
@@ -388,7 +389,7 @@
     },
     "character-designer": {
       "input": "config/style-bible.json",
-      "output": "assets/characters/<character-id>.json + assets/characters/<character-id>-<expression>.svg + assets/characters/<character-id>-<expression>.png",
+      "output": "assets/characters/creator-01.json + assets/characters/creator-01-neutral.svg + assets/characters/creator-01-neutral.png",
       "upstream": "style bible",
       "downstream": "collector",
       "category": "character",
@@ -398,7 +399,7 @@
       "batch": 5
     },
     "character-setup-manager": {
-      "input": "character design files",
+      "input": "assets/characters/creator-01.json",
       "output": "projects/<project>/04-character/character-setup-manager.json",
       "upstream": "character-designer",
       "downstream": "video-maker",
@@ -410,7 +411,7 @@
       "schema": "inventory"
     },
     "expression-pose-library": {
-      "input": "character setup assets",
+      "input": "assets/characters/creator-01.json",
       "output": "projects/<project>/04-character/expression-pose-library.json",
       "upstream": "character-designer",
       "downstream": "video-maker",
@@ -422,7 +423,7 @@
       "schema": "inventory"
     },
     "consistency-guardian": {
-      "input": "rendered scenes + character references",
+      "input": "projects/<project>/06-video/scenes/ + assets/characters/creator-01.json",
       "output": "projects/<project>/04-character/consistency-guardian.json",
       "upstream": "video-maker",
       "downstream": "final-test",
@@ -433,7 +434,7 @@
       "batch": 5
     },
     "character-qa-tester": {
-      "input": "character assets",
+      "input": "assets/characters/creator-01.json",
       "output": "projects/<project>/04-character/character-qa-tester.json",
       "upstream": "character-designer",
       "downstream": "final-test",
@@ -444,7 +445,7 @@
       "batch": 5
     },
     "element-designer": {
-      "input": "style bible + final script",
+      "input": "config/style-bible.json + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/05-scene/element-designer.json",
       "upstream": "character and voice",
       "downstream": "scenario-designer",
@@ -456,7 +457,7 @@
       "schema": "inventory"
     },
     "element-organizer": {
-      "input": "scene elements",
+      "input": "projects/<project>/05-scene/element-designer.json",
       "output": "projects/<project>/05-scene/element-organizer.json",
       "upstream": "element-designer",
       "downstream": "scenario-designer",
@@ -468,8 +469,8 @@
       "schema": "inventory"
     },
     "scenario-designer": {
-      "input": "collector output + style bible",
-      "output": "projects/<project>/05-scene/scenario-designer.json + assets/scenes/<scene-id>-background.svg + assets/scenes/<scene-id>.png",
+      "input": "projects/<project>/02-script/latest_script.json + config/style-bible.json",
+      "output": "projects/<project>/05-scene/scenario-designer.json + assets/scenes/warm-desk-background.svg + assets/scenes/scene-warm-desk-smile.png",
       "upstream": "collector",
       "downstream": "video-maker",
       "category": "scene",
@@ -479,7 +480,7 @@
       "batch": 5
     },
     "script-voice-character-collector": {
-      "input": "script + voiceover + character references",
+      "input": "projects/<project>/02-script/latest_script.json + projects/<project>/03-voice/voiceover.mp3 + assets/characters/creator-01.json + assets/scenes/scene-warm-desk-smile.png",
       "output": "projects/<project>/05-scene/collection.json",
       "upstream": "script, voice and character",
       "downstream": "video-maker",
@@ -490,7 +491,7 @@
       "batch": 6
     },
     "lipsync-motion-planner": {
-      "input": "voice timings + character references",
+      "input": "projects/<project>/03-voice/captions.json + assets/characters/creator-01.json",
       "output": "projects/<project>/06-video/lipsync-motion-planner.json",
       "upstream": "collector",
       "downstream": "video-maker",
@@ -503,7 +504,7 @@
     },
     "video-maker": {
       "input": "projects/<project>/05-scene/collection.json",
-      "output": "projects/<project>/06-video/scenes/",
+      "output": "projects/<project>/06-video/scenes/ + projects/<project>/06-video/video-maker-report.json",
       "upstream": "collector",
       "downstream": "rough-cut-assembler",
       "category": "video-making",
@@ -514,7 +515,7 @@
       "requires": "ffmpeg"
     },
     "video-quality-checker": {
-      "input": "rendered scene videos",
+      "input": "projects/<project>/06-video/scenes/",
       "output": "projects/<project>/06-video/video-quality-checker.json",
       "upstream": "video-maker",
       "downstream": "rough-cut-assembler",
@@ -526,7 +527,7 @@
       "requires": "ffmpeg"
     },
     "script-video-voice-collector": {
-      "input": "script + rendered scenes + voiceover",
+      "input": "projects/<project>/05-scene/collection.json + projects/<project>/06-video/scenes/",
       "output": "projects/<project>/07-edit/script-video-voice-collector.json",
       "upstream": "video-making",
       "downstream": "rough-cut-assembler",
@@ -538,8 +539,8 @@
       "schema": "inventory"
     },
     "rough-cut-assembler": {
-      "input": "projects/<project>/06-video/scenes/",
-      "output": "projects/<project>/07-edit/rough-cut.mp4",
+      "input": "projects/<project>/06-video/scenes/ + projects/<project>/05-scene/collection.json",
+      "output": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/07-edit/rough-cut-assembler-report.json",
       "upstream": "video-maker",
       "downstream": "caption-maker",
       "category": "video-editing",
@@ -550,7 +551,7 @@
       "requires": "ffmpeg"
     },
     "video-editor": {
-      "input": "rough cut + edit notes",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/07-edit/script-video-voice-collector.json",
       "output": "projects/<project>/07-edit/video-editor.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -563,7 +564,7 @@
       "schema": "media-effect"
     },
     "animator": {
-      "input": "rough cut + scene elements",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/05-scene/element-organizer.json",
       "output": "projects/<project>/07-edit/animator.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -576,7 +577,7 @@
       "schema": "media-effect"
     },
     "motion-graphic-editor": {
-      "input": "rough cut + brand assets",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + config/style-bible.json",
       "output": "projects/<project>/07-edit/motion-graphic-editor.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -589,7 +590,7 @@
       "schema": "media-effect"
     },
     "branding-manager": {
-      "input": "style bible + edited video",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + config/style-bible.json",
       "output": "projects/<project>/07-edit/branding-manager.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -602,7 +603,7 @@
       "schema": "media-effect"
     },
     "cut-rhythm-editor": {
-      "input": "rough cut + script timings",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/07-edit/cut-rhythm-editor.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -615,7 +616,7 @@
       "schema": "media-effect"
     },
     "pattern-interrupt-inserter": {
-      "input": "rough cut + final script",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/02-script/hook.json",
       "output": "projects/<project>/07-edit/pattern-interrupt-inserter.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -628,7 +629,7 @@
       "schema": "media-effect"
     },
     "hook-visual-editor": {
-      "input": "rough cut + hook plan",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/02-script/hook.json",
       "output": "projects/<project>/07-edit/hook-visual-editor.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -641,7 +642,7 @@
       "schema": "media-effect"
     },
     "seamless-loop-editor": {
-      "input": "rough cut + loop plan",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/02-script/loop-cta-designer.json",
       "output": "projects/<project>/07-edit/seamless-loop-editor.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -654,7 +655,7 @@
       "schema": "media-effect"
     },
     "virtual-camera-planner": {
-      "input": "scene layouts",
+      "input": "projects/<project>/05-scene/scenario-designer.json",
       "output": "projects/<project>/07-edit/virtual-camera-planner.json",
       "upstream": "video-making",
       "downstream": "video-editor",
@@ -666,7 +667,7 @@
       "schema": "plan"
     },
     "transition-designer": {
-      "input": "rough cut + style bible",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + config/style-bible.json",
       "output": "projects/<project>/07-edit/transition-designer.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -678,7 +679,7 @@
       "requires": "ffmpeg"
     },
     "color-grading-keeper": {
-      "input": "edited video + style bible",
+      "input": "projects/<project>/07-edit/rough-cut.mp4 + config/style-bible.json",
       "output": "projects/<project>/07-edit/color-grading-keeper.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -691,7 +692,7 @@
       "schema": "media-effect"
     },
     "broll-variety-planner": {
-      "input": "final script + stock assets",
+      "input": "projects/<project>/02-script/latest_script.json + projects/<project>/07-edit/stock-asset-finder.json",
       "output": "projects/<project>/07-edit/broll-variety-planner.json",
       "upstream": "video-making",
       "downstream": "video-editor",
@@ -715,7 +716,7 @@
       "batch": 7
     },
     "kinetic-text-animator": {
-      "input": "caption data + video",
+      "input": "projects/<project>/07-edit/captions.json + projects/<project>/07-edit/captioned.mp4",
       "output": "projects/<project>/07-edit/kinetic-text-animator.json",
       "upstream": "caption-maker",
       "downstream": "final-test",
@@ -727,7 +728,7 @@
       "requires": "ffmpeg"
     },
     "emphasis-sticker-placer": {
-      "input": "final script + video",
+      "input": "projects/<project>/02-script/latest_script.json + projects/<project>/07-edit/captioned.mp4",
       "output": "projects/<project>/07-edit/emphasis-sticker-placer.json",
       "upstream": "caption-maker",
       "downstream": "final-test",
@@ -740,7 +741,7 @@
       "schema": "media-effect"
     },
     "intro-outro-manager": {
-      "input": "video + brand assets",
+      "input": "projects/<project>/07-edit/captioned.mp4 + config/style-bible.json",
       "output": "projects/<project>/07-edit/intro-outro-manager.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -753,7 +754,7 @@
       "schema": "media-effect"
     },
     "watermark-logo-placer": {
-      "input": "video + logo asset",
+      "input": "projects/<project>/07-edit/captioned.mp4 + config/style-bible.json",
       "output": "projects/<project>/07-edit/watermark-logo-placer.json",
       "upstream": "rough-cut-assembler",
       "downstream": "final-test",
@@ -766,7 +767,7 @@
       "schema": "media-effect"
     },
     "beat-sync-editor": {
-      "input": "video + music track",
+      "input": "projects/<project>/07-edit/captioned.mp4 + projects/<project>/03-voice/music-sfx-selector.json",
       "output": "projects/<project>/07-edit/beat-sync-editor.json",
       "upstream": "audio-mixer",
       "downstream": "final-test",
@@ -779,7 +780,7 @@
       "schema": "media-effect"
     },
     "audio-ducking-controller": {
-      "input": "voice track + music track",
+      "input": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/music-sfx-selector.json",
       "output": "projects/<project>/07-edit/audio-ducking-controller.json",
       "upstream": "audio-mixer",
       "downstream": "final-test",
@@ -791,7 +792,7 @@
       "requires": "ffmpeg"
     },
     "sfx-timing-placer": {
-      "input": "video + SFX list",
+      "input": "projects/<project>/07-edit/captioned.mp4 + projects/<project>/03-voice/music-sfx-selector.json",
       "output": "projects/<project>/07-edit/sfx-timing-placer.json",
       "upstream": "audio-mixer",
       "downstream": "final-test",
@@ -804,7 +805,7 @@
       "schema": "media-effect"
     },
     "av-sync-checker": {
-      "input": "final video",
+      "input": "projects/<project>/08-final-test/final-video.mp4",
       "output": "projects/<project>/07-edit/av-sync-checker.json",
       "upstream": "video-editing",
       "downstream": "final-test",
@@ -816,7 +817,7 @@
       "requires": "ffmpeg"
     },
     "template-preset-manager": {
-      "input": "style bible + edit presets",
+      "input": "config/style-bible.json + projects/<project>/07-edit/video-editor.json",
       "output": "projects/<project>/07-edit/template-preset-manager.json",
       "upstream": "style bible",
       "downstream": "video-editing",
@@ -828,7 +829,7 @@
       "schema": "inventory"
     },
     "safe-zone-checker": {
-      "input": "captioned video",
+      "input": "projects/<project>/07-edit/captions.json + projects/<project>/07-edit/captioned.mp4",
       "output": "projects/<project>/07-edit/safe-zone-checker.json",
       "upstream": "caption-maker",
       "downstream": "final-test",
@@ -839,7 +840,7 @@
       "batch": 7
     },
     "preview-frame-extractor": {
-      "input": "final video",
+      "input": "projects/<project>/08-final-test/final-video.mp4",
       "output": "projects/<project>/07-edit/preview-frame-extractor.json",
       "upstream": "video-editing",
       "downstream": "final-test",
@@ -852,7 +853,7 @@
       "schema": "media-effect"
     },
     "format-converter": {
-      "input": "final video",
+      "input": "projects/<project>/08-final-test/final-video.mp4",
       "output": "projects/<project>/07-edit/format-converter.json",
       "upstream": "final video",
       "downstream": "publish stage",
@@ -864,7 +865,7 @@
       "requires": "ffmpeg"
     },
     "thumbnail-designer": {
-      "input": "final video + title",
+      "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/07-edit/thumbnail-designer.json",
       "upstream": "final video",
       "downstream": "description-maker",
@@ -877,7 +878,7 @@
       "schema": "media-effect"
     },
     "render-export-optimizer": {
-      "input": "edit project + video",
+      "input": "projects/<project>/07-edit/captioned.mp4 + config/channel.json",
       "output": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/07-edit/render-export-optimizer.json",
       "upstream": "video-editing",
       "downstream": "publish stage",
@@ -889,7 +890,7 @@
       "requires": "ffmpeg"
     },
     "variant-batch-renderer": {
-      "input": "template + variant list",
+      "input": "projects/<project>/07-edit/template-preset-manager.json + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/07-edit/variant-batch-renderer.json",
       "upstream": "template-preset-manager",
       "downstream": "growth stage",
@@ -902,7 +903,7 @@
       "schema": "media-effect"
     },
     "stock-asset-finder": {
-      "input": "final script + asset needs",
+      "input": "projects/<project>/02-script/latest_script.json + config/style-bible.json",
       "output": "projects/<project>/07-edit/stock-asset-finder.json",
       "upstream": "research",
       "downstream": "scene and video stages",
@@ -914,7 +915,7 @@
       "schema": "selection"
     },
     "red-team": {
-      "input": "final video + final script",
+      "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/08-final-test/red-team.json",
       "upstream": "video-editing",
       "downstream": "bug-finder",
@@ -926,7 +927,7 @@
       "schema": "analysis"
     },
     "ruthless-team": {
-      "input": "final video",
+      "input": "projects/<project>/08-final-test/final-video.mp4",
       "output": "projects/<project>/08-final-test/ruthless-team.json",
       "upstream": "video-editing",
       "downstream": "bug-finder",
@@ -938,7 +939,7 @@
       "schema": "analysis"
     },
     "bug-finder": {
-      "input": "final video + reports",
+      "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/08-final-test/red-team.json + projects/<project>/08-final-test/ruthless-team.json",
       "output": "projects/<project>/08-final-test/bug-finder.json",
       "upstream": "video-editing",
       "downstream": "description-maker",
@@ -949,7 +950,7 @@
       "batch": 8
     },
     "solver": {
-      "input": "bug report",
+      "input": "projects/<project>/08-final-test/bug-finder.json",
       "output": "projects/<project>/08-final-test/solver.json",
       "upstream": "bug-finder",
       "downstream": "final render",
@@ -961,7 +962,7 @@
       "schema": "plan"
     },
     "copyright-policy-checker": {
-      "input": "final script + assets + video",
+      "input": "projects/<project>/02-script/latest_script.json + assets/characters/creator-01.json + projects/<project>/08-final-test/final-video.mp4",
       "output": "projects/<project>/08-final-test/copyright-policy-checker.json",
       "upstream": "final-test",
       "downstream": "publish stage",
@@ -972,7 +973,7 @@
       "batch": 8
     },
     "platform-compliance-checker": {
-      "input": "final video + metadata",
+      "input": "projects/<project>/08-final-test/final-video.mp4",
       "output": "projects/<project>/08-final-test/platform-compliance-checker.json",
       "upstream": "final-test",
       "downstream": "publish stage",
@@ -983,7 +984,7 @@
       "batch": 8
     },
     "accessibility-safety-checker": {
-      "input": "final video",
+      "input": "projects/<project>/07-edit/captions.json + projects/<project>/03-voice/voiceover.mp3 + projects/<project>/08-final-test/final-video.mp4",
       "output": "projects/<project>/08-final-test/accessibility-safety-checker.json",
       "upstream": "final-test",
       "downstream": "publish stage",
@@ -994,7 +995,7 @@
       "batch": 8
     },
     "handover": {
-      "input": "all final assets",
+      "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/07-edit/captions.json + projects/<project>/09-description/description.md",
       "output": "projects/<project>/10-publish/handover.md + projects/<project>/10-publish/handover-check.json",
       "upstream": "final-test",
       "downstream": "publish stage",
@@ -1005,7 +1006,7 @@
       "batch": 8
     },
     "description-maker": {
-      "input": "final script + channel config",
+      "input": "projects/<project>/02-script/latest_script.json + projects/<project>/08-final-test/bug-finder.json + config/channel.json",
       "output": "projects/<project>/09-description/description.md",
       "upstream": "final-test",
       "downstream": "growth stage",
@@ -1016,7 +1017,7 @@
       "batch": 8
     },
     "copywriter": {
-      "input": "final script + audience persona",
+      "input": "projects/<project>/02-script/latest_script.json + projects/<project>/01-research/audience-persona-builder.json",
       "output": "projects/<project>/09-description/copywriter.md",
       "upstream": "final-test",
       "downstream": "description-maker",
@@ -1028,7 +1029,7 @@
       "schema": "selection"
     },
     "seo-specialist": {
-      "input": "description + final script",
+      "input": "projects/<project>/09-description/description.md + projects/<project>/02-script/latest_script.json",
       "output": "projects/<project>/09-description/seo-specialist.md",
       "upstream": "description-maker",
       "downstream": "growth stage",
@@ -1040,7 +1041,7 @@
       "schema": "analysis"
     },
     "marketing-specialist": {
-      "input": "final video + audience persona",
+      "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/01-research/audience-persona-builder.json",
       "output": "projects/<project>/09-description/marketing-specialist.md",
       "upstream": "final-test",
       "downstream": "growth stage",
@@ -1052,7 +1053,7 @@
       "schema": "plan"
     },
     "youtube-seo-specialist": {
-      "input": "projects/<project>/10-publish/inputs/ (manual export; no API access)",
+      "input": "projects/<project>/10-publish/inputs/ + projects/<project>/09-description/description.md",
       "output": "projects/<project>/10-publish/youtube-seo-specialist.json",
       "upstream": "description-maker",
       "downstream": "publish stage",
@@ -1065,7 +1066,7 @@
       "api_needed": "later"
     },
     "youtube-analyst": {
-      "input": "projects/<project>/10-publish/inputs/ (manual export; no API access)",
+      "input": "projects/<project>/10-publish/inputs/",
       "output": "projects/<project>/10-publish/youtube-analyst.json",
       "upstream": "published video",
       "downstream": "research loop",
@@ -1078,7 +1079,7 @@
       "api_needed": "later"
     },
     "analytics-feedback-loop": {
-      "input": "projects/<project>/10-publish/inputs/ (manual export; no API access)",
+      "input": "projects/<project>/10-publish/inputs/ + projects/<project>/10-publish/youtube-analyst.json",
       "output": "projects/<project>/10-publish/analytics-feedback-loop.json",
       "upstream": "youtube-analyst",
       "downstream": "research stage",
@@ -1091,7 +1092,7 @@
       "api_needed": "later"
     },
     "scheduler-publisher": {
-      "input": "projects/<project>/10-publish/inputs/ (manual export; no API access)",
+      "input": "projects/<project>/10-publish/inputs/ + projects/<project>/10-publish/handover.md",
       "output": "projects/<project>/10-publish/scheduler-publisher.json",
       "upstream": "handover",
       "downstream": "platforms",
@@ -1104,7 +1105,7 @@
       "api_needed": "later"
     },
     "cross-platform-repurposer": {
-      "input": "final video",
+      "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/10-publish/handover.md",
       "output": "projects/<project>/10-publish/cross-platform-repurposer.json",
       "upstream": "handover",
       "downstream": "other platforms",
@@ -1116,7 +1117,7 @@
       "schema": "plan"
     },
     "comment-community-manager": {
-      "input": "projects/<project>/10-publish/inputs/ (manual export; no API access)",
+      "input": "projects/<project>/10-publish/inputs/",
       "output": "projects/<project>/10-publish/comment-community-manager.json",
       "upstream": "published video",
       "downstream": "research stage",
@@ -1129,7 +1130,7 @@
       "api_needed": "later"
     },
     "ab-tester": {
-      "input": "projects/<project>/10-publish/inputs/ (manual export; no API access)",
+      "input": "projects/<project>/10-publish/inputs/",
       "output": "projects/<project>/10-publish/ab-tester.json",
       "upstream": "growth data",
       "downstream": "research stage",
@@ -1142,7 +1143,7 @@
       "api_needed": "later"
     },
     "monetization-tracker": {
-      "input": "projects/<project>/10-publish/inputs/ (manual export; no API access)",
+      "input": "projects/<project>/10-publish/inputs/",
       "output": "projects/<project>/10-publish/monetization-tracker.json",
       "upstream": "published video",
       "downstream": "research stage",

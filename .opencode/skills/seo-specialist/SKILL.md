@@ -22,15 +22,13 @@ Score the description's keyword choices against local search notes and return th
 # Input
 
 - `projects/<project>/09-description/description.md`
-- `research/keyword-notes.md` (manual notes, no API)
-- `config/channel.json` language
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `SEO metadata`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/09-description/seo-specialist.md`
 
 # Keyword criteria
 

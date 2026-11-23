@@ -11,7 +11,7 @@ batch: 3
 
 # Shorts Script Tester & QA Skill
 
-When the user asks to test, audit, or review a script, read `scripts/latest_script.json` (or the specified script) and perform a strict quality audit across these 5 pillars:
+When the user asks to test, audit, or review a script, read `projects/<project>/02-script/latest_script.json` (or the specified script) and perform a strict quality audit across these 5 pillars:
 
 1. **Wordage & Pacing Check (Math & Timing):**
    - Count the exact total words across all `narration` fields.
@@ -33,7 +33,7 @@ When the user asks to test, audit, or review a script, read `scripts/latest_scri
 
 ## Output Format
 - Present a clean **Script Audit Scorecard** in the chat (Overall Score out of 10, Word Count vs. Target Time, Strengths, and Specific Fixes).
-- If any pillar scores below 8/10, automatically provide an **Optimized Version** and ask the user: *"Should I overwrite `scripts/latest_script.json` with this improved version?"*
+- If any pillar scores below 8/10, automatically provide an **Optimized Version** and ask the user: *"Should I overwrite `projects/<project>/02-script/latest_script.json` with this improved version?"*
 
 # When to use
 
@@ -49,8 +49,12 @@ Audits script quality across five pillars.
 
 
 - `projects/<project>/02-script/latest_script.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
+
+# Output
+
+- `projects/<project>/02-script/script-tester.json`
 
 # Steps
 
@@ -58,7 +62,7 @@ Audits script quality across five pillars.
 2. Load `projects/<project>/02-script/latest_script.json`; stop if it is missing or malformed. Validate it first with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`.
 3. Count words in every `narration`, estimate speaking time from the project language (Bangla ~110-130 wpm, English ~140-160 wpm), compare with `total_duration_sec`, and flag scenes over 15 words.
 4. Score hook power, tone/naturalness, goal alignment and visual readiness on 1-10 with a short reason for each, keeping the original 5-pillar rubric above.
-5. Write the scorecard to `projects/<project>/08-final-test/script-audit.json`; if any pillar scores below 8, also write an improved script to `projects/<project>/02-script/latest_script.optimized.json`.
+5. Write the scorecard to `projects/<project>/02-script/script-tester.json`; if any pillar scores below 8, also write an improved script to `projects/<project>/02-script/latest_script.optimized.json`.
 6. Validate both JSON outputs and log any problem to `projects/<project>/08-final-test/error-log.jsonl`.
 
 # How to test

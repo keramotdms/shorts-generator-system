@@ -20,14 +20,13 @@ Checks YouTube and Facebook rules.
 
 # Input
 
-- `final video + metadata`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/08-final-test/final-video.mp4`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `projects/<project>/08-final-test/platform-compliance-checker.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 

@@ -20,14 +20,13 @@ Records errors and fixes for every stage.
 
 # Input
 
-- `error reports from skills`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/08-final-test/`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `projects/<project>/error-log-keeper.jsonl`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `projects/<project>/08-final-test/error-log.jsonl`
 
 # Steps
 

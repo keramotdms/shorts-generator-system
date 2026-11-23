@@ -17,13 +17,13 @@ batch: 1
 Keep the whole Shorts production pipeline organized. It remembers which stage we are on, what skill owns that stage, and what must be finished before moving to the next stage.
 
 ## Input
-- A project folder under `projects/` (starter: `projects/_template/`).
-- The pipeline state file: `projects/_template/pipeline-state.json`.
-- Commands given to `scripts/orchestrator.py`: `init`, `status`, `complete <stage_id>`, `reset`.
+- `config/channel.json`
+- `projects/<project>/pipeline-state.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 ## Output
-- `projects/_template/pipeline-state.json` with stage statuses and the current stage.
-- A clear terminal status list showing `pending`, `current`, and `done`.
+- `projects/<project>/orchestrator.json`
 
 ## Stages (in order)
 1. `research` — Research (book/niche/trend finder)

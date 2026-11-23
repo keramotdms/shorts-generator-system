@@ -24,14 +24,12 @@ Build one 2x3 contact sheet from a finished clip so a reviewer can judge six eve
 # Input
 
 - `projects/<project>/08-final-test/final-video.mp4`
-- `config/defaults.json` resolution
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `preview frames`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/preview-frame-extractor.json`
 
 # Contact sheet parameters
 

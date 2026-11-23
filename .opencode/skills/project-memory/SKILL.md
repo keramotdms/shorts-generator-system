@@ -21,13 +21,12 @@ Stores tone, colors, fonts, character look and voice choices.
 # Input
 
 - `config/channel.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `config/style-bible.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 

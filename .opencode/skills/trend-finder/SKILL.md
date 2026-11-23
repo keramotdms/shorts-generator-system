@@ -20,38 +20,38 @@ Finds location-based YouTube and Facebook trends.
 
 # Input
 
-- `config/channel.json + research/trend-cache/`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `config/channel.json`
+- `projects/<project>/01-research/trend-cache/`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `research/trend-cache/*.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `projects/<project>/01-research/trend-report.json`
 
 # Steps
 
 1. Read `config/channel.json` and `config/style-bible.json` through project-memory. Use `audience_location` as the filtering region; do not assume a global trend applies to Bangladesh.
-2. Look for source data inside `research/trend-cache/` (user-supplied CSV/JSON exports or an earlier run). Create that folder if it does not exist. If there is no source file, ask the user to drop an export there and stop; do not install or call a paid API.
-3. For each source row keep only items where the topic maps to the channel niche and the region matches. Record `platform` (`youtube-shorts` or `facebook-reels`), `topic`, `signals` (views/shares or rank), `observed_on`, and `source_file`.
+2. Look for source data inside `projects/<project>/01-research/trend-cache/` (user-supplied CSV/JSON exports or an earlier run). Create that folder if it does not exist. If there is no source file, ask the user to drop an export there and stop; do not install or call a paid API.
+3. For each source row keep only items where the topic maps to the channel niche and the region from `config/channel.json`. Record `platform` (`youtube-shorts` or `facebook-reels`), `topic`, `signals` (views/shares or rank), `observed_on`, and `source_file`.
 4. Score every kept item 1-5 for freshness, local relevance, and reuse as a 30-60 s Short. Sort by the total and keep at most 10 items.
-5. Write the result to `research/trend-cache/trend-report.json` at the repository root (no `projects/<project>/` prefix). Re-open it, confirm it parses and is non-empty, and log problems via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+5. Write the result to `projects/<project>/01-research/trend-report.json`; create `projects/<project>/01-research/` first. Re-open it, confirm it parses and is non-empty, and log problems via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 **Acceptance criteria**
-- `research/trend-cache/trend-report.json` exists at the repository root and parses.
+- `projects/<project>/01-research/trend-report.json` exists under the current project and parses.
 - Every entry has `platform`, `topic`, `signals`, `observed_on`, `source_file`, and 3 scores.
-- Every entry cites a real file inside `research/trend-cache/`.
+- Every entry cites a real file inside `projects/<project>/01-research/trend-cache/`.
 - No entry is older than 30 days from `observed_on`.
 
 **Output format (short example)**
 ```json
 {
   "region": "Bangladesh / Bangla-speaking",
-  "source_files": ["research/trend-cache/youtube-export.csv"],
+  "source_files": ["projects/<project>/01-research/trend-cache/youtube-export.csv"],
   "trends": [
     {"platform": "youtube-shorts", "topic": "low-cost side hustle",
      "signals": {"views": 120000}, "observed_on": "2026-11-20",
-     "source_file": "research/trend-cache/youtube-export.csv",
+     "source_file": "projects/<project>/01-research/trend-cache/youtube-export.csv",
      "scores": {"freshness": 5, "local": 5, "reuse": 4}}
   ]
 }
@@ -64,7 +64,7 @@ Finds location-based YouTube and Facebook trends.
 
 # How to test
 
-- Type: `Use the trend-finder skill with PROJECT=<project>`. Expected: `research/trend-cache/*.json` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Type: `Use the trend-finder skill with PROJECT=<project>`. Expected: `projects/<project>/01-research/trend-report.json` exists, parses cleanly, and contains no hardcoded niche or language value.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

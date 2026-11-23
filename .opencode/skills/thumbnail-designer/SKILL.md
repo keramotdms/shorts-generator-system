@@ -24,15 +24,13 @@ Grab one representative frame from the finished Short and stamp the uppercase pr
 # Input
 
 - `projects/<project>/08-final-test/final-video.mp4`
-- `config/style-bible.json` font
-- `PROJECT` environment variable
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `thumbnail image`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/thumbnail-designer.json`
 
 # Thumbnail parameters
 

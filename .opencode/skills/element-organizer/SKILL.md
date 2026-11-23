@@ -21,15 +21,13 @@ Assign versions to scene elements and keep one active index so scenario-designer
 
 # Input
 
-- - `projects/<project>/05-scene/element-designer.json`
-- - `assets/scenes/*.svg`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/05-scene/element-designer.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `element index`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/05-scene/element-organizer.json`
 
 # Versioning rules
 

@@ -20,14 +20,14 @@ Validates folder structure, naming and backups.
 
 # Input
 
-- `assets/ and projects/<project>/`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `config/channel.json`
+- `projects/<project>/`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `projects/<project>/asset-manager.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 

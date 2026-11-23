@@ -20,14 +20,13 @@ Tracks tasks and progress across the pipeline.
 
 # Input
 
-- `pipeline state and task list`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/pipeline-state.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `projects/<project>/task-tracker.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 

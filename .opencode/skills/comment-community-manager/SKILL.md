@@ -23,15 +23,13 @@ Sort a manual comment export into questions, praise and objections, then draft B
 
 # Input
 
-- `projects/<project>/10-publish/inputs/comments-export.json` (manual export; no API access)
-- `config/channel.json` tone
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/10-publish/inputs/`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `reply plan`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/10-publish/comment-community-manager.json`
 
 # Reply rules
 

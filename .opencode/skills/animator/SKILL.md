@@ -23,16 +23,14 @@ Turn one flat scene PNG into a short animated clip with a gentle zoompan so a st
 
 # Input
 
-- `assets/scenes/*.png` or the generated media fixture
-- `config/defaults.json` resolution
-- `config/style-bible.json` palette
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/07-edit/rough-cut.mp4`
+- `projects/<project>/05-scene/element-organizer.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `animated video`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/animator.json`
 
 # Animation parameters
 

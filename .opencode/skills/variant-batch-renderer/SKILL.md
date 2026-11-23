@@ -23,16 +23,14 @@ Render three hue-shifted copies of one clip in a single FFmpeg run so title and 
 
 # Input
 
-- `projects/<project>/07-edit/rough-cut.mp4`
-- `config/style-bible.json` palette
-- `config/presets/*.json` active presets
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/07-edit/template-preset-manager.json`
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `batch rendered videos`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/variant-batch-renderer.json`
 
 # Variant parameters
 

@@ -21,15 +21,13 @@ Keep one canonical JSON file per character id and produce an inventory that maps
 
 # Input
 
-- - `assets/characters/*.json`
-- - `projects/<project>/04-character/character-thinker-counter.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/04-character/character-thinker-counter.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `character reference index`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/04-character/character-organizer.json`
 
 # Naming and version rules
 

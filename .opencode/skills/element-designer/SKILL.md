@@ -21,15 +21,14 @@ Define a small set of flat 2D scene elements drawn from the style-bible palette 
 
 # Input
 
-- - `config/style-bible.json` palette
-- - `projects/<project>/02-script/latest_script.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `config/style-bible.json`
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `scene element assets`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/05-scene/element-designer.json`
 
 # Element design rules
 

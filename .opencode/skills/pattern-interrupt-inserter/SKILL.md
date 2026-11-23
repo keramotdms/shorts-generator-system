@@ -24,15 +24,13 @@ Flip the middle third of a clip horizontally so the viewer gets a visual jolt at
 # Input
 
 - `projects/<project>/07-edit/rough-cut.mp4`
-- `projects/<project>/02-script/retention-pacing-optimizer.json`
-- `config/defaults.json` resolution
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/hook.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `video with pattern interrupts`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/pattern-interrupt-inserter.json`
 
 # Interrupt timing
 

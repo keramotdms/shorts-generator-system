@@ -21,15 +21,14 @@ Produce a voice plan that fixes the narrator, speaking order and per-scene word 
 
 # Input
 
-- - `projects/<project>/02-script/latest_script.json`
-- - `config/style-bible.json` voice.default_gender
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- `config/style-bible.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `voice plan`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/03-voice/voiceover-organizer.json`
 
 # Voice plan criteria
 

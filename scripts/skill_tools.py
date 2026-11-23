@@ -189,7 +189,10 @@ def cmd_asset_manager(args: argparse.Namespace) -> None:
         "missing_folders": missing,
         "status": "PASS" if not missing else "FAIL",
     }
-    path = lib.write_json(lib.ensure(project / "asset-report.json"), report)
+    path = lib.write_json(
+        lib.contract_output("asset-manager", filename="asset-manager.json") or project / "asset-manager.json",
+        report,
+    )
     if missing:
         print("FAIL asset-manager: missing folders: " + ", ".join(missing))
         sys.exit(1)
@@ -197,7 +200,8 @@ def cmd_asset_manager(args: argparse.Namespace) -> None:
 
 
 def cmd_task_tracker(args: argparse.Namespace) -> None:
-    path = lib.ensure(lib.project_dir() / "task-state.json")
+    path = lib.contract_output("task-tracker", filename="task-tracker.json") or lib.project_dir() / "task-tracker.json"
+    lib.ensure(path)
     state = lib.read_json(path, required=False) or {"tasks": []}
     if args.command == "add":
         state["tasks"].append({"name": args.name, "status": "pending"})
@@ -264,18 +268,40 @@ def cmd_collector(args: argparse.Namespace) -> None:
     lib.validate_schema("latest_script", lib.stage(2, "latest_script.json"))
     script_data = lib.read_json(lib.stage(2, "latest_script.json"))
     voice = lib.stage(3, "voiceover.mp3")
-    characters = lib.read_json(lib.CONFIG_DIR / "style-bible.json", required=False) or {}
+    style_bible = lib.read_json(lib.CONFIG_DIR / "style-bible.json", required=False) or {}
+    design_path = lib.ROOT / "assets" / "characters" / "creator-01.json"
+    design = lib.read_json(design_path, required=False) or {}
+    if not design:
+        raise lib.SkillError(f"Missing input file: {lib.relative(design_path)}")
+    characters = dict(style_bible.get("characters", {}))
+    characters["designs"] = {design_path.name: design}
+
+    scene_data = script_data.get("scenes", []) if isinstance(script_data, dict) else []
+    scene_images: list[str] = []
+    scene_files: list[str] = []
+    fallback_image = lib.ROOT / "assets" / "scenes" / "scene-warm-desk-smile.png"
+    for index in range(1, len(scene_data) + 1):
+        image = lib.stage(5, f"scene_{index:03d}.png")
+        if not image.is_file():
+            image = fallback_image
+        if not image.is_file():
+            raise lib.SkillError(f"Missing input file: {lib.relative(image)}")
+        scene_images.append(lib.relative(image))
+        scene_files.append(f"scene_{index:03d}.mp4")
+
     collection = {
         "project": lib.project_name(),
         "context": lib.style_context(),
         "script": script_data,
         "voiceover": lib.relative(voice) if voice.is_file() else None,
-        "characters": characters.get("characters", {}),
+        "characters": characters,
+        "scene_images": scene_images,
+        "scenes": scene_files,
         "status": "PASS" if voice.is_file() else "WARN",
     }
     out = lib.write_json(lib.stage(5, "collection.json"), collection)
     lib.validate_schema("collection", out)
-    lib.ok("script-voice-character-collector", "collection built", out)
+    lib.ok("script-voice-character-collector", "collection built with scenes and character design", out)
 
 
 def cmd_safe_zone(args: argparse.Namespace) -> None:
@@ -381,20 +407,27 @@ def music_input() -> Path | None:
 
 
 def cmd_video_maker(skill: str, args: argparse.Namespace) -> None:
-    script = lib.read_json(lib.stage(2, "latest_script.json"), required=False) or {}
+    collection_path = lib.stage(5, "collection.json")
+    collection = lib.read_json(collection_path)
+    script = collection.get("script", {}) if isinstance(collection, dict) else {}
     scene_data = script.get("scenes", []) if isinstance(script, dict) else []
-    images = sorted((lib.ROOT / "assets" / "scenes").glob("*.png"))
-    images += sorted(lib.stage(5).glob("*.png"))
-    if not images:
-        raise lib.SkillError("No scene images found in assets/scenes/ or projects/<project>/05-scene/")
+    image_paths = collection.get("scene_images", []) if isinstance(collection, dict) else []
+    scene_names = collection.get("scenes", []) if isinstance(collection, dict) else []
+    if not image_paths or not scene_names or len(image_paths) != len(scene_names):
+        raise lib.SkillError(
+            f"{lib.relative(collection_path)} must contain matching scene_images[] and scenes[]"
+        )
     out_dir = lib.stage(6, "scenes")
     out_dir.mkdir(parents=True, exist_ok=True)
     reports = []
-    for index, image in enumerate(images, start=1):
+    for index, (relative_image, name) in enumerate(zip(image_paths, scene_names), start=1):
+        image = lib.ROOT / str(relative_image)
+        if not image.is_file():
+            raise lib.SkillError(f"Missing input file: {lib.relative(image)}")
         duration = 5.0
         if index - 1 < len(scene_data) and isinstance(scene_data[index - 1], dict):
             duration = float(scene_data[index - 1].get("duration_sec", 5.0) or 5.0)
-        output = out_dir / f"scene_{index:03d}.mp4"
+        output = out_dir / str(name)
         ffmpeg_run([
             "-loop", "1", "-framerate", "30", "-i", str(image),
             "-t", str(duration),
@@ -403,18 +436,19 @@ def cmd_video_maker(skill: str, args: argparse.Namespace) -> None:
         ])
         reports.append(probe_summary(output))
     report = lib.write_json(lib.stage(6, f"{skill}-report.json"), {"scenes": reports, "status": "PASS"})
-    lib.ok(skill, f"{len(reports)} scene videos rendered from images", report)
+    lib.ok(skill, f"{len(reports)} scene videos rendered from collection.json", report)
 
 
 def cmd_rough_cut(skill: str, args: argparse.Namespace) -> None:
-    collection = lib.read_json(lib.stage(5, "collection.json"), required=False) or {}
+    collection_path = lib.stage(5, "collection.json")
+    collection = lib.read_json(collection_path)
     names = collection.get("scenes", []) if isinstance(collection, dict) else []
+    if not names:
+        raise lib.SkillError(f"Missing scenes[] field in {lib.relative(collection_path)}")
     scenes = [lib.stage(6, "scenes", str(name)) for name in names]
-    scenes = [path for path in scenes if path.is_file()]
-    if not scenes:
-        scenes = sorted(lib.stage(6, "scenes").glob("*.mp4"))
-    if not scenes:
-        raise lib.SkillError("No scene videos found in projects/<project>/06-video/scenes/")
+    missing = [lib.relative(path) for path in scenes if not path.is_file()]
+    if missing:
+        raise lib.SkillError("Missing scene videos: " + ", ".join(missing))
     list_file = lib.ensure(lib.stage(7, f"{skill}-inputs.txt"))
     list_file.write_text("".join(f"file '{path.as_posix()}'\n" for path in scenes), encoding="utf-8")
     output = lib.stage(7, "rough-cut.mp4")

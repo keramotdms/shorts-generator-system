@@ -19,11 +19,11 @@ Optional: when FFmpeg is usable, set `FFMPEG_PATH` to the executable before any 
 ## 1. New video idea → research
 
 ```text
-Use the book-finder skill with PROJECT=my-video. Find 3 niche ideas from config/channel.json via project-memory and write research/niche-report.md.
+Use the book-finder skill with PROJECT=my-video. Find 3 niche ideas from config/channel.json via project-memory and write projects/my-video/01-research/niche-report.md.
 ```
 
 ```text
-Use the trend-finder skill with PROJECT=my-video. Check Bangladesh / Bangla-speaking trends from project-memory and write research/trend-cache/trend-report.json.
+Use the trend-finder skill with PROJECT=my-video. Check Bangladesh / Bangla-speaking trends from project-memory and write projects/my-video/01-research/trend-report.json.
 ```
 
 Optional depth: `competitor-analyzer`, `audience-persona-builder`, `fact-checker`, `content-calendar` use the same pattern.
@@ -31,7 +31,7 @@ Optional depth: `competitor-analyzer`, `audience-persona-builder`, `fact-checker
 ## 2. Story → hook → script
 
 ```text
-Use the story-thinker skill with PROJECT=my-video. Turn research/niche-report.md into projects/my-video/02-script/story.json using the cached niche/language/style.
+Use the story-thinker skill with PROJECT=my-video. Turn projects/my-video/01-research/niche-report.md and projects/my-video/01-research/trend-report.json into projects/my-video/02-script/story.json using the cached niche/language/style.
 ```
 
 ```text
@@ -43,7 +43,7 @@ Use the script-writer skill with PROJECT=my-video. Write projects/my-video/02-sc
 ```
 
 ```text
-Use the script-tester skill with PROJECT=my-video. Audit projects/my-video/02-script/latest_script.json and write the report to projects/my-video/08-final-test/script-audit.json.
+Use the script-tester skill with PROJECT=my-video. Audit projects/my-video/02-script/latest_script.json and write the report to projects/my-video/02-script/script-tester.json.
 ```
 
 ## 3. Voice
@@ -53,7 +53,7 @@ Use the voiceover-generator skill with PROJECT=my-video. Generate projects/my-vi
 ```
 
 ```text
-Use the caption-maker skill with PROJECT=my-video. Turn projects/my-video/03-voice/captions.json into projects/my-video/07-edit/captions.json with safe-zone data.
+Use the caption-maker skill with PROJECT=my-video. Turn projects/my-video/03-voice/captions.json into projects/my-video/07-edit/captions.json with safe-zone data, then burn it into projects/my-video/07-edit/captioned.mp4 and write projects/my-video/07-edit/caption-maker.json.
 ```
 
 `voiceover-captions` is a legacy pointer only; use the two skills above.
@@ -61,17 +61,17 @@ Use the caption-maker skill with PROJECT=my-video. Turn projects/my-video/03-voi
 ## 4. Character + scene
 
 ```text
-Use the character-designer skill with PROJECT=my-video. Read config/style-bible.json through project-memory and write projects/my-video/04-character/characters.json.
+Use the character-designer skill with PROJECT=my-video. Read config/style-bible.json through project-memory and write assets/characters/creator-01.json plus its SVG/PNG expressions.
 ```
 
 ```text
-Use the scenario-designer skill with PROJECT=my-video. Build projects/my-video/05-scene/layouts.json from the collector output and style context.
+Use the scenario-designer skill with PROJECT=my-video. Build projects/my-video/05-scene/scenario-designer.json from the final script and style context, plus assets/scenes/warm-desk-background.svg and assets/scenes/scene-warm-desk-smile.png.
 ```
 
 ## 5. Collect + render video
 
 ```text
-Use the script-voice-character-collector skill with PROJECT=my-video. Combine latest_script.json, voiceover.mp3 and characters.json into projects/my-video/05-scene/collection.json.
+Use the script-voice-character-collector skill with PROJECT=my-video. Combine projects/my-video/02-script/latest_script.json, projects/my-video/03-voice/voiceover.mp3, assets/characters/creator-01.json and assets/scenes/scene-warm-desk-smile.png into projects/my-video/05-scene/collection.json (including scene_images[] and scenes[]).
 ```
 
 ```text

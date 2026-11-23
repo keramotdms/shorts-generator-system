@@ -21,15 +21,13 @@ Check every number and named claim in a draft Bangla script against local source
 
 # Input
 
-- projects/<project>/02-script/latest_script.json
-- projects/<project>/02-script/inputs/source-notes.md (manual evidence, no API)
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `fact-check notes`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/01-research/fact-checker.json`
 
 # Claim criteria
 

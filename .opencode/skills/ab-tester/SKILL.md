@@ -23,15 +23,13 @@ Compare two manually exported title or thumbnail variants and declare a winner o
 
 # Input
 
-- projects/<project>/10-publish/inputs/ab-results.json (manual export; no API access)
-- projects/<project>/09-description/description.md
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/10-publish/inputs/`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `A/B test report`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/10-publish/ab-tester.json`
 
 # Test validity rules
 

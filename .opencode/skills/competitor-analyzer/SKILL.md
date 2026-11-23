@@ -21,16 +21,14 @@ Compare three locally noted competitor Shorts against our own format and return 
 
 # Input
 
-- research/competitor-notes.md (manual notes, no API)
-- research/niche-report.md
-- config/style-bible.json video length
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/01-research/niche-report.md`
+- `config/channel.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `competitor analysis report`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/01-research/competitor-analyzer.json`
 
 # Comparison criteria
 

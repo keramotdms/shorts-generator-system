@@ -21,13 +21,13 @@ Generates natural speech audio and word timings.
 # Input
 
 - `projects/<project>/02-script/latest_script.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/captions.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `projects/<project>/03-voice/voiceover.mp3`
+- `projects/<project>/03-voice/captions.json`
 
 # Steps
 

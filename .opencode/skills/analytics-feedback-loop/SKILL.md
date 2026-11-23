@@ -23,22 +23,21 @@ Convert a manually exported performance report into three research notes that th
 
 # Input
 
-- `projects/<project>/10-publish/inputs/analytics-report.json` (manual export; no API access)
-- `research/niche-report.md`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/10-publish/inputs/`
+- `projects/<project>/10-publish/youtube-analyst.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `insight notes for research`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/10-publish/analytics-feedback-loop.json`
 
 # Feedback rules
 
 1. Use at least 5 published videos from the export before drawing a conclusion.
 2. Rank videos by save rate, not by raw views, because this niche is educational.
 3. Write exactly three research notes in the summary.
-4. Each note must name a topic or format from research/niche-report.md.
+4. Each note must name a topic or format from projects/<project>/01-research/niche-report.md.
 5. Never infer demographics that are absent from the export.
 
 # Output format (short example)
@@ -83,7 +82,7 @@ Schema: `config/schemas/manual-input.json`
 1. Check that projects/<project>/10-publish/inputs/analytics-report.json exists before reading anything.
 2. Count rows and stop with WARN when fewer than five videos are present.
 3. Rank the exported videos by save rate and note the top format.
-4. Compare that format with topics listed in research/niche-report.md.
+4. Compare that format with topics listed in projects/<project>/01-research/niche-report.md.
 5. Write three concrete research notes into the summary.
 6. Save the feedback file to projects/<project>/10-publish/analytics-feedback-loop.json and validate its schema.
 

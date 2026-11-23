@@ -23,15 +23,14 @@ Rank manually exported keywords for a Bangla Short and choose the one phrase tha
 
 # Input
 
-- `projects/<project>/10-publish/inputs/keyword-export.json` (manual export; no API access)
+- `projects/<project>/10-publish/inputs/`
 - `projects/<project>/09-description/description.md`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `YouTube SEO plan`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/10-publish/youtube-seo-specialist.json`
 
 # Keyword ranking rules
 

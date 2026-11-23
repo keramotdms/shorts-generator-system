@@ -20,14 +20,15 @@ Checks copyright and policy risks.
 
 # Input
 
-- `final script + assets + video`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- `assets/characters/creator-01.json`
+- `projects/<project>/08-final-test/final-video.mp4`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `projects/<project>/08-final-test/copyright-policy-checker.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 

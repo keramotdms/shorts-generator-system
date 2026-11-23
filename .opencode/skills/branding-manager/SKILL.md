@@ -24,15 +24,13 @@ Stamp a palette-coloured channel bar and the project label onto every edited cli
 # Input
 
 - `projects/<project>/07-edit/rough-cut.mp4`
-- `config/style-bible.json` palette and font
-- `config/defaults.json` resolution
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `config/style-bible.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `branded video`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/branding-manager.json`
 
 # Brand placement parameters
 

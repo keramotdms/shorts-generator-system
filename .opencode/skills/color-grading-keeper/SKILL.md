@@ -24,14 +24,13 @@ Apply one repeatable eq curve derived from the palette length so every scene kee
 # Input
 
 - `projects/<project>/07-edit/rough-cut.mp4`
-- `config/style-bible.json` palette
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `config/style-bible.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `color-graded video`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/color-grading-keeper.json`
 
 # Grade parameters
 

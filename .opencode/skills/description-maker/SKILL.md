@@ -20,18 +20,19 @@ Writes the title, description and hashtags.
 
 # Input
 
-- `final script + channel config`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- `projects/<project>/08-final-test/bug-finder.json`
+- `config/channel.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `projects/<project>/09-description/description.md`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 
-1. Read `projects/<project>/02-script/latest_script.json`, `config/channel.json` and `config/style-bible.json` through project-memory. Use `language` for the copy and `niche` for the keyword.
+1. Read `projects/<project>/02-script/latest_script.json`, `projects/<project>/08-final-test/bug-finder.json`, `config/channel.json` and `config/style-bible.json` through project-memory. Treat any bug-finder FAIL as a required fix before writing the description. Use `language` for the copy and `niche` for the keyword.
 2. Write a title of at most 60 characters that contains the niche keyword and the hook promise from `script.hook`. Write the first 2 description lines as the hook itself, because Shorts collapses the rest.
 3. Add 2-4 short sentences that state the value and one call to action. Add optional timestamps only if the script has `scene[].duration_sec`; otherwise omit them. Finish with 3-5 hashtags, lower-case, niche-related, no more than 2 generic tags.
 4. Write `projects/<project>/09-description/description.md` with the exact blocks shown below; create the `09-description` folder first.

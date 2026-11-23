@@ -20,14 +20,15 @@ Finds bugs in the final video.
 
 # Input
 
-- `final video + reports`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/08-final-test/final-video.mp4`
+- `projects/<project>/08-final-test/red-team.json`
+- `projects/<project>/08-final-test/ruthless-team.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `projects/<project>/08-final-test/bug-finder.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 

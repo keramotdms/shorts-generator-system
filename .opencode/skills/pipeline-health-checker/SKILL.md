@@ -20,14 +20,14 @@ Checks tools, skills, handoffs and final output.
 
 # Input
 
-- `whole repository and final video`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `config/skill-contracts.json`
+- `projects/<project>/08-final-test/final-video.mp4`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `projects/<project>/pipeline-health-checker.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 

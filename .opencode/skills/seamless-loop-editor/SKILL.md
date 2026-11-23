@@ -25,14 +25,12 @@ Reverse the final 0.4 seconds of a clip and append it so the last frame walks ba
 
 - `projects/<project>/07-edit/rough-cut.mp4`
 - `projects/<project>/02-script/loop-cta-designer.json`
-- `config/defaults.json` resolution
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `loop-ready video`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/seamless-loop-editor.json`
 
 # Loop seam parameters
 

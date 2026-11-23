@@ -22,16 +22,14 @@ Shortlist reusable local images and clips from assets/ for a script's visual gap
 
 # Input
 
-- `assets/scenes/*.png`, `assets/scenes/*.svg`, `assets/video/*.mp4`
-- `projects/<project>/05-scene/scenario-designer.json`
-- `config/style-bible.json` palette
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- `config/style-bible.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `stock asset list`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/stock-asset-finder.json`
 
 # Asset scoring
 

@@ -23,16 +23,14 @@ Mix one local sound effect 1.2 seconds into a video at 0.35 volume so a payoff a
 
 # Input
 
-- `projects/<project>/07-edit/rough-cut.mp4`
-- `assets/sfx/*.mp3` local owned cues
-- `projects/<project>/05-scene/music-sfx-selector.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/07-edit/captioned.mp4`
+- `projects/<project>/03-voice/music-sfx-selector.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `video with SFX`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/sfx-timing-placer.json`
 
 # SFX placement parameters
 

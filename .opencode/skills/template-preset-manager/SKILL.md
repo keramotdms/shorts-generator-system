@@ -22,16 +22,14 @@ Register the small set of edit presets that may be reused across Shorts and keep
 
 # Input
 
-- `config/style-bible.json` palette and font
-- `config/defaults.json` resolution
-- `config/presets/*.json` local preset files
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `config/style-bible.json`
+- `projects/<project>/07-edit/video-editor.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `template library`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/template-preset-manager.json`
 
 # Preset rules
 

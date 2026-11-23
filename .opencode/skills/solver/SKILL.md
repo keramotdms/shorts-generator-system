@@ -22,15 +22,12 @@ Turn each confirmed bug into one small, ordered fix that can be applied and re-t
 # Input
 
 - `projects/<project>/08-final-test/bug-finder.json`
-- `projects/<project>/08-final-test/ruthless-team.json`
-- `config/style-bible.json` constraints
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `fix plan`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/08-final-test/solver.json`
 
 # Fix ordering rules
 

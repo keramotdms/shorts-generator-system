@@ -21,16 +21,14 @@ Pick one primary Bangla-speaking viewer from three researched candidates so hook
 
 # Input
 
-- research/niche-report.md
-- research/trend-cache/*.json
-- config/channel.json target audience
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/01-research/niche-report.md`
+- `config/channel.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `audience persona profile`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/01-research/audience-persona-builder.json`
 
 # Persona shortlist criteria
 
@@ -82,7 +80,7 @@ Schema: `config/schemas/selection.json`
 # Steps
 
 1. Open project-memory first and copy the language and region values into the persona constraints.
-2. Read research/niche-report.md and the newest JSON in research/trend-cache/ without calling any external API.
+2. Read `projects/<project>/01-research/niche-report.md` and `projects/<project>/01-research/trend-report.json` without calling any external API.
 3. Write three short viewer sketches with a taka income, a device and one money worry.
 4. Score the sketches against the three numeric thresholds above and select the top passing one.
 5. Save the shortlist to projects/<project>/01-research/audience-persona-builder.json.

@@ -21,15 +21,14 @@ Generate five character concepts from the script and style bible, then shortlist
 
 # Input
 
-- - `config/style-bible.json`
-- - `projects/<project>/02-script/latest_script.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `config/style-bible.json`
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `character idea list`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/04-character/character-thinker-counter.json`
 
 # Character score criteria
 

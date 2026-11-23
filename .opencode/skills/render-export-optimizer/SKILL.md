@@ -22,15 +22,15 @@ Optimizes render settings and file size.
 
 # Input
 
-- `edit project + video`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/07-edit/captioned.mp4`
+- `config/channel.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `projects/<project>/08-final-test/final-video.mp4` (the ONE canonical final video)
+- `projects/<project>/08-final-test/final-video.mp4`
 - `projects/<project>/07-edit/render-export-optimizer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 

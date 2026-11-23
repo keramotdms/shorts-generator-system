@@ -25,14 +25,12 @@ Add a two-second opening push-in on the hook frame so the promise lands before t
 
 - `projects/<project>/07-edit/rough-cut.mp4`
 - `projects/<project>/02-script/hook.json`
-- `config/defaults.json` resolution
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `hook-enhanced video`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/hook-visual-editor.json`
 
 # Opening push-in parameters
 

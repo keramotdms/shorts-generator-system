@@ -21,16 +21,14 @@ Turn research topics into a two-week posting calendar with fixed weekdays, local
 
 # Input
 
-- research/niche-report.md
-- research/trend-cache/*.json
-- config/channel.json posting cadence
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/01-research/niche-report.md`
+- `projects/<project>/01-research/trend-report.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `content calendar`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/01-research/content-calendar.json`
 
 # Calendar constraints
 
@@ -92,7 +90,7 @@ Schema: `config/schemas/plan.json`
 # Steps
 
 1. Read the cadence and region from project-memory so weekday and time rules match the channel.
-2. List topic ideas from research/niche-report.md and the newest trend cache file.
+2. List topic ideas from projects/<project>/01-research/niche-report.md and the newest trend cache file.
 3. Place one topic on each chosen weekday inside the 14-day window.
 4. Check that money topics are not on consecutive days and that goals repeat.
 5. Write the calendar to projects/<project>/01-research/content-calendar.json.

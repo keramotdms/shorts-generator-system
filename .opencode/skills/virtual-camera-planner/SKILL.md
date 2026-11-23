@@ -23,15 +23,12 @@ Write a timed camera plan that tells the SVG renderer when to pan or zoom a flat
 # Input
 
 - `projects/<project>/05-scene/scenario-designer.json`
-- `config/style-bible.json` safe margins
-- `config/defaults.json` resolution
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `camera move plan`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/virtual-camera-planner.json`
 
 # Camera move constraints
 

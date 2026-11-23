@@ -21,15 +21,14 @@ Select a background music track and a short sound-effect list that fit the scene
 
 # Input
 
-- - `projects/<project>/05-scene/scenario-designer.json`
-- - `assets/music/` (local files you already own)
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `config/style-bible.json`
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `music and SFX selection list`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/03-voice/music-sfx-selector.json`
 
 # Selection criteria
 

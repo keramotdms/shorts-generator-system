@@ -21,16 +21,13 @@ Design a last-3-seconds handoff where the ending frame flows back into the openi
 
 # Input
 
-- projects/<project>/02-script/latest_script.json
-- projects/<project>/02-script/hook.json
-- config/style-bible.json safe margins
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `loop and CTA plan`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/02-script/loop-cta-designer.json`
 
 # Loop design criteria
 

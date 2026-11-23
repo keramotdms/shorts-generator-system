@@ -23,15 +23,13 @@ Summarise a manual YouTube analytics export into three scored dimensions that de
 
 # Input
 
-- `projects/<project>/10-publish/inputs/youtube-analytics-export.json` (manual export; no API access)
-- `config/channel.json` length target
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/10-publish/inputs/`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `performance report`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/10-publish/youtube-analyst.json`
 
 # Analysis dimensions
 

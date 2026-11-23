@@ -21,24 +21,23 @@ Finds niche and topic ideas for the channel.
 # Input
 
 - `config/channel.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `research/niche-report.md`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `projects/<project>/01-research/niche-report.md`
 
 # Steps
 
 1. Read `config/channel.json` and `config/style-bible.json` through project-memory; take `niche`, `language` and `audience_location` from there, never from memory. If either file is missing or a value is null, stop and ask once.
 2. Build a candidate list of exactly 3 low-startup-cost topics that fit the niche and a Bangladesh audience (examples: mobile-based side hustle, small home service, reselling). For each candidate write: who pays, what is sold, first action possible with under 1,000 BDT, and one concrete Bangla hook line.
 3. Rank the candidates with a simple 1-5 score for demand, ease of first sale, and story potential. Pick the top topic and write one paragraph explaining why it beats the other two.
-4. Write the report to `research/niche-report.md` at the repository root (no `projects/<project>/` prefix). Use the format below and create `research/` first.
+4. Write the report to `projects/<project>/01-research/niche-report.md`; create `projects/<project>/01-research/` first.
 5. Re-open the report and check that all 3 candidates, their scores, the winner and the source files are present. Log any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 **Acceptance criteria**
-- `research/niche-report.md` exists at the repository root and is not empty.
+- `projects/<project>/01-research/niche-report.md` exists under the current project and is not empty.
 - It contains exactly 3 ranked candidates with a demand/ease/story score each.
 - The winning topic names the payer, the offer, and a first action under 1,000 BDT.
 - Niche, language and location match `config/channel.json` exactly.
@@ -63,7 +62,7 @@ Bangla hook: "পুরনো ফোন দিয়েই শুরু করু�
 
 # How to test
 
-- Type: `Use the book-finder skill with PROJECT=<project>`. Expected: `research/niche-report.md` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Type: `Use the book-finder skill with PROJECT=<project>`. Expected: `projects/<project>/01-research/niche-report.md` exists, parses cleanly, and contains no hardcoded niche or language value.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

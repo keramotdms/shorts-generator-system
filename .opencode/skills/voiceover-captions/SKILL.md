@@ -1,6 +1,6 @@
 ---
 name: voiceover-captions
-description: Generates natural Bangla or English voiceover audio (MP3) and exact word/phrase-level caption timestamps (JSON) from scripts/latest_script.json using free edge-tts.
+description: Generates natural Bangla or English voiceover audio (MP3) and exact word/phrase-level caption timestamps (JSON) from projects/<project>/02-script/latest_script.json using free edge-tts.
 category: voice
 status: legacy
 phase: later
@@ -15,7 +15,7 @@ batch: 4
 When the user asks to generate voiceover or captions from the script:
 1. Ensure the Python package `edge-tts` is installed (run `pip install edge-tts` if missing).
 2. Run `python scripts/generate_audio.py` (pass `--gender female` if the user requests a female voice; default is male).
-3. Verify that both `output/voiceover.mp3` and `output/captions.json` are generated successfully and report the exact total audio duration in seconds.
+3. Verify that both `projects/<project>/03-voice/voiceover.mp3` and `projects/<project>/03-voice/captions.json` are generated successfully and report the exact total audio duration in seconds.
 
 # When to use
 
@@ -31,21 +31,21 @@ Legacy combined voiceover and caption generator.
 
 
 - `projects/<project>/02-script/latest_script.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 
-- `output/voiceover.mp3 + output/captions.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `projects/<project>/03-voice/voiceover.mp3`
+- `projects/<project>/03-voice/captions.json`
 
 # Steps
 
 1. Read language and voice style through project-memory (`config/channel.json` + `config/style-bible.json`); this skill is kept only for compatibility.
 2. Validate `projects/<project>/02-script/latest_script.json` with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`; stop if it is missing or malformed.
 3. Keep the original behaviour: ensure `edge-tts` is available, then run `python scripts/generate_audio.py` with the gender requested by the user.
-4. Verify `output/voiceover.mp3` and `output/captions.json` were created and report exact audio duration in seconds.
+4. Verify `projects/<project>/03-voice/voiceover.mp3` and `projects/<project>/03-voice/captions.json` were created and report exact audio duration in seconds.
 5. Tell the user to use `voiceover-generator` + `caption-maker` for new projects; do not duplicate their logic here.
 
 # How to test

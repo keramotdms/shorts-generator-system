@@ -21,14 +21,14 @@ Mixes voice, music and sound effect levels.
 
 # Input
 
-- `voice + music + SFX files`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/03-voice/voiceover.mp3`
+- `projects/<project>/03-voice/music-sfx-selector.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `projects/<project>/03-voice/audio-mixer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 

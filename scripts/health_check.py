@@ -53,6 +53,7 @@ REQUIRED_FILES = [
     "config/defaults.json",
     "tests/test_skills.py",
     "tests/test_no_template.py",
+    "tests/test_chain.py",
     "tests/smoke/run_dummy_pipeline.py",
     "config/schemas/analysis.json",
     "config/schemas/plan.json",

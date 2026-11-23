@@ -21,15 +21,14 @@ Attach pronunciation, emphasis and emotion notes to every spoken line so the voi
 
 # Input
 
-- - `projects/<project>/03-voice/voiceover-organizer.json`
-- - `projects/<project>/02-script/latest_script.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/03-voice/voiceover-organizer.json`
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `pronunciation and emotion notes`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/03-voice/pronunciation-emotion-director.json`
 
 # Delivery criteria
 

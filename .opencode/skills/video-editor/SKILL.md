@@ -24,15 +24,13 @@ Remove a small lead-in and tail from a rough cut using matched video and audio t
 # Input
 
 - `projects/<project>/07-edit/rough-cut.mp4`
-- `projects/<project>/02-script/retention-pacing-optimizer.json`
-- `config/defaults.json` resolution
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/07-edit/script-video-voice-collector.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `edited video`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/video-editor.json`
 
 # Trim parameters
 

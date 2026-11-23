@@ -21,16 +21,14 @@ Build a three-channel promotion plan with fixed posting windows so one Short can
 
 # Input
 
-- `projects/<project>/10-publish/handover.md`
+- `projects/<project>/08-final-test/final-video.mp4`
 - `projects/<project>/01-research/audience-persona-builder.json`
-- `config/channel.json` platform list
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `marketing plan`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/09-description/marketing-specialist.md`
 
 # Promotion constraints
 

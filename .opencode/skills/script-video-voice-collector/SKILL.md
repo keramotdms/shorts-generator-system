@@ -22,16 +22,14 @@ Verify and index the exact script, rendered scene clips and voiceover file that 
 
 # Input
 
-- projects/<project>/02-script/latest_script.json
-- projects/<project>/06-video/scenes/*.mp4
-- projects/<project>/03-voice/voiceover.mp3
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/05-scene/collection.json`
+- `projects/<project>/06-video/scenes/`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `edit package`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/script-video-voice-collector.json`
 
 # Edit package rules
 

@@ -22,15 +22,13 @@ Plan local crops and caption adjustments for reposting one finished Short to two
 # Input
 
 - `projects/<project>/08-final-test/final-video.mp4`
-- `config/channel.json` platform list
-- `config/defaults.json` resolution
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/10-publish/handover.md`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `platform-specific variants`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/10-publish/cross-platform-repurposer.json`
 
 # Repurposing constraints
 

@@ -23,15 +23,14 @@ Shorten a rough cut by trimming two halves of the source video and concatenating
 
 # Input
 
-- - `projects/<project>/07-edit/rough-cut.mp4`
-- - `config/defaults.json` resolution and `config/style-bible.json` video length
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/07-edit/rough-cut.mp4`
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `re-paced video`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/cut-rhythm-editor.json`
 
 # Rhythm parameters
 

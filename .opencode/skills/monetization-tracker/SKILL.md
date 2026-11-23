@@ -23,15 +23,13 @@ Summarise a manually exported revenue file in Bangla taka and flag any row where
 
 # Input
 
-- `projects/<project>/10-publish/inputs/revenue-export.json` (manual export; no API access)
-- `config/channel.json` currency
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/10-publish/inputs/`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `monetization report`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/10-publish/monetization-tracker.json`
 
 # Revenue checks
 

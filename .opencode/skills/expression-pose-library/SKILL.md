@@ -21,15 +21,13 @@ Publish the exact expression and pose vocabulary that scripts/svg_scene_builder.
 
 # Input
 
-- - `assets/characters/<character-id>.json`
-- - `scripts/svg_scene_builder.py`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `assets/characters/creator-01.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `expression and pose library`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/04-character/expression-pose-library.json`
 
 # Library rules
 
@@ -88,7 +86,7 @@ Schema: `config/schemas/inventory.json`
 
 # Steps
 
-1. Read the palette and character id from `assets/characters/<character-id>.json` after schema validation.
+1. Read the palette and character id from `assets/characters/creator-01.json` after schema validation.
 2. Query the builder's expression and pose alias tables by reading `scripts/svg_scene_builder.py`.
 3. Generate one PNG per expression with the builder if the file is missing.
 4. Register each generated file with its builder version and state.

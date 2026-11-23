@@ -23,13 +23,14 @@ Assembles the first cut of all scenes.
 # Input
 
 - `projects/<project>/06-video/scenes/`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/05-scene/collection.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
 - `projects/<project>/07-edit/rough-cut.mp4`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `projects/<project>/07-edit/rough-cut-assembler-report.json`
 
 # Steps
 

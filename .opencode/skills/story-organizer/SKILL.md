@@ -21,15 +21,13 @@ Convert a loose story concept into a timed beat sheet where every scene has a si
 
 # Input
 
-- - `projects/<project>/02-script/story.json`
-- - `config/channel.json` video length range
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/story.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `organized story beats`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/02-script/story-organizer.json`
 
 # Beat timing criteria
 

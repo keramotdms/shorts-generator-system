@@ -21,15 +21,13 @@ Score a draft script for attention decay and return a timed re-cut plan that rem
 
 # Input
 
-- - `projects/<project>/02-script/latest_script.json`
-- - `config/channel.json` length_sec range
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `pacing suggestions`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/02-script/retention-pacing-optimizer.json`
 
 # Pacing score criteria
 

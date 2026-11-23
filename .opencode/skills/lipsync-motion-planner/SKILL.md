@@ -21,15 +21,14 @@ Turn caption word timings into a minimal lip-sync and motion plan that the flat 
 
 # Input
 
-- - `projects/<project>/03-voice/captions.json`
-- - `projects/<project>/05-scene/collection.json`
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/03-voice/captions.json`
+- `assets/characters/creator-01.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `lip sync and motion plan`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/06-video/lipsync-motion-planner.json`
 
 # Motion constraints
 

@@ -23,15 +23,14 @@ Place one local flat-shape image over a short window of the rough cut so a talki
 
 # Input
 
-- - `projects/<project>/07-edit/rough-cut.mp4`
-- - `assets/scenes/*.png` local flat images
-- `config/channel.json` and `config/style-bible.json`, read through project-memory
-- `PROJECT` environment variable (defaults to `_template`)
+- `projects/<project>/02-script/latest_script.json`
+- `projects/<project>/07-edit/stock-asset-finder.json`
+- Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
+- `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `B-roll plan`
-- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+- `projects/<project>/07-edit/broll-variety-planner.json`
 
 # B-roll rules
 

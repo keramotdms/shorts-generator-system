@@ -90,3 +90,16 @@
 - Log the mistake, why it happened, and the fix here immediately.
 - Never install a tool or package without telling the user what and why, and getting approval.
 - Build one skill at a time; show the test steps and wait for OK before continuing.
+
+## 2026-11-23 — Four-phase review fix
+
+- **A green test suite can hide a broken chain.** `tests/test_skills.py` and the smoke test passed while `caption-maker` never wrote `07-edit/captions.json`, no skill produced `08-final-test/final-video.mp4`, and `handover` required its own output as an input. Lesson: always run an end-to-end dry run with fake data, not only unit-style harnesses.
+- **A handover report must be an output, never an input.** Fixed the circular dependency and made `handover` exit non-zero when any of its three real upstream assets is missing. Lesson: `ready: false` with exit 0 is a silent failure.
+- **The canonical final video needs one declared producer.** `render-export-optimizer` is now the only skill that writes `projects/<project>/08-final-test/final-video.mp4`; every consumer reads that exact path. Lesson: multiple possible final files make downstream checks meaningless.
+- **`contract_output()` must select by filename, not just stage.** Without that, a JSON report could overwrite a media deliverable. Lesson: when a skill emits several file types, resolve the declared output by its basename.
+- **Exact contract paths need a graph test.** Replacing ~68 descriptive Input/Output strings fixed readability, but only `tests/test_chain.py` proves every input is produced earlier and no output is duplicated. Lesson: path strings are data; validate them as a dependency graph.
+- **A passing self-test that only prints `PASS` proves nothing.** Six skills printed a fixed string and ten only checked whether FFmpeg was available. Lesson: every self-test must assert a real expected value — schema validity, round-tripped JSON, or ffprobe-measured duration/resolution — and the harness must count PASS/BLOCKED honestly.
+- **Anti-template tests can miss copy-paste among already-real skills.** The 55 rewritten skills had unique Steps, but 99 pairs among the original 38 were over 80% identical after removing the skill name. Lesson: run pairwise similarity across all skills, not only the ones previously flagged as templates.
+- **Legitimate Bangla text is not hardcoding.** Bangla rules, ৳ amounts and filled config examples may contain niche/language literals; the real test is whether values load through project-memory. Lesson: do not “fix” valid localisation examples just to make a grep quiet.
+- **Analyzer regexes can swallow adjacent fenced blocks.** A bare closing ``` before a ```json block was parsed as the opening fence, hiding a valid example. Lesson: use one JSON fence per section or avoid mixing markdown and JSON fences when a regex extracts examples.
+- **Recompute final verdicts from current files.** The first final checker still used static issue sets from the original audit and reported stale failures after the fixes. Lesson: after each phase, regenerate facts and derive verdicts from live files and tests.

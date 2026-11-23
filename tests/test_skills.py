@@ -123,6 +123,17 @@ def main() -> int:
         if result.returncode != 0 and "BLOCKED" not in output:
             errors.append(f"{skill}: self-test failed: {output or result.stderr.strip()}")
 
+    svg_test = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "svg_scene_builder.py"), "--self-test"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    svg_output = svg_test.stdout.strip()
+    print(svg_output)
+    if svg_test.returncode != 0 and "BLOCKED" not in svg_output:
+        errors.append(f"svg-scene-builder: self-test failed: {svg_output or svg_test.stderr.strip()}")
+
     print()
     if errors:
         print(f"FAIL: {len(errors)} problem(s) in {checked} skills")

@@ -1,0 +1,15 @@
+{
+  "id": "creator-01",
+  "name": "অনিক",
+  "style_source": "config/style-bible.json",
+  "appearance": {
+    "body": "slim, friendly young adult",
+    "hair": "short black hair",
+    "clothing": "simple blue shirt",
+    "palette": ["#111827", "#F9FAFB", "#F59E0B", "#10B981"]
+  },
+  "voice": {
+    "gender": "male",
+    "tone": "calm and conversational"
+  }
+}

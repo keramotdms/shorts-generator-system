@@ -374,7 +374,7 @@
     },
     "character-designer": {
       "input": "config/style-bible.json",
-      "output": "assets/characters/<character-id>.json",
+      "output": "assets/characters/<character-id>.json + assets/characters/<character-id>-<expression>.svg + assets/characters/<character-id>-<expression>.png",
       "upstream": "style bible",
       "downstream": "collector",
       "category": "character",
@@ -451,7 +451,7 @@
     },
     "scenario-designer": {
       "input": "collector output + style bible",
-      "output": "projects/<project>/05-scene/scenario-designer.json",
+      "output": "projects/<project>/05-scene/scenario-designer.json + assets/scenes/<scene-id>-background.svg + assets/scenes/<scene-id>.png",
       "upstream": "collector",
       "downstream": "video-maker",
       "category": "scene",

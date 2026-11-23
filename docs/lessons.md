@@ -60,6 +60,14 @@
 - **Audit finding: 8 checker skills only validated fixtures in self-test.** Fix: their self-tests now generate real media with the already-installed FFmpeg and check duration, resolution and audio with `ffprobe` where relevant.
 - **The remaining FFmpeg skills are intentionally generic for now — needs real logic later:** `animator`, `beat-sync-editor`, `branding-manager`, `broll-variety-planner`, `color-grading-keeper`, `cut-rhythm-editor`, `emphasis-sticker-placer`, `hook-visual-editor`, `intro-outro-manager`, `motion-graphic-editor`, `pattern-interrupt-inserter`, `preview-frame-extractor`, `seamless-loop-editor`, `sfx-timing-placer`, `thumbnail-designer`, `variant-batch-renderer`, `video-editor`, `watermark-logo-placer`. Do not claim these have finished, purpose-specific FFmpeg logic yet.
 
+## 2026-11-23 — SVG scene builder
+
+- **No Python SVG/PNG package is installed** (`cairosvg`, `Pillow`, `wand`, `svglib`, `reportlab`, `lxml` all absent). Fix: `scripts/svg_scene_builder.py` writes SVG with the standard library and rasterizes with the already-installed Microsoft Edge headless renderer. No install was requested or performed.
+- **FFmpeg cannot decode SVG in this build** (`no decoder found for: svg`). Fix: keep SVG generation and PNG rasterization in the builder; FFmpeg only consumes the resulting PNGs later.
+- **Windows drive letters break FFmpeg filter parsing when escaped once.** Fix: drive-letter colons in `fontfile` need a double backslash (`C\\:/Windows/Fonts/...`) in `scripts/skill_tools.py`; single escaping produced `No option name near '/Windows/...'`.
+- **`drawbox` does not accept `round()` in this FFmpeg build.** Fix: use integer pixel values for the 1080x1920 safe-zone preview.
+- **Sample outputs:** `assets/characters/creator-01-neutral.{svg,png}`, `creator-01-smile.{svg,png}`, `creator-01-surprised.{svg,png}`, `assets/scenes/warm-desk-background.{svg,png}` and `assets/scenes/scene-warm-desk-smile.{svg,png}`.
+
 ## Rules for future mistakes
 
 - Log the mistake, why it happened, and the fix here immediately.

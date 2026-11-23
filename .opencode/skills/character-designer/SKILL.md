@@ -27,6 +27,7 @@ Designs the 2D character look.
 # Output
 
 - `assets/characters/<character-id>.json`
+- `assets/characters/<character-id>-<expression>.svg` and `.png` for `neutral`, `smile` and `surprised`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -36,12 +37,14 @@ Designs the 2D character look.
 3. Check the design against the real 2D constraint: simple shapes only (circle head, rounded body, 2-3 clothing shapes), no fine facial detail, no gradients, no photo texture. Describe each part in one short English phrase.
 4. Write `assets/characters/<character-id>.json` at the repository root (no `projects/<project>/` prefix); create `assets/characters/` first.
 5. Run `python scripts/schema_validator.py character assets/characters/<character-id>.json`, re-open the file, and log any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+6. Render the reusable flat-shape views with `python scripts/svg_scene_builder.py character --character assets/characters/<character-id>.json --expression <neutral|smile|surprised> --out assets/characters/<character-id>-<expression>`. The helper validates the SVG, rasterizes it to PNG with the already-installed Edge renderer, and prints both exact paths. Repeat for all three expressions.
 
 **Acceptance criteria**
 - `character.json` passes `config/schemas/character.json`.
 - `id` matches `^[a-z0-9-]+$` and is unique inside `assets/characters/`.
 - `appearance.palette` is copied from `config/style-bible.json`, not invented.
 - `voice.gender` and `voice.tone` agree with the script's narrator.
+- All three `<character-id>-<expression>.svg` and `.png` files exist, parse as SVG, and are exactly 1080x1920 PNGs.
 
 **Output format (short example)**
 ```json
@@ -62,10 +65,13 @@ Designs the 2D character look.
 1. Use at most 3 clothing shapes so the look stays consistent across scenes.
 2. Keep hair, shirt and palette identical for this `id` in every scene.
 3. Do not add a second character here; create a new file with a new `id` instead.
+4. Reuse `scripts/svg_scene_builder.py` for every expression; never hand-edit the generated SVG or PNG.
 
 # How to test
 
 - Type: `Use the character-designer skill with PROJECT=<project>`. Expected: `assets/characters/<character-id>.json` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Run `python scripts/svg_scene_builder.py --self-test` → expected `PASS svg-scene-builder: PNG 1080x1920 ...`.
+- Run `python scripts/svg_scene_builder.py sample` → expected `assets/characters/creator-01-neutral.png`, `creator-01-smile.png` and `creator-01-surprised.png` are printed as OUTPUT paths.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

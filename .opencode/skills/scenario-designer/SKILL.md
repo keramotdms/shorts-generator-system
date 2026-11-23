@@ -27,6 +27,8 @@ Builds scene layouts and visual plans.
 # Output
 
 - `projects/<project>/05-scene/scenario-designer.json`
+- `assets/scenes/<scene-id>-background.svg` and `.png`
+- `assets/scenes/<scene-id>.svg` and `.png`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
@@ -36,10 +38,19 @@ Builds scene layouts and visual plans.
 3. Follow this skill's prompt instructions to builds scene layouts and visual plans, using only the context loaded in step 1.
 4. Write the result to `projects/<project>/05-scene/scenario-designer.json` inside the current project under projects/<project>/; create parent folders first.
 5. Re-open `projects/<project>/05-scene/scenario-designer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+6. Draw the scene with `python scripts/svg_scene_builder.py scene --character assets/characters/<character-id>.json --description "<scene visual prompt>" --out assets/scenes/<scene-id> --background-out assets/scenes/<scene-id>-background`. The helper infers expression and pose from the description, draws a flat-shape background plus character, validates the SVG, rasterizes both PNGs with the already-installed Edge renderer, and prints the exact paths.
+
+**Acceptance criteria**
+- `projects/<project>/05-scene/scenario-designer.json` is valid and non-empty.
+- `assets/scenes/<scene-id>-background.svg/.png` and `assets/scenes/<scene-id>.svg/.png` exist.
+- Rendered PNGs are exactly 1080x1920 and use the palette from the character JSON.
+- No fine detail, gradient or photo texture appears in the SVG.
 
 # How to test
 
 - Type: `Use the scenario-designer skill with PROJECT=<project>`. Expected: `projects/<project>/05-scene/scenario-designer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
+- Run `python scripts/svg_scene_builder.py --self-test` → expected `PASS svg-scene-builder: PNG 1080x1920 ...`.
+- Run `python scripts/svg_scene_builder.py sample` → expected `assets/scenes/warm-desk-background.png` and `assets/scenes/scene-warm-desk-smile.png` are printed as OUTPUT paths.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

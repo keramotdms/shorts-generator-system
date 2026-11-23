@@ -15,5 +15,15 @@
   "voiceover": "projects/_template/03-voice/voiceover.mp3",
   "characters": {
     "default": "friendly young Bangla-speaking creator"
-  }
+  },
+  "scene_images": [
+    "projects/_template/05-scene/scene_001.png",
+    "projects/_template/05-scene/scene_002.png",
+    "projects/_template/05-scene/scene_003.png"
+  ],
+  "scenes": [
+    "scene_001.mp4",
+    "scene_002.mp4",
+    "scene_003.mp4"
+  ]
 }

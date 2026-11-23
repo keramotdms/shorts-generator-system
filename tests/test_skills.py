@@ -96,6 +96,20 @@ def main() -> int:
     errors: list[str] = test_schemas()
     checked = 0
     script_backed: list[str] = []
+    passed = 0
+    blocked = 0
+
+    def record_result(output: str) -> None:
+        nonlocal passed, blocked
+        results = [line.strip() for line in output.splitlines()
+                   if line.strip().startswith(("PASS ", "BLOCKED "))]
+        if not results:
+            return
+        if results[-1].startswith("PASS "):
+            passed += 1
+        else:
+            blocked += 1
+
     for folder in sorted(SKILLS.iterdir()):
         if not folder.is_dir():
             continue
@@ -120,6 +134,7 @@ def main() -> int:
         )
         output = result.stdout.strip()
         print(output)
+        record_result(output)
         if result.returncode != 0 and "BLOCKED" not in output:
             errors.append(f"{skill}: self-test failed: {output or result.stderr.strip()}")
 
@@ -131,8 +146,13 @@ def main() -> int:
     )
     svg_output = svg_test.stdout.strip()
     print(svg_output)
+    record_result(svg_output)
     if svg_test.returncode != 0 and "BLOCKED" not in svg_output:
         errors.append(f"svg-scene-builder: self-test failed: {svg_output or svg_test.stderr.strip()}")
+
+    expected_results = len(script_backed) + 1
+    if passed + blocked != expected_results:
+        errors.append(f"self-test result count: expected {expected_results} final results, got {passed} PASS + {blocked} BLOCKED")
 
     print()
     if errors:
@@ -140,7 +160,7 @@ def main() -> int:
         for error in errors:
             print(" - " + error)
         return 1
-    print(f"PASS: {checked} skills validated, {len(script_backed)} self-tests passed or blocked")
+    print(f"PASS: {checked} skills validated, {passed} self-tests passed, {blocked} blocked")
     return 0
 
 

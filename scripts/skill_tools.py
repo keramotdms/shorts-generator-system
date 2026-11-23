@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import os
+import shutil
 import sys
 from pathlib import Path
 from typing import Any
@@ -737,6 +739,41 @@ def cmd_health(args: argparse.Namespace) -> None:
     health_check.main()
 
 
+def self_test_dir(skill: str) -> Path:
+    path = lib.ROOT / ".tmp" / "self-test" / skill
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def fixture_video() -> tuple[bool, dict[str, Any] | str]:
+    status, detail = lib.ffmpeg_status()
+    if status != "OK":
+        return False, f"ffmpeg {status} - {detail}"
+    media = ensure_media_fixtures()
+    summary = probe_summary(media["video"])
+    assert summary["width"] == 1080, summary
+    assert summary["height"] == 1920, summary
+    assert summary["duration_sec"] > 0, summary
+    return True, summary
+
+
+def fixture_audio() -> tuple[bool, dict[str, Any] | str]:
+    status, detail = lib.ffmpeg_status()
+    if status != "OK":
+        return False, f"ffmpeg {status} - {detail}"
+    media = ensure_media_fixtures()
+    summary = probe_summary(media["audio"])
+    assert summary["duration_sec"] > 0, summary
+    return True, summary
+
+
+def blocked_or_pass(skill: str, ok: bool, result: dict[str, Any] | str, detail: str) -> None:
+    if not ok:
+        print(f"BLOCKED {skill}: {result}")
+        return
+    print(f"PASS {skill}: {detail}")
+
+
 def self_test(skill: str) -> int:
     print(f"SELF-TEST {skill}")
     if skill in {"animator", "beat-sync-editor", "branding-manager", "broll-variety-planner",
@@ -747,31 +784,52 @@ def self_test(skill: str) -> int:
                  "video-editor", "watermark-logo-placer"}:
         import effect_ffmpeg
         return effect_ffmpeg.self_test(skill)
+
     if skill == "project-memory":
         ctx = lib.style_context()
         assert ctx["niche"] and ctx["language"] and ctx["audience_location"]
-        print("PASS project-memory: context loaded from channel config")
+        print(f"PASS {skill}: context loaded from channel config ({ctx['language']}, {ctx['audience_location']})")
     elif skill == "asset-manager":
         assert lib.project_dir().is_dir()
-        print("PASS asset-manager: project folder present")
-    elif skill in {"task-tracker", "error-log-keeper"}:
-        print(f"PASS {skill}: helper functions importable")
+        print(f"PASS {skill}: {lib.relative(lib.project_dir())} exists")
+    elif skill == "task-tracker":
+        target = self_test_dir(skill) / "task-tracker.json"
+        expected = {"tasks": [{"name": "self-test", "status": "done", "stage": "research"}]}
+        lib.write_json(target, expected)
+        loaded = lib.read_json(target)
+        assert loaded["tasks"][0]["name"] == "self-test", loaded
+        assert loaded["tasks"][0]["status"] == "done", loaded
+        print(f"PASS {skill}: task file round-trip verified (1 task, status=done)")
+    elif skill == "error-log-keeper":
+        target = self_test_dir(skill) / "error-log.jsonl"
+        target.write_text("", encoding="utf-8")
+        lib.append_jsonl(target, {"skill": "self-test", "status": "WARN", "reason": "fixture"})
+        lines = target.read_text(encoding="utf-8").splitlines()
+        assert len(lines) == 1, lines
+        entry = lib.json_loads(lines[0])
+        assert entry["skill"] == "self-test" and entry["status"] == "WARN", entry
+        print(f"PASS {skill}: JSONL round-trip verified (1 entry, status=WARN)")
     elif skill == "caption-maker":
         lib.validate_schema("captions", VALID / "captions.json")
-        print("PASS caption-maker: caption schema verified")
+        data = lib.read_json(VALID / "captions.json")
+        assert len(data["captions"]) >= 3, data
+        print(f"PASS {skill}: caption schema verified ({len(data['captions'])} real caption blocks)")
     elif skill == "script-voice-character-collector":
         lib.validate_schema("latest_script", VALID / "latest_script.json")
         lib.validate_schema("collection", VALID / "collection.json")
-        print("PASS collector: script and collection schemas verified")
+        collection = lib.read_json(VALID / "collection.json")
+        assert len(collection["scenes"]) >= 3, collection
+        assert len(collection["scene_images"]) == len(collection["scenes"]), collection
+        print(f"PASS {skill}: script and collection schemas verified ({len(collection['scenes'])} scenes)")
     elif skill == "voiceover-generator":
         lib.validate_schema("latest_script", VALID / "latest_script.json")
         lib.validate_schema("captions", VALID / "captions.json")
-        print("PASS voiceover-generator: script and caption schemas verified")
+        script = lib.read_json(VALID / "latest_script.json")
+        assert len(script["scenes"]) >= 3 and script["total_duration_sec"] >= 30, script
+        print(f"PASS {skill}: script and caption schemas verified ({script['total_duration_sec']} sec)")
     elif skill in CHECKER_TARGETS:
         for kind, schema_name, _stage, _pattern in CHECKER_TARGETS[skill]:
-            if kind == "json":
-                lib.validate_schema(schema_name, VALID / f"{schema_name}.json")
-            elif kind == "characters":
+            if kind in ("json", "characters"):
                 lib.validate_schema(schema_name, VALID / f"{schema_name}.json")
             elif kind == "text":
                 assert (MEDIA / "description_sample.md").is_file()
@@ -783,15 +841,108 @@ def self_test(skill: str) -> int:
             assert probe_summary(media["video"])["width"] == 1080
         print(f"PASS {skill}: real output files and ffprobe checks verified")
     elif skill == "safe-zone-checker":
-        print("PASS safe-zone-checker: caption and video validation functions verified")
-    elif skill in {"orchestrator", "pipeline-health-checker", "handover", "voiceover-generator"}:
-        print(f"PASS {skill}: helper imports and contract verified")
-    else:
-        status, detail = lib.ffmpeg_status()
-        if status == "OK":
-            print(f"PASS {skill}: ffmpeg available ({detail[:60]})")
+        lib.validate_schema("captions", VALID / "captions.json")
+        data = lib.read_json(VALID / "captions.json")
+        blocks = data["captions"]
+        assert blocks and all(0 <= b["start"] < b["end"] <= data["total_duration_sec"] for b in blocks)
+        ok, result = fixture_video()
+        if ok:
+            detail = f"{len(blocks)} captions inside {result['width']}x{result['height']}, {result['duration_sec']:.2f}s"
         else:
-            print(f"BLOCKED {skill}: ffmpeg {status} - {detail}")
+            detail = ""
+        blocked_or_pass(skill, ok, result, detail)
+    elif skill == "orchestrator":
+        target = self_test_dir(skill) / "pipeline-state.json"
+        stages = ["research", "script", "voice", "character", "scene", "video",
+                  "edit", "final_test", "description", "publish"]
+        lib.write_json(target, {"stages": stages, "current": "research", "status": "PASS"})
+        loaded = lib.read_json(target)
+        assert len(loaded["stages"]) == 10 and loaded["stages"][0] == "research", loaded
+        assert loaded["current"] == "research", loaded
+        print(f"PASS {skill}: 10-stage state round-trip verified (current=research)")
+    elif skill == "pipeline-health-checker":
+        contracts = lib.read_json(lib.CONTRACTS_PATH)
+        skills = contracts["skills"]
+        assert len(skills) == 93, len(skills)
+        assert all(entry.get("input") and entry.get("output") for entry in skills.values())
+        print(f"PASS {skill}: {len(skills)} contracts have non-empty exact input/output")
+    elif skill == "handover":
+        project = "self-test-handover"
+        demo = lib.ROOT / "projects" / project
+        old_project = os.environ.get("PROJECT")
+        shutil.rmtree(demo, ignore_errors=True)
+        os.environ["PROJECT"] = project
+        try:
+            for sub in ("08-final-test", "07-edit", "09-description", "10-publish"):
+                (demo / sub).mkdir(parents=True, exist_ok=True)
+            (demo / "08-final-test" / "final-video.mp4").write_bytes(b"handover fixture")
+            lib.write_json(demo / "07-edit" / "captions.json", lib.read_json(VALID / "captions.json"))
+            (demo / "09-description" / "description.md").write_text("# Fixture\n", encoding="utf-8")
+            cmd_handover(argparse.Namespace())
+            check = lib.read_json(lib.stage(10, "handover-check.json"))
+            markdown = lib.stage(10, "handover.md").read_text(encoding="utf-8")
+            assert check["ready"] is True, check
+            assert "Path: " not in markdown  # the helper lists exact asset paths, not a fake duration
+            assert lib.relative(lib.stage(8, "final-video.mp4")) in markdown, markdown
+            (demo / "09-description" / "description.md").unlink()
+            try:
+                cmd_handover(argparse.Namespace())
+                raise AssertionError("handover must fail when an asset is missing")
+            except lib.SkillError as exc:
+                assert "not ready" in str(exc), exc
+            check = lib.read_json(lib.stage(10, "handover-check.json"))
+            assert check["ready"] is False and len(check["missing"]) == 1, check
+            assert lib.stage(10, "handover.md").is_file()
+        finally:
+            shutil.rmtree(demo, ignore_errors=True)
+            if old_project is None:
+                os.environ.pop("PROJECT", None)
+            else:
+                os.environ["PROJECT"] = old_project
+        print(f"PASS {skill}: ready=true with 3 assets; ready=false and non-zero when one is missing")
+    elif skill == "kinetic-text-animator":
+        lib.validate_schema("captions", VALID / "captions.json")
+        data = lib.read_json(VALID / "captions.json")
+        assert len(data["captions"]) >= 3, data
+        ok, result = fixture_video()
+        if ok:
+            detail = f"{len(data['captions'])} caption blocks and ffprobe {result['width']}x{result['height']}, {result['duration_sec']:.2f}s"
+        else:
+            detail = ""
+        blocked_or_pass(skill, ok, result, detail)
+    elif skill in {"audio-mixer", "audio-ducking-controller", "av-sync-checker"}:
+        ok_video, video = fixture_video()
+        ok_audio, audio = fixture_audio()
+        ok = ok_video and ok_audio
+        result = video if not ok_video else audio
+        if ok:
+            detail = (f"ffprobe video {video['width']}x{video['height']} {video['duration_sec']:.2f}s "
+                      f"has_audio={video['has_audio']}, audio {audio['duration_sec']:.2f}s")
+        else:
+            detail = ""
+        blocked_or_pass(skill, ok, result, detail)
+    elif skill in {"video-maker", "rough-cut-assembler", "format-converter",
+                   "render-export-optimizer", "transition-designer", "video-quality-checker"}:
+        ok, result = fixture_video()
+        if ok and skill in {"video-maker", "rough-cut-assembler"}:
+            collection = lib.read_json(VALID / "collection.json")
+            assert len(collection["scenes"]) >= 3, collection
+            assert len(collection["scene_images"]) == len(collection["scenes"]), collection
+        if ok and skill == "render-export-optimizer":
+            canonical = lib.contract_output(skill, filename="final-video.mp4")
+            assert canonical is not None and canonical.name == "final-video.mp4", canonical
+        if ok:
+            detail = f"ffprobe {result['width']}x{result['height']}, {result['duration_sec']:.2f}s"
+        else:
+            detail = ""
+        blocked_or_pass(skill, ok, result, detail)
+    else:
+        ok, result = fixture_video()
+        if ok:
+            detail = f"ffprobe {result['width']}x{result['height']}, {result['duration_sec']:.2f}s"
+        else:
+            detail = ""
+        blocked_or_pass(skill, ok, result, detail)
     return 0
 
 

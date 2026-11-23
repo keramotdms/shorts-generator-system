@@ -227,6 +227,9 @@ def cmd_error_log(args: argparse.Namespace) -> None:
 
 def cmd_caption_maker(args: argparse.Namespace) -> None:
     source = lib.stage(3, "captions.json")
+    rough_cut = lib.stage(7, "rough-cut.mp4")
+    if not rough_cut.is_file():
+        raise lib.SkillError(f"Missing input file: {lib.relative(rough_cut)}")
     lib.validate_schema("captions", source)
     data = lib.read_json(source)
     captions = data.get("captions", []) if isinstance(data, dict) else data
@@ -247,7 +250,12 @@ def cmd_caption_maker(args: argparse.Namespace) -> None:
                 "max_chars_per_line": 18,
             }
         )
-    out = lib.write_json(lib.stage(7, "captions.json"), {"captions": safe, "source": lib.relative(source)})
+    result = dict(data) if isinstance(data, dict) else {}
+    result["captions"] = safe
+    if not result.get("language"):
+        result["language"] = lib.load_channel()["language"]
+    result["source"] = lib.relative(source)
+    out = lib.write_json(lib.stage(7, "captions.json"), result)
     lib.validate_schema("captions", out)
     lib.ok("caption-maker", f"{len(safe)} safe-zone captions written", out)
 
@@ -304,7 +312,11 @@ def cmd_safe_zone(args: argparse.Namespace) -> None:
         "preview": lib.relative(preview) if preview else None,
         "status": "PASS" if not problems else "FAIL",
     }
-    out = lib.write_json(lib.stage(7, "safe-zone-report.json"), report)
+    out = lib.write_json(
+        lib.contract_output("safe-zone-checker", filename="safe-zone-checker.json")
+        or lib.stage(7, "safe-zone-checker.json"),
+        report,
+    )
     if problems:
         raise lib.SkillError(f"{len(problems)} safe-zone violations")
     lib.ok("safe-zone-checker", "captions and video safe zone verified", out)
@@ -323,7 +335,10 @@ def cmd_ffprobe_check(skill: str, args: argparse.Namespace) -> None:
     result = lib.run([str(probe), "-v", "error", "-show_entries", "format=duration", "-of", "json", str(video)])
     data = lib.json_loads(result.stdout)
     duration = float(data["format"]["duration"])
-    out = lib.write_json(lib.stage(8, f"{skill}-report.json"), {"video": lib.relative(video), "duration_sec": duration, "status": "PASS"})
+    out = lib.write_json(
+        lib.contract_output(skill, filename=f"{skill}.json") or lib.stage(8, f"{skill}-report.json"),
+        {"video": lib.relative(video), "duration_sec": duration, "status": "PASS"},
+    )
     lib.ok(skill, f"duration {duration:.3f}s", out)
 
 
@@ -345,12 +360,15 @@ def cmd_ffmpeg_build(skill: str, args: argparse.Namespace) -> None:
     lib.ok(skill, "video rendered", output)
 
 
-def final_video_input() -> Path | None:
-    for candidate in (
+def final_video_input(*, prefer_final: bool = True) -> Path | None:
+    candidates = [
         lib.stage(8, "final-video.mp4"),
         lib.stage(7, "captioned.mp4"),
         lib.stage(7, "rough-cut.mp4"),
-    ):
+    ]
+    if not prefer_final:
+        candidates = candidates[1:] + candidates[:1]
+    for candidate in candidates:
         if candidate.is_file():
             return candidate
     scenes = sorted(lib.stage(6, "scenes").glob("*.mp4"))
@@ -415,9 +433,11 @@ def cmd_caption_burn_in(skill: str, args: argparse.Namespace) -> None:
         video = lib.stage(6, "scenes", "scene_001.mp4")
     if not video.is_file():
         raise lib.SkillError("Missing video for caption burn-in: projects/<project>/07-edit/rough-cut.mp4")
-    data = lib.read_json(lib.stage(7, "captions.json"), required=False)
-    if data is None:
-        data = lib.read_json(lib.stage(3, "captions.json"))
+    # cmd_caption_maker() is the only producer of 07-edit/captions.json; run it first.
+    captions_path = lib.stage(7, "captions.json")
+    if not captions_path.is_file():
+        cmd_caption_maker(argparse.Namespace())
+    data = lib.read_json(captions_path)
     items = data.get("captions", []) if isinstance(data, dict) else data
     if not items:
         raise lib.SkillError("No caption events found for burn-in")
@@ -438,7 +458,8 @@ def cmd_caption_burn_in(skill: str, args: argparse.Namespace) -> None:
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-c:a", "copy", str(output),
     ])
     summary = probe_summary(output)
-    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), {**summary, "captions": len(blocks)})
+    report_path = lib.contract_output(skill, filename=f"{skill}.json") or lib.stage(7, f"{skill}.json")
+    report = lib.write_json(report_path, {**summary, "captions": len(blocks)})
     lib.ok(skill, f"{len(blocks)} captions burned into video", report)
 
 
@@ -459,10 +480,12 @@ def cmd_format_converter(skill: str, args: argparse.Namespace) -> None:
 
 
 def cmd_render_export(skill: str, args: argparse.Namespace) -> None:
-    video = final_video_input()
+    video = final_video_input(prefer_final=False)
     if video is None:
         raise lib.SkillError("No video found to export")
-    output = lib.stage(7, f"{skill}.mp4")
+    # One canonical final video for checkers, handover and every publish skill.
+    output = lib.stage(8, "final-video.mp4")
+    lib.ensure(output).parent.mkdir(parents=True, exist_ok=True)
     ffmpeg_run([
         "-i", str(video),
         "-c:v", "libx264", "-preset", "slow", "-crf", "24",
@@ -473,8 +496,12 @@ def cmd_render_export(skill: str, args: argparse.Namespace) -> None:
     summary = probe_summary(output)
     summary["input_bytes"] = video.stat().st_size
     summary["output_bytes"] = output.stat().st_size
-    report = lib.write_json(lib.stage(7, f"{skill}-report.json"), summary)
-    lib.ok(skill, f"exported {summary['output_bytes']} bytes (crf 24, preset slow)", report)
+    summary["canonical_path"] = lib.relative(output)
+    report = lib.write_json(
+        lib.contract_output(skill, filename=f"{skill}.json") or lib.stage(7, f"{skill}.json"),
+        summary,
+    )
+    lib.ok(skill, f"exported {lib.relative(output)} ({summary['output_bytes']} bytes)", report)
 
 
 def cmd_audio_mixer(skill: str, args: argparse.Namespace) -> None:
@@ -624,7 +651,8 @@ def cmd_checker(skill: str, args: argparse.Namespace) -> None:
                 problems.append(f"{lib.relative(target)}: expected 1080x1920")
             if not (1 <= summary["duration_sec"] <= 60):
                 problems.append(f"{lib.relative(target)}: duration outside 1-60 s")
-    report = lib.write_json(lib.stage(8, f"{skill}-report.json"), {
+    report_path = lib.contract_output(skill, filename=f"{skill}.json") or lib.stage(8, f"{skill}-report.json")
+    report = lib.write_json(report_path, {
         "skill": skill, "status": "FAIL" if problems else "PASS",
         "problems": problems, "details": details,
     })
@@ -634,18 +662,39 @@ def cmd_checker(skill: str, args: argparse.Namespace) -> None:
 
 
 def cmd_handover(args: argparse.Namespace) -> None:
+    # handover.md is this skill's OUTPUT, never an input (no circular dependency).
     files = [
         lib.stage(8, "final-video.mp4"),
         lib.stage(7, "captions.json"),
         lib.stage(9, "description.md"),
-        lib.stage(10, "handover.md"),
     ]
     missing = [lib.relative(path) for path in files if not path.is_file()]
     if files[1].is_file():
         lib.validate_schema("captions", files[1])
     report = {"ready": not missing, "missing": missing, "project": lib.project_name()}
     out = lib.write_json(lib.stage(10, "handover-check.json"), report)
-    lib.ok("handover", "ready" if not missing else "not ready: " + ", ".join(missing), out)
+
+    channel = lib.load_channel()
+    handover_md = lib.ensure(lib.stage(10, "handover.md"))
+    lines = [
+        f"# Handover — {lib.project_name()}",
+        "",
+        f"- Niche: {channel['niche']}",
+        f"- Language: {channel['language']}",
+        f"- Audience: {channel['audience_location']}",
+        f"- Status: {'READY' if not missing else 'NOT READY'}",
+        "",
+        "## Final assets",
+        "",
+    ]
+    lines += [f"- `{lib.relative(path)}`" for path in files]
+    if missing:
+        lines += ["", "## Missing assets", ""] + [f"- `{path}`" for path in missing]
+    handover_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    if missing:
+        raise lib.SkillError("not ready: " + ", ".join(missing))
+    lib.ok("handover", "ready: all final assets present", out)
 
 
 def cmd_health(args: argparse.Namespace) -> None:
@@ -754,6 +803,9 @@ def main(argv: list[str] | None = None, skill_override: str | None = None) -> in
         elif skill == "rough-cut-assembler":
             cmd_rough_cut(skill, args)
         elif skill == "caption-maker":
+            # Both declared outputs are produced: 07-edit/captions.json and the
+            # burned-in video + 07-edit/caption-maker.json report.
+            cmd_caption_maker(args)
             cmd_caption_burn_in(skill, args)
         elif skill == "format-converter":
             cmd_format_converter(skill, args)

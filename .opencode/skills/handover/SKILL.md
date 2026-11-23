@@ -20,28 +20,30 @@ Packages final files for publishing.
 
 # Input
 
-- `all final assets`
+- `projects/<project>/08-final-test/final-video.mp4`
+- `projects/<project>/07-edit/captions.json`
+- `projects/<project>/09-description/description.md`
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/10-publish/handover.md`
+- `projects/<project>/10-publish/handover.md` + `projects/<project>/10-publish/handover-check.json`
 - A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
 
 # Steps
 
 1. Read `config/channel.json` and `config/style-bible.json` through project-memory so the handover lists the real niche, language and location.
-2. Check these four final assets by exact path: `projects/<project>/08-final-test/final-video.mp4`, `projects/<project>/07-edit/captions.json`, `projects/<project>/09-description/description.md`, `projects/<project>/10-publish/handover.md`. List every missing path; do not publish while any is missing.
-3. Validate `projects/<project>/07-edit/captions.json` with `python scripts/schema_validator.py captions projects/<project>/07-edit/captions.json`. Run `python scripts/skill_tools.py handover run` with `PROJECT=<project>` to write `handover-check.json`.
-4. Write `projects/<project>/10-publish/handover.md` with the exact sections shown below: asset checklist with PASS/MISSING, exact publish path, duration from captions `total_duration_sec`, and any `BLOCKED` items from FFmpeg skills.
-5. Re-open both `handover.md` and `handover-check.json`; confirm `ready` matches the checklist and the file list is identical. Log any mismatch via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+2. Check these three upstream final assets by exact path: `projects/<project>/08-final-test/final-video.mp4`, `projects/<project>/07-edit/captions.json`, `projects/<project>/09-description/description.md`. `handover.md` is this skill's own output, never an input; list every missing upstream path.
+3. Validate `projects/<project>/07-edit/captions.json` with `python scripts/schema_validator.py captions projects/<project>/07-edit/captions.json`. Run `python scripts/skill_tools.py handover run` with `PROJECT=<project>`; the helper writes both `handover-check.json` and `handover.md`.
+4. The helper writes `projects/<project>/10-publish/handover.md` with an asset checklist with PASS/MISSING, the exact publish path, and the real niche/language/audience from project-memory. Do not invent a duration that is not in captions.
+5. Re-open both `handover.md` and `handover-check.json`; confirm `ready` matches the checklist and the file list is identical. If any asset is missing, exit NON-ZERO so the pipeline cannot report success; log the problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 
 **Acceptance criteria**
 - `handover.md` and `handover-check.json` both exist under `projects/<project>/10-publish/`.
 - Every checked asset appears with its exact relative path and a PASS or MISSING status.
 - Captions pass `config/schemas/captions.json` and the duration is copied from that file.
-- `ready` is true only when all four assets are present.
+- `ready` is true only when all three upstream assets are present; otherwise the command exits non-zero.
 
 **Output format (short example)**
 ```markdown
@@ -51,13 +53,11 @@ Niche: Personal finance / side hustles | Language: bn
 ## Assets
 - PASS projects/my-video/08-final-test/final-video.mp4
 - PASS projects/my-video/07-edit/captions.json
-- MISSING projects/my-video/09-description/description.md
+- PASS projects/my-video/09-description/description.md
 
 ## Publish
 Path: projects/my-video/08-final-test/final-video.mp4
-Duration: 40.0 s (from captions.json)
-Blocked: video-maker (ffmpeg BLOCKED by application control)
-Ready: no
+Ready: yes
 ```
 
 **Quality rules**
@@ -67,7 +67,7 @@ Ready: no
 
 # How to test
 
-- `python scripts/skill_tools.py handover --self-test` → expected `PASS handover: ...`. Then confirm `projects/<project>/10-publish/handover.md` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py handover run` → exits 0 with `ready: true` only when all three upstream assets exist; otherwise exits 1 and still writes `projects/<project>/10-publish/handover.md` and `projects/<project>/10-publish/handover-check.json` listing the missing paths.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

@@ -16,6 +16,7 @@ CONFIG_DIR = ROOT / "config"
 CHANNEL_PATH = CONFIG_DIR / "channel.json"
 DEFAULTS_PATH = CONFIG_DIR / "defaults.json"
 STYLE_BIBLE_PATH = CONFIG_DIR / "style-bible.json"
+CONTRACTS_PATH = CONFIG_DIR / "skill-contracts.json"
 
 STAGE_DIRS = {
     1: "01-research",
@@ -102,6 +103,29 @@ def relative(path: Path) -> str:
         return str(path.relative_to(ROOT))
     except ValueError:
         return str(path)
+
+
+def contract_output(skill: str, *, filename: str | None = None) -> Path | None:
+    """Return an exact output path declared for a skill in the contracts.
+
+    Pass ``filename`` when a skill declares several outputs (for example a media
+    file plus a JSON report) so a report can never overwrite the media file.
+    Placeholder paths (for example <character-id>) and descriptive strings are ignored.
+    """
+    data = read_json(CONTRACTS_PATH, required=False)
+    if not isinstance(data, dict):
+        return None
+    entry = (data.get("skills") or {}).get(skill) or {}
+    output = str(entry.get("output") or "")
+    prefix = "projects/<project>/"
+    for candidate in output.split(" + "):
+        candidate = candidate.strip()
+        if not candidate.startswith(prefix) or "<" in candidate[len(prefix):]:
+            continue
+        if filename and Path(candidate).name != filename:
+            continue
+        return ROOT / "projects" / project_name() / candidate[len(prefix):]
+    return None
 
 
 def load_channel() -> dict[str, Any]:

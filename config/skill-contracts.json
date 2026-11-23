@@ -705,7 +705,7 @@
     },
     "caption-maker": {
       "input": "projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4",
-      "output": "projects/<project>/07-edit/captions.json + projects/<project>/07-edit/caption-maker.json",
+      "output": "projects/<project>/07-edit/captions.json + projects/<project>/07-edit/caption-maker.json + projects/<project>/07-edit/captioned.mp4",
       "upstream": "voice and rough cut",
       "downstream": "safe-zone-checker",
       "category": "video-editing",
@@ -878,7 +878,7 @@
     },
     "render-export-optimizer": {
       "input": "edit project + video",
-      "output": "projects/<project>/07-edit/render-export-optimizer.json",
+      "output": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/07-edit/render-export-optimizer.json",
       "upstream": "video-editing",
       "downstream": "publish stage",
       "category": "video-editing",
@@ -995,7 +995,7 @@
     },
     "handover": {
       "input": "all final assets",
-      "output": "projects/<project>/10-publish/handover.md",
+      "output": "projects/<project>/10-publish/handover.md + projects/<project>/10-publish/handover-check.json",
       "upstream": "final-test",
       "downstream": "publish stage",
       "category": "final-test",

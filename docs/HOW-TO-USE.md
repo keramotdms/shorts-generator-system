@@ -91,15 +91,23 @@ Use the caption-maker skill with PROJECT=my-video. Produce projects/my-video/07-
 ```
 
 ```text
-Use the safe-zone-checker skill with PROJECT=my-video. Validate projects/my-video/07-edit/captions.json and write projects/my-video/07-edit/safe-zone-report.json.
+Use the safe-zone-checker skill with PROJECT=my-video. Validate projects/my-video/07-edit/captions.json and write projects/my-video/07-edit/safe-zone-checker.json.
 ```
 
-All other editing skills (animator, transitions, color, audio sync, thumbnails, export) follow the same `Use the <skill> skill with PROJECT=my-video` pattern and read FFMPEG_PATH when needed.
+All other editing skills (animator, transitions, color, audio sync, thumbnails) follow the same `Use the <skill> skill with PROJECT=my-video` pattern and read FFMPEG_PATH when needed.
+
+Export the one canonical final video before final tests:
+
+```text
+Use the render-export-optimizer skill with PROJECT=my-video. Export projects/my-video/07-edit/captioned.mp4 to projects/my-video/08-final-test/final-video.mp4 and write projects/my-video/07-edit/render-export-optimizer.json.
+```
+
+Every later skill (bug-finder, platform/accessibility checkers, handover, publishing) reads that exact path.
 
 ## 7. Final test
 
 ```text
-Use the bug-finder skill with PROJECT=my-video. Check projects/my-video/08-final-test/ reports and write projects/my-video/08-final-test/bug-report.json.
+Use the bug-finder skill with PROJECT=my-video. Check projects/my-video/08-final-test/final-video.mp4 and write projects/my-video/08-final-test/bug-finder.json.
 ```
 
 ```text
@@ -113,10 +121,10 @@ Use the description-maker skill with PROJECT=my-video. Write projects/my-video/0
 ```
 
 ```text
-Use the handover skill with PROJECT=my-video. Verify final-video.mp4, captions.json, description.md and handover.md, then write projects/my-video/10-publish/handover-check.json.
+Use the handover skill with PROJECT=my-video. Verify projects/my-video/08-final-test/final-video.mp4, projects/my-video/07-edit/captions.json and projects/my-video/09-description/description.md, then write projects/my-video/10-publish/handover.md and projects/my-video/10-publish/handover-check.json.
 ```
 
-Expected: `ready: true`. If `ready: false`, fix the listed missing files and repeat.
+Expected: `ready: true`. If any asset is missing, handover writes both files but exits non-zero and lists the exact missing paths; fix them and repeat.
 
 ## Testing the whole system (no real media needed)
 

@@ -17,9 +17,9 @@ When the user asks to write a script for a Short, follow these exact steps:
 2. **Hook First (0-3 seconds):** Start with a pattern-interrupt hook, shocking fact, or bold question that stops viewers from scrolling.
 3. **Fast-Paced Body (3-45 seconds):** Keep sentences short (max 8-12 words per sentence), conversational, and value-packed. Remove all fluff.
 4. **Strong CTA / Loop (Last 3-5 seconds):** End with a seamless loop back to the first sentence or a clear call-to-action.
-5. **Structured Output:** 
-   - Create a `scripts/` folder if it doesn't exist.
-   - Save the output as `scripts/latest_script.json` with this exact structure:
+5. **Structured Output:**
+   - Create `projects/<project>/02-script/` if it doesn't exist.
+   - Save the output as `projects/<project>/02-script/latest_script.json` with this exact structure:
      - `language`: `"bn"` or `"en"`
      - `title`: Catchy title
      - `hook`: The opening 3-second line
@@ -74,12 +74,37 @@ Writes the full script with scenes and timings.
 {
   "language": "bn",
   "title": "টাকা ছাড়াই সাইড হাসল",
-  "hook": "পুরনো ফোন দিয়েই শুরু করা যায়?",
+  "hook": "আপনার পকেটে টাকা না থাকলেও শুরু করা যায়",
   "total_duration_sec": 40,
   "scenes": [
-    {"scene_number": 1, "narration": "অনেকের মনে হয় পুঁজি না থাকলে চলে না।",
-     "visual_prompt": "Flat 2D worried person with empty wallet",
-     "highlight_words": ["পুঁজি"], "duration_sec": 12}
+    {
+      "scene_number": 1,
+      "narration": "অনেকের মনে হয় পুঁজি না থাকলে কিছু করা যাবে না।",
+      "visual_prompt": "Flat 2D illustration of a worried person looking at an empty wallet, bold shapes",
+      "highlight_words": [
+        "পুঁজি",
+        "কিছু"
+      ],
+      "duration_sec": 12
+    },
+    {
+      "scene_number": 2,
+      "narration": "শুরু করুন এক ছোট কাজ দিয়ে, যার খরচ প্রায় শূন্য।",
+      "visual_prompt": "Flat 2D illustration of a phone and a notebook on a desk, warm amber accent",
+      "highlight_words": [
+        "ছোট"
+      ],
+      "duration_sec": 14
+    },
+    {
+      "scene_number": 3,
+      "narration": "আজই একটার নাম লিখুন, কালকে শুরু করুন।",
+      "visual_prompt": "Flat 2D illustration of a checklist with one item ticked, green accent",
+      "highlight_words": [
+        "আজই"
+      ],
+      "duration_sec": 14
+    }
   ]
 }
 ```

@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "selection.json",
+  "title": "Candidate shortlist with scores",
+  "type": "object",
+  "required": ["status", "skill", "project", "generated_at", "candidates", "chosen_id", "rationale"],
+  "properties": {
+    "status": {"type": "string", "enum": ["PASS", "WARN", "FAIL"]},
+    "skill": {"type": "string", "minLength": 2},
+    "project": {"type": "string", "minLength": 2},
+    "generated_at": {"type": "string", "minLength": 10},
+    "language": {"type": "string", "minLength": 2},
+    "candidates": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "score", "reason"],
+        "properties": {
+          "id": {"type": "string", "minLength": 2},
+          "score": {"type": "number", "minimum": 0, "maximum": 10},
+          "reason": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "chosen_id": {"type": "string", "minLength": 2},
+    "rationale": {"type": "string", "minLength": 10}
+  }
+}

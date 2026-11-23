@@ -1,46 +1,107 @@
 ---
 name: retention-pacing-optimizer
-description: Improves pacing to hold viewer attention.
+description: Tightens script pacing with timed cut targets for Shorts.
 category: script
 status: implemented
 phase: later
 type: prompt-only
-batch: 3
+batch: A
+schema: plan
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when improves pacing to hold viewer attention for a video in `projects/<project>/`.
+Use after script-writer when the script is complete but the first 3 seconds feel slow or scenes run too long for a Short.
 
 # Purpose
 
-Improves pacing to hold viewer attention.
+Score a draft script for attention decay and return a timed re-cut plan that removes dead air without changing the script's meaning.
 
 # Input
 
-- `draft script`
+- - `projects/<project>/02-script/latest_script.json`
+- - `config/channel.json` length_sec range
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/02-script/retention-pacing-optimizer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `pacing suggestions`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Pacing score criteria
+
+1. The hook must land by 2.5 seconds; if it starts later, score that criterion 0/10.
+2. No more than 4 consecutive seconds may pass without a new visual or text change.
+3. Score each line 0–10 for novelty, stakes and clarity; any line below 6 is a cut candidate.
+4. Target 2.8–3.5 words per second for Bangla narration measured from the script duration fields.
+5. Keep the final 5 seconds for a loop or call to action; never delete it.
+
+# Output format (short example)
+
+Schema: `config/schemas/plan.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "retention-pacing-optimizer",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "items": [
+    {
+      "id": 1,
+      "action": "Move the salary number into the hook",
+      "start_sec": 0,
+      "end_sec": 2,
+      "reason": "hook originally started at 4.2 seconds"
+    },
+    {
+      "id": 2,
+      "action": "Trim the greeting line",
+      "start_sec": 2,
+      "end_sec": 6,
+      "reason": "no new information for 4 seconds"
+    },
+    {
+      "id": 3,
+      "action": "Add a wallet graphic on the totals line",
+      "start_sec": 6,
+      "end_sec": 14,
+      "reason": "visual change every 4 seconds"
+    }
+  ],
+  "constraints": [
+    "hook by 2.5 seconds",
+    "Bangla speech rate 2.8-3.5 words/sec",
+    "loop kept in final 5 seconds"
+  ],
+  "summary": "Three timed edits lift the hook forward and add one visual change; total 45 seconds preserved."
+}
+```
+
+# Quality rules
+
+1. Each item names the exact line number from the source script.
+2. The sum of kept durations stays inside the channel length range.
+3. No rule hardcodes English; word-rate guidance is written for Bangla.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `draft script`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to improves pacing to hold viewer attention, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/02-script/retention-pacing-optimizer.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/02-script/retention-pacing-optimizer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read language and target duration through project-memory, then load `projects/<project>/02-script/latest_script.json`.
+2. Validate the draft with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`.
+3. Score every scene line on novelty, stakes and clarity using the 0–10 scale.
+4. Locate gaps longer than 4 seconds and propose a visual change or a trim for each one.
+5. Write the timed edit list to `projects/<project>/02-script/retention-pacing-optimizer.json`.
+6. Re-check the total runtime and validate the file against `config/schemas/plan.json`.
 
 # How to test
 
-- Type: `Use the retention-pacing-optimizer skill with PROJECT=<project>`. Expected: `projects/<project>/02-script/retention-pacing-optimizer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Run `python scripts/schema_validator.py plan projects/_template/02-script/retention-pacing-optimizer.json` after a real run, then `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/plan.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +109,4 @@ script-writer -> final-test
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the script has no duration fields, return WARN and ask for timings instead of guessing a word rate. On schema failure, stop and name the invalid scene index.

@@ -1,46 +1,107 @@
 ---
 name: voiceover-organizer
-description: Plans voice style, gender and scene order.
+description: Plans narrator gender, scene order and line lengths.
 category: voice
 status: implemented
 phase: later
 type: prompt-only
-batch: 4
+batch: A
+schema: plan
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when plans voice style, gender and scene order for a video in `projects/<project>/`.
+Use after the script is locked and before voiceover-generator, when the narrator voice and scene reading order are still undecided.
 
 # Purpose
 
-Plans voice style, gender and scene order.
+Produce a voice plan that fixes the narrator, speaking order and per-scene word budget before any audio is generated.
 
 # Input
 
-- `final script + style bible`
+- - `projects/<project>/02-script/latest_script.json`
+- - `config/style-bible.json` voice.default_gender
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/03-voice/voiceover-organizer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `voice plan`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Voice plan criteria
+
+1. Use exactly one narrator for the whole Short; a second voice requires a new project.
+2. Take gender from `voice.default_gender` in the style bible instead of choosing it here.
+3. Keep each scene to at most 18 Bangla words so it fits one breath.
+4. Order scenes by the script's beat order, never by file name.
+5. Reserve the last scene for the loop line and mark it as the final item.
+
+# Output format (short example)
+
+Schema: `config/schemas/plan.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "voiceover-organizer",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "items": [
+    {
+      "id": 1,
+      "action": "Narrate hook: one coffee costs ৳120",
+      "start_sec": 0,
+      "end_sec": 6,
+      "reason": "12 Bangla words, under 18"
+    },
+    {
+      "id": 2,
+      "action": "Narrate monthly total",
+      "start_sec": 6,
+      "end_sec": 18,
+      "reason": "16 Bangla words"
+    },
+    {
+      "id": 3,
+      "action": "Narrate loop line",
+      "start_sec": 38,
+      "end_sec": 45,
+      "reason": "reserved final 7 seconds"
+    }
+  ],
+  "constraints": [
+    "one narrator",
+    "gender from style bible",
+    "max 18 Bangla words per scene"
+  ],
+  "summary": "Single male narrator reads three grouped scenes in beat order with a reserved loop line."
+}
+```
+
+# Quality rules
+
+1. The gender string matches the style bible value exactly.
+2. No item contains more than 18 words when split on whitespace.
+3. Items follow the numeric order of script scenes.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final script + style bible`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to plans voice style, gender and scene order, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/03-voice/voiceover-organizer.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/03-voice/voiceover-organizer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read the voice block from `config/style-bible.json` through project-memory.
+2. Validate `projects/<project>/02-script/latest_script.json` against its schema.
+3. Count words per scene and group adjoining short scenes into one reading unit.
+4. Assign the style-bible gender to the single narrator and mark the last scene as the loop line.
+5. Write the plan to `projects/<project>/03-voice/voiceover-organizer.json`.
+6. Validate against `config/schemas/plan.json` and report any scene over 18 words.
 
 # How to test
 
-- Type: `Use the voiceover-organizer skill with PROJECT=<project>`. Expected: `projects/<project>/03-voice/voiceover-organizer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Run `python scripts/schema_validator.py plan projects/_template/03-voice/voiceover-organizer.json` then `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/plan.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +109,4 @@ script-writer -> voiceover-generator
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the style bible has no voice.default_gender, stop and ask project-memory to regenerate it. Never default to a gender based on the creator's name.

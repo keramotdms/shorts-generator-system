@@ -114,6 +114,25 @@ REAL_SKILLS = {
     "book-finder", "trend-finder", "story-thinker", "hook-writer",
     "character-designer", "description-maker", "project-memory",
     "scenario-designer", "script-voice-character-collector", "handover",
+    # Rewritten from TEMPLATE to REAL in the 2026-11-23 batches A-D.
+    "ab-tester", "analytics-feedback-loop", "animator",
+    "audience-persona-builder", "beat-sync-editor", "branding-manager",
+    "broll-variety-planner", "character-organizer", "character-setup-manager",
+    "character-thinker-counter", "color-grading-keeper", "comment-community-manager",
+    "competitor-analyzer", "content-calendar", "copywriter",
+    "cross-platform-repurposer", "cut-rhythm-editor", "element-designer",
+    "element-organizer", "emphasis-sticker-placer", "expression-pose-library",
+    "fact-checker", "hook-visual-editor", "intro-outro-manager",
+    "lipsync-motion-planner", "localization", "loop-cta-designer",
+    "marketing-specialist", "monetization-tracker", "motion-graphic-editor",
+    "music-sfx-selector", "pattern-interrupt-inserter", "preview-frame-extractor",
+    "pronunciation-emotion-director", "red-team", "retention-pacing-optimizer",
+    "ruthless-team", "scheduler-publisher", "script-user-tester",
+    "script-video-voice-collector", "seamless-loop-editor", "seo-specialist",
+    "sfx-timing-placer", "solver", "stock-asset-finder", "story-organizer",
+    "template-preset-manager", "thumbnail-designer", "variant-batch-renderer",
+    "video-editor", "virtual-camera-planner", "voiceover-organizer",
+    "watermark-logo-placer", "youtube-analyst", "youtube-seo-specialist",
 }
 BATCH_OF = {name: number for number, names in BATCHES.items() for name in names}
 

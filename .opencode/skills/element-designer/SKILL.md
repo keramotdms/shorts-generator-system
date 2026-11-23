@@ -1,46 +1,99 @@
 ---
 name: element-designer
-description: Designs reusable 2D scene elements.
+description: Designs flat reusable scene elements.
 category: scene
 status: implemented
 phase: later
 type: prompt-only
-batch: 5
+batch: A
+schema: inventory
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when designs reusable 2d scene elements for a video in `projects/<project>/`.
+Use after the character is approved and before scenario-designer, when a scene needs a desk, wallet, phone or notebook prop.
 
 # Purpose
 
-Designs reusable 2D scene elements.
+Define a small set of flat 2D scene elements drawn from the style-bible palette so every scene can reuse them without new art.
 
 # Input
 
-- `style bible + final script`
+- - `config/style-bible.json` palette
+- - `projects/<project>/02-script/latest_script.json`
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/05-scene/element-designer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `scene element assets`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Element design rules
+
+1. Design at most 6 elements for one Short.
+2. Use only the four palette colours from the style bible plus white and gray for floors.
+3. Draw with rect, circle and path only; no gradient, blur or image texture.
+4. Each element must be recognisable at 1080x1920 and occupy at least 100 pixels on one axis.
+5. Name elements in lowercase-kebab-case such as `warm-desk-notebook`.
+
+# Output format (short example)
+
+Schema: `config/schemas/inventory.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "element-designer",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "entries": [
+    {
+      "path": "assets/scenes/warm-desk-background.svg",
+      "version": 1,
+      "purpose": "desk and wall, flat palette shapes",
+      "state": "active"
+    },
+    {
+      "path": "assets/scenes/warm-desk-notebook.svg",
+      "version": 1,
+      "purpose": "notebook prop from the SVG builder",
+      "state": "active"
+    },
+    {
+      "path": "assets/scenes/wallet-prop.svg",
+      "version": 1,
+      "purpose": "wallet prop, draft",
+      "state": "draft"
+    }
+  ],
+  "summary": "Three flat elements registered; two active and one draft awaiting script use."
+}
+```
+
+# Quality rules
+
+1. Every entry path is an .svg file under assets/scenes/.
+2. No entry description contains the word gradient or photo.
+3. The number of active entries is 6 or fewer.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `style bible + final script`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to designs reusable 2d scene elements, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/05-scene/element-designer.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/05-scene/element-designer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read the palette from `config/style-bible.json` through project-memory.
+2. Scan the validated script for prop words such as notebook, wallet or phone.
+3. Map each prop word to an existing SVG builder prop or describe a new flat-shape element.
+4. Check size and colour limits against the rules above.
+5. Write the element list to `projects/<project>/05-scene/element-designer.json`.
+6. Validate against `config/schemas/inventory.json` and count active entries.
 
 # How to test
 
-- Type: `Use the element-designer skill with PROJECT=<project>`. Expected: `projects/<project>/05-scene/element-designer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Run `python scripts/svg_scene_builder.py sample`, then validate `projects/_template/05-scene/element-designer.json` with the inventory schema.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/inventory.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +101,4 @@ character and voice -> scenario-designer
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If a prop needs texture or fine detail, record it as `draft` with the reason and substitute a simple flat shape rather than blocking the scene.

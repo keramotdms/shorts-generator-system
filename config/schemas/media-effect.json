@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "media-effect.json",
+  "title": "FFmpeg effect run report",
+  "type": "object",
+  "required": ["status", "skill", "project", "generated_at", "video", "duration_sec", "width", "height", "has_audio", "parameters", "summary"],
+  "properties": {
+    "status": {"type": "string", "enum": ["PASS", "WARN", "FAIL"]},
+    "skill": {"type": "string", "minLength": 2},
+    "project": {"type": "string", "minLength": 2},
+    "generated_at": {"type": "string", "minLength": 10},
+    "video": {"type": "string", "minLength": 5},
+    "duration_sec": {"type": "number", "minimum": 0.1},
+    "width": {"type": "integer", "minimum": 16},
+    "height": {"type": "integer", "minimum": 16},
+    "has_audio": {"type": "boolean"},
+    "parameters": {"type": "object", "minProperties": 1},
+    "summary": {"type": "string", "minLength": 10}
+  }
+}

@@ -193,7 +193,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 3
+      "batch": "A",
+      "schema": "plan"
     },
     "hook-writer": {
       "input": "story.json + config/channel.json",
@@ -226,7 +227,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 3
+      "batch": "A",
+      "schema": "plan"
     },
     "loop-cta-designer": {
       "input": "draft script",
@@ -259,7 +261,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 3
+      "batch": "A",
+      "schema": "analysis"
     },
     "localization": {
       "input": "final script + config/channel.json",
@@ -281,7 +284,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 4
+      "batch": "A",
+      "schema": "plan"
     },
     "pronunciation-emotion-director": {
       "input": "voice plan + final script",
@@ -292,7 +296,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 4
+      "batch": "A",
+      "schema": "plan"
     },
     "voiceover-generator": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -325,7 +330,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 4
+      "batch": "A",
+      "schema": "selection"
     },
     "audio-mixer": {
       "input": "voice + music + SFX files",
@@ -359,7 +365,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 5
+      "batch": "A",
+      "schema": "selection"
     },
     "character-organizer": {
       "input": "character ideas + assets",
@@ -370,7 +377,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 5
+      "batch": "A",
+      "schema": "inventory"
     },
     "character-designer": {
       "input": "config/style-bible.json",
@@ -403,7 +411,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 5
+      "batch": "A",
+      "schema": "inventory"
     },
     "consistency-guardian": {
       "input": "rendered scenes + character references",
@@ -436,7 +445,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 5
+      "batch": "A",
+      "schema": "inventory"
     },
     "element-organizer": {
       "input": "scene elements",
@@ -447,7 +457,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 5
+      "batch": "A",
+      "schema": "inventory"
     },
     "scenario-designer": {
       "input": "collector output + style bible",
@@ -480,7 +491,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 6
+      "batch": "A",
+      "schema": "plan"
     },
     "video-maker": {
       "input": "projects/<project>/05-scene/collection.json",
@@ -586,8 +598,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "A",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "pattern-interrupt-inserter": {
       "input": "rough cut + final script",
@@ -669,8 +682,9 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 7,
-      "requires": "ffmpeg"
+      "batch": "A",
+      "requires": "ffmpeg",
+      "schema": "media-effect"
     },
     "caption-maker": {
       "input": "projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4",
@@ -881,7 +895,8 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 8
+      "batch": "A",
+      "schema": "analysis"
     },
     "ruthless-team": {
       "input": "final video",

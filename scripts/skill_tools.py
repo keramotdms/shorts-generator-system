@@ -16,15 +16,9 @@ FIXTURES = lib.ROOT / "tests" / "fixtures"
 VALID = FIXTURES / "valid"
 MEDIA = lib.ROOT / ".tmp" / "media"
 
-# Skills that still use the shared concat helper. They are intentionally generic.
-GENERIC_FFMPEG_SKILLS = {
-    "animator", "beat-sync-editor", "branding-manager", "broll-variety-planner",
-    "color-grading-keeper", "cut-rhythm-editor", "emphasis-sticker-placer",
-    "hook-visual-editor", "intro-outro-manager", "motion-graphic-editor",
-    "pattern-interrupt-inserter", "preview-frame-extractor", "seamless-loop-editor",
-    "sfx-timing-placer", "thumbnail-designer", "variant-batch-renderer",
-    "video-editor", "watermark-logo-placer",
-}
+# No skill uses the shared concat helper any more. The 18 formerly generic
+# skills now have purpose-specific commands in scripts/effect_ffmpeg.py.
+GENERIC_FFMPEG_SKILLS: set[str] = set()
 
 CHECKER_TARGETS = {
     "script-tester": [("json", "latest_script", 2, "latest_script.json")],
@@ -662,6 +656,14 @@ def cmd_health(args: argparse.Namespace) -> None:
 
 def self_test(skill: str) -> int:
     print(f"SELF-TEST {skill}")
+    if skill in {"animator", "beat-sync-editor", "branding-manager", "broll-variety-planner",
+                 "color-grading-keeper", "cut-rhythm-editor", "emphasis-sticker-placer",
+                 "hook-visual-editor", "intro-outro-manager", "motion-graphic-editor",
+                 "pattern-interrupt-inserter", "preview-frame-extractor", "seamless-loop-editor",
+                 "sfx-timing-placer", "thumbnail-designer", "variant-batch-renderer",
+                 "video-editor", "watermark-logo-placer"}:
+        import effect_ffmpeg
+        return effect_ffmpeg.self_test(skill)
     if skill == "project-memory":
         ctx = lib.style_context()
         assert ctx["niche"] and ctx["language"] and ctx["audience_location"]
@@ -767,6 +769,14 @@ def main(argv: list[str] | None = None, skill_override: str | None = None) -> in
             cmd_transition(skill, args)
         elif skill in CHECKER_TARGETS:
             cmd_checker(skill, args)
+        elif skill in {"animator", "beat-sync-editor", "branding-manager", "broll-variety-planner",
+                       "color-grading-keeper", "cut-rhythm-editor", "emphasis-sticker-placer",
+                       "hook-visual-editor", "intro-outro-manager", "motion-graphic-editor",
+                       "pattern-interrupt-inserter", "preview-frame-extractor", "seamless-loop-editor",
+                       "sfx-timing-placer", "thumbnail-designer", "variant-batch-renderer",
+                       "video-editor", "watermark-logo-placer"}:
+            import effect_ffmpeg
+            effect_ffmpeg.run(skill)
         elif skill in GENERIC_FFMPEG_SKILLS:
             cmd_ffmpeg_build(skill, args)
         else:

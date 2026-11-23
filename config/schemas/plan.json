@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "plan.json",
+  "title": "Timed or ordered action plan",
+  "type": "object",
+  "required": ["status", "skill", "project", "generated_at", "items", "constraints", "summary"],
+  "properties": {
+    "status": {"type": "string", "enum": ["PASS", "WARN", "FAIL"]},
+    "skill": {"type": "string", "minLength": 2},
+    "project": {"type": "string", "minLength": 2},
+    "generated_at": {"type": "string", "minLength": 10},
+    "language": {"type": "string", "minLength": 2},
+    "items": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "action", "reason"],
+        "properties": {
+          "id": {"type": "integer", "minimum": 1},
+          "action": {"type": "string", "minLength": 3},
+          "start_sec": {"type": "number", "minimum": 0},
+          "end_sec": {"type": "number", "minimum": 0},
+          "reason": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "constraints": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 3}},
+    "summary": {"type": "string", "minLength": 10}
+  }
+}

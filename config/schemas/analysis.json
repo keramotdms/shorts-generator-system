@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "analysis.json",
+  "title": "Scored analysis or critique",
+  "type": "object",
+  "required": ["status", "skill", "project", "generated_at", "criteria", "findings", "summary"],
+  "properties": {
+    "status": {"type": "string", "enum": ["PASS", "WARN", "FAIL"]},
+    "skill": {"type": "string", "minLength": 2},
+    "project": {"type": "string", "minLength": 2},
+    "generated_at": {"type": "string", "minLength": 10},
+    "language": {"type": "string", "minLength": 2},
+    "source_file": {"type": "string", "minLength": 3},
+    "criteria": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["name", "score", "evidence"],
+        "properties": {
+          "name": {"type": "string", "minLength": 3},
+          "score": {"type": "number", "minimum": 0, "maximum": 10},
+          "evidence": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "findings": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3}},
+    "summary": {"type": "string", "minLength": 10}
+  }
+}

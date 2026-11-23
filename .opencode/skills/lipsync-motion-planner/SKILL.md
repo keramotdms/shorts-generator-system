@@ -1,46 +1,107 @@
 ---
 name: lipsync-motion-planner
-description: Plans lip sync and basic motion.
+description: Plans simple mouth and body motion from word timings.
 category: video-making
 status: implemented
 phase: later
 type: prompt-only
-batch: 6
+batch: A
+schema: plan
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when plans lip sync and basic motion for a video in `projects/<project>/`.
+Use after the collector and before video-maker, when a static character needs timed mouth opening and one simple body move per scene.
 
 # Purpose
 
-Plans lip sync and basic motion.
+Turn caption word timings into a minimal lip-sync and motion plan that the flat SVG character can actually perform.
 
 # Input
 
-- `voice timings + character references`
+- - `projects/<project>/03-voice/captions.json`
+- - `projects/<project>/05-scene/collection.json`
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/06-video/lipsync-motion-planner.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `lip sync and motion plan`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Motion constraints
+
+1. Allow only two mouth states: open and closed; no phoneme-level shapes.
+2. Open the mouth only during a word interval from captions.json; never between words.
+3. Allow one body motion per scene from idle, wave, point or think.
+4. Keep motion events at least 1.5 seconds apart to stay readable at 9:16.
+5. Use the pose names from expression-pose-library exactly as written.
+
+# Output format (short example)
+
+Schema: `config/schemas/plan.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "lipsync-motion-planner",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "items": [
+    {
+      "id": 1,
+      "action": "Mouth open onেকশ in scene 1",
+      "start_sec": 0.4,
+      "end_sec": 0.9,
+      "reason": "word interval from captions"
+    },
+    {
+      "id": 2,
+      "action": "Pose wave during the greeting scene",
+      "start_sec": 2.0,
+      "end_sec": 5.0,
+      "reason": "one body motion per scene"
+    },
+    {
+      "id": 3,
+      "action": "Mouth open on the saving line",
+      "start_sec": 36.0,
+      "end_sec": 37.2,
+      "reason": "final payoff word"
+    }
+  ],
+  "constraints": [
+    "mouth states open/closed only",
+    "poses idle/wave/point/think",
+    "1.5 seconds between motions"
+  ],
+  "summary": "Three timed cues derived from caption intervals and the supported pose list."
+}
+```
+
+# Quality rules
+
+1. Every cue start and end matches a caption interval in the source file.
+2. No unsupported pose name appears in any action.
+3. Body motions are at least 1.5 seconds apart.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `voice timings + character references`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to plans lip sync and basic motion, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/06-video/lipsync-motion-planner.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/06-video/lipsync-motion-planner.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Load language from project-memory and validate `projects/<project>/03-voice/captions.json`.
+2. Read the collection file to learn which character and scenes exist.
+3. Map caption word intervals to open-mouth windows, one per word.
+4. Choose one supported pose per scene and space body motions by at least 1.5 seconds.
+5. Write the plan to `projects/<project>/06-video/lipsync-motion-planner.json`.
+6. Validate against `config/schemas/plan.json` and cross-check every interval with captions.
 
 # How to test
 
-- Type: `Use the lipsync-motion-planner skill with PROJECT=<project>`. Expected: `projects/<project>/06-video/lipsync-motion-planner.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Validate `projects/_template/06-video/lipsync-motion-planner.json` with the plan schema, then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/plan.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +109,4 @@ collector -> video-maker
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If captions are missing or word timings are absent, report BLOCKED for motion planning and render the character in idle pose instead of guessing mouth movement.

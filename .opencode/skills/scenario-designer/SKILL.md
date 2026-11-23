@@ -38,7 +38,7 @@ Builds scene layouts and visual plans.
 3. Lay out the scene as flat shapes: background colour from the character JSON palette, the character placed inside the 9:16 frame, and one prop that matches the scene visual prompt.
 4. Write the result to `projects/<project>/05-scene/scenario-designer.json` inside the current project under projects/<project>/; create parent folders first.
 5. Re-open `projects/<project>/05-scene/scenario-designer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
-6. Draw the scene with `python scripts/svg_scene_builder.py scene --character assets/characters/creator-01.json --description "<scene visual prompt>" --out assets/scenes/scene-warm-desk-smile --background-out assets/scenes/warm-desk-background`. The helper infers expression and pose from the description, draws a flat-shape background plus character, validates the SVG, rasterizes both PNGs with the already-installed Edge renderer, and prints the exact paths.
+6. Draw the scene with `python scripts/svg_scene_builder.py scene --character assets/characters/creator-01/character.json --description "<scene visual prompt>" --out assets/scenes/scene-warm-desk-smile --background-out assets/scenes/warm-desk-background`. The helper infers expression and pose from the description, draws a flat-shape background plus character, validates the SVG, rasterizes both PNGs with the already-installed Edge renderer, and prints the exact paths.
 
 **Acceptance criteria**
 - `projects/<project>/05-scene/scenario-designer.json` is valid and non-empty.

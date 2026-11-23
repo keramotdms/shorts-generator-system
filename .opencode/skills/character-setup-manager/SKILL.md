@@ -21,7 +21,7 @@ Register the flat body, mouth and prop layers that the SVG builder can swap inde
 
 # Input
 
-- `assets/characters/creator-01.json`
+- `assets/characters/creator-01/character.json`
 - Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
 - `PROJECT` environment variable (defaults to `_template`).
 
@@ -80,7 +80,7 @@ Schema: `config/schemas/inventory.json`
 
 # Steps
 
-1. Validate assets/characters/creator-01.json against `config/schemas/character.json` first.
+1. Validate assets/characters/creator-01/character.json against `config/schemas/character.json` first.
 2. Read the builder's accepted layer aliases from scripts/svg_scene_builder.py without modifying it.
 3. Confirm each of the three layer files exists on disk before registering it.
 4. Assign versions from the file metadata and keep old SVGs as archive entries.

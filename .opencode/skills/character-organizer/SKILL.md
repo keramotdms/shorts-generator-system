@@ -50,7 +50,7 @@ Schema: `config/schemas/inventory.json`
   "language": "bn",
   "entries": [
     {
-      "path": "assets/characters/creator-01.json",
+      "path": "assets/characters/creator-01/character.json",
       "version": 1,
       "purpose": "canonical look from the shortlist",
       "state": "active"

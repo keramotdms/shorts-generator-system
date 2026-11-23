@@ -21,7 +21,7 @@ Checks copyright and policy risks.
 # Input
 
 - `projects/<project>/02-script/latest_script.json`
-- `assets/characters/creator-01.json`
+- `assets/characters/creator-01/character.json`
 - `projects/<project>/08-final-test/final-video.mp4`
 - Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
 - `PROJECT` environment variable (defaults to `_template`).
@@ -32,7 +32,7 @@ Checks copyright and policy risks.
 
 # Steps
 1. Read `projects/<project>/02-script/latest_script.json` and extract narration, visual_prompt and highlight_words for source tracing.
-2. Compare `assets/characters/creator-01.json` with the drawing in `projects/<project>/08-final-test/final-video.mp4`; flag an unlicensed look-alike as WARN.
+2. Compare `assets/characters/creator-01/character.json` with the drawing in `projects/<project>/08-final-test/final-video.mp4`; flag an unlicensed look-alike as WARN.
 3. Check that music and SFX cue names in the script match the licensed list in `music-sfx-selector.json`; an absent cue id is FAIL.
 4. Look for third-party brand names in narration and require a clearance note for each one.
 5. Save each finding with its source line and risk level to `projects/<project>/08-final-test/copyright-policy-checker.json`.

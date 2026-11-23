@@ -22,7 +22,7 @@ Turn caption word timings into a minimal lip-sync and motion plan that the flat 
 # Input
 
 - `projects/<project>/03-voice/captions.json`
-- `assets/characters/creator-01.json`
+- `assets/characters/creator-01/character.json`
 - Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
 - `PROJECT` environment variable (defaults to `_template`).
 

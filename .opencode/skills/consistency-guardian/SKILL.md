@@ -12,16 +12,17 @@ batch: 5
 
 # When to use
 
-Use when checks character consistency across scenes for a video in `projects/<project>/`.
+Use when checking character consistency across scenes for a video in `projects/<project>/`.
 
 # Purpose
 
-Checks character consistency across scenes.
+Compares every rendered scene against the locked parametric character and proves the same part IDs, colours and proportions produce byte-identical renders.
 
 # Input
 
 - `projects/<project>/06-video/scenes/`
-- `assets/characters/creator-01.json`
+- `assets/characters/creator-01/character.json`
+- `assets/character-parts/parts.json`
 - Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
 - `PROJECT` environment variable (defaults to `_template`).
 
@@ -30,16 +31,18 @@ Checks character consistency across scenes.
 - `projects/<project>/04-character/consistency-guardian.json`
 
 # Steps
-1. Build a reference fingerprint from `assets/characters/creator-01.json`: palette, hair, clothing and voice tone.
-2. Inspect every MP4 in `projects/<project>/06-video/scenes/` and extract its first frame with ffmpeg.
-3. Compare each frame with the fingerprint; flag a changed shirt colour or missing palette colour as FAIL.
-4. Count scene files and compare that number with the collector scene list; a gap is WARN.
-5. Save frame indexes, mismatch reasons and a continuity verdict to `projects/<project>/04-character/consistency-guardian.json`.
-6. Assert the report lists every scene filename that was examined.
+
+1. Build a reference fingerprint from `assets/characters/creator-01/character.json`: every `parts` key/value (part IDs and hex colours) plus `proportions` (head height, total height, head-to-body ratio, shoulder width).
+2. Render the same design twice with `scripts/character_designer.py` and compare the two PNGs by SHA-256; any difference is FAIL.
+3. Inspect every MP4 in `projects/<project>/06-video/scenes/` and extract its first frame with ffmpeg.
+4. Compare each frame with the fingerprint; flag a changed shirt colour, hair style, skin tone or missing palette colour as FAIL.
+5. Count scene files and compare that number with the collector scene list; a gap is WARN.
+6. Save frame indexes, mismatch reasons, both render hashes and a continuity verdict to `projects/<project>/04-character/consistency-guardian.json`.
+7. Assert the report lists every scene filename that was examined.
 
 # How to test
 
-- `python scripts/skill_tools.py consistency-guardian --self-test` → expected `PASS consistency-guardian: ...`. Then confirm `projects/<project>/04-character/consistency-guardian.json` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py consistency-guardian --self-test` → expected `PASS consistency-guardian: identical part ids/colors/proportions and byte-identical renders across two scenes`. Then confirm `projects/<project>/04-character/consistency-guardian.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

@@ -389,18 +389,18 @@
       "schema": "inventory"
     },
     "character-designer": {
-      "input": "config/style-bible.json",
-      "output": "assets/characters/creator-01.json + assets/characters/creator-01-neutral.svg + assets/characters/creator-01-neutral.png",
+      "input": "config/style-bible.json + projects/<project>/04-character/character-brief.json + assets/character-parts/parts.json",
+      "output": "assets/characters/creator-01/character.json + assets/characters/creator-01/layered.svg + assets/characters/creator-01/preview.png + assets/characters/creator-01/preview-sheet.png + assets/characters/creator-01-neutral.svg + assets/characters/creator-01-neutral.png + assets/characters/creator-01-smile.svg + assets/characters/creator-01-smile.png + assets/characters/creator-01-surprised.svg + assets/characters/creator-01-surprised.png + projects/<project>/04-character/character-design-set.json",
       "upstream": "style bible",
       "downstream": "collector",
       "category": "character",
       "status": "implemented",
       "phase": "3",
-      "type": "prompt-only",
+      "type": "script-backed",
       "batch": 5
     },
     "character-setup-manager": {
-      "input": "assets/characters/creator-01.json",
+      "input": "assets/characters/creator-01/character.json",
       "output": "projects/<project>/04-character/character-setup-manager.json",
       "upstream": "character-designer",
       "downstream": "video-maker",
@@ -412,7 +412,7 @@
       "schema": "inventory"
     },
     "expression-pose-library": {
-      "input": "assets/characters/creator-01.json",
+      "input": "assets/characters/creator-01/character.json",
       "output": "projects/<project>/04-character/expression-pose-library.json",
       "upstream": "character-designer",
       "downstream": "video-maker",
@@ -424,7 +424,7 @@
       "schema": "inventory"
     },
     "consistency-guardian": {
-      "input": "projects/<project>/06-video/scenes/ + assets/characters/creator-01.json",
+      "input": "projects/<project>/06-video/scenes/ + assets/characters/creator-01/character.json",
       "output": "projects/<project>/04-character/consistency-guardian.json",
       "upstream": "video-maker",
       "downstream": "final-test",
@@ -435,7 +435,7 @@
       "batch": 5
     },
     "character-qa-tester": {
-      "input": "assets/characters/creator-01.json",
+      "input": "assets/characters/creator-01/character.json",
       "output": "projects/<project>/04-character/character-qa-tester.json",
       "upstream": "character-designer",
       "downstream": "final-test",
@@ -481,7 +481,7 @@
       "batch": 5
     },
     "script-voice-character-collector": {
-      "input": "projects/<project>/02-script/latest_script.json + projects/<project>/03-voice/voiceover.mp3 + assets/characters/creator-01.json + assets/scenes/scene-warm-desk-smile.png",
+      "input": "projects/<project>/02-script/latest_script.json + projects/<project>/03-voice/voiceover.mp3 + assets/characters/creator-01/character.json + assets/scenes/scene-warm-desk-smile.png",
       "output": "projects/<project>/05-scene/collection.json",
       "upstream": "script, voice and character",
       "downstream": "video-maker",
@@ -492,7 +492,7 @@
       "batch": 6
     },
     "lipsync-motion-planner": {
-      "input": "projects/<project>/03-voice/captions.json + assets/characters/creator-01.json",
+      "input": "projects/<project>/03-voice/captions.json + assets/characters/creator-01/character.json",
       "output": "projects/<project>/06-video/lipsync-motion-planner.json",
       "upstream": "collector",
       "downstream": "video-maker",
@@ -963,7 +963,7 @@
       "schema": "plan"
     },
     "copyright-policy-checker": {
-      "input": "projects/<project>/02-script/latest_script.json + assets/characters/creator-01.json + projects/<project>/08-final-test/final-video.mp4",
+      "input": "projects/<project>/02-script/latest_script.json + assets/characters/creator-01/character.json + projects/<project>/08-final-test/final-video.mp4",
       "output": "projects/<project>/08-final-test/copyright-policy-checker.json",
       "upstream": "final-test",
       "downstream": "publish stage",

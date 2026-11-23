@@ -49,7 +49,9 @@ ORDER = [
 # Files/directories that enter the pipeline from outside (config, manual exports, seeds).
 SEEDS = {
     "config/channel.json", "config/style-bible.json", "config/skill-contracts.json",
+    "assets/character-parts/parts.json",
     P + "pipeline-state.json", P + "10-publish/inputs/", P, P + "08-final-test/",
+    P + "04-character/character-brief.json",
 }
 
 ALLOWED_PREFIXES = ("projects/<project>/", "config/", "assets/", "research/")
@@ -104,7 +106,7 @@ def main() -> int:
         "story-thinker reads exact research paths": TREND in skills["story-thinker"]["input"],
         "script-tester duplicate output fixed": skills["script-tester"]["output"] == P + "02-script/script-tester.json",
         "hook field mapping is explicit": "hook.json.text" in (ROOT / ".opencode/skills/script-writer/SKILL.md").read_text(encoding="utf-8"),
-        "collector consumes character design": "assets/characters/creator-01.json" in skills["script-voice-character-collector"]["input"],
+        "collector consumes character design": "assets/characters/creator-01/character.json" in skills["script-voice-character-collector"]["input"],
         "video-maker consumes collection.json": skills["video-maker"]["input"] == P + "05-scene/collection.json",
         "rough-cut consumes collection.json": P + "05-scene/collection.json" in skills["rough-cut-assembler"]["input"],
         "caption-maker writes captions.json": P + "07-edit/captions.json" in skills["caption-maker"]["output"],

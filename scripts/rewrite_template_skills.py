@@ -533,7 +533,7 @@ SPECS["character-organizer"] = {
     ],
     "example": {
         "entries": entries(
-            ("assets/characters/creator-01.json", 1, "canonical look from the shortlist", "active"),
+            ("assets/characters/creator-01/character.json", 1, "canonical look from the shortlist", "active"),
             ("assets/characters/creator-01-smile.png", 1, "smile expression sheet", "active"),
             ("assets/characters/creator-00.json", 1, "old draft kept for reference", "archive"),
         ),

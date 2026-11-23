@@ -61,7 +61,7 @@ Use the caption-maker skill with PROJECT=my-video. Turn projects/my-video/03-voi
 ## 4. Character + scene
 
 ```text
-Use the character-designer skill with PROJECT=my-video. Read config/style-bible.json through project-memory and write assets/characters/creator-01.json plus its SVG/PNG expressions.
+Use the character-designer skill with PROJECT=my-video. Read config/style-bible.json through project-memory and write assets/characters/creator-01/character.json plus its SVG/PNG expressions.
 ```
 
 ```text
@@ -71,7 +71,7 @@ Use the scenario-designer skill with PROJECT=my-video. Build projects/my-video/0
 ## 5. Collect + render video
 
 ```text
-Use the script-voice-character-collector skill with PROJECT=my-video. Combine projects/my-video/02-script/latest_script.json, projects/my-video/03-voice/voiceover.mp3, assets/characters/creator-01.json and assets/scenes/scene-warm-desk-smile.png into projects/my-video/05-scene/collection.json (including scene_images[] and scenes[]).
+Use the script-voice-character-collector skill with PROJECT=my-video. Combine projects/my-video/02-script/latest_script.json, projects/my-video/03-voice/voiceover.mp3, assets/characters/creator-01/character.json and assets/scenes/scene-warm-desk-smile.png into projects/my-video/05-scene/collection.json (including scene_images[] and scenes[]).
 ```
 
 ```text

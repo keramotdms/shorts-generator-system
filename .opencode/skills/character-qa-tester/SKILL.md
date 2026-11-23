@@ -12,15 +12,17 @@ batch: 5
 
 # When to use
 
-Use when tests character outputs for errors for a video in `projects/<project>/`.
+Use when testing character outputs for errors for a video in `projects/<project>/`.
 
 # Purpose
 
-Tests character outputs for errors.
+Tests the locked parametric character, its layer structure and its rendered previews, then writes a field-by-field verdict.
 
 # Input
 
-- `assets/characters/creator-01.json`
+- `assets/characters/creator-01/character.json`
+- `assets/character-parts/parts.json`
+- `assets/characters/creator-01/layered.svg`
 - Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
 - `PROJECT` environment variable (defaults to `_template`).
 
@@ -29,16 +31,18 @@ Tests character outputs for errors.
 - `projects/<project>/04-character/character-qa-tester.json`
 
 # Steps
-1. Open `assets/characters/creator-01.json` and validate it against the character schema.
-2. Confirm the palette has exactly 4 hex colours and the expression set contains neutral, smile and surprised.
-3. Check each SVG and PNG sidecar under `assets/characters/` parses and measures exactly 1080x1920.
-4. Compare hair, clothing and voice fields with `config/style-bible.json`; report any contradiction as FAIL.
-5. Write field-by-field findings to `projects/<project>/04-character/character-qa-tester.json`.
-6. Assert the report holds at least 3 checked fields and one explicit PASS or FAIL verdict.
+
+1. Validate `assets/characters/creator-01/character.json` against `config/schemas/character.json`.
+2. Confirm each part ID in `parts` exists in `assets/character-parts/parts.json`, and that the library holds at least 6 heads, 8 hairstyles, 6 eyes, 4 brows, 8 mouths, 5 bodies, 8 outfits and 8 accessories.
+3. Parse `assets/characters/creator-01/layered.svg` and assert all 10 layer ids exist: body, outfit, arms, neck, head, hair, brows, eyes, mouth, accessory.
+4. Assert head-to-body ratio is 0.18–0.30, skin/outline contrast is at least 3.0, and `appearance.palette` holds at least 3 distinct hex colours from `config/style-bible.json`.
+5. Check `assets/characters/creator-01/preview.png` and `assets/characters/creator-01/preview-sheet.png` parse as PNG and measure exactly 1080x1920.
+6. Compare hair, clothing and voice fields with `config/style-bible.json`; report any contradiction as FAIL.
+7. Write field-by-field findings to `projects/<project>/04-character/character-qa-tester.json`, with at least 3 checked fields and one explicit PASS or FAIL verdict.
 
 # How to test
 
-- `python scripts/skill_tools.py character-qa-tester --self-test` → expected `PASS character-qa-tester: ...`. Then confirm `projects/<project>/04-character/character-qa-tester.json` exists and is non-empty after a real run.
+- `python scripts/skill_tools.py character-qa-tester --self-test` → expected `PASS character-qa-tester: schema, 10 layer ids, palette (5) and 1080x1920 PNGs verified`. Then confirm `projects/<project>/04-character/character-qa-tester.json` exists and is non-empty after a real run.
 - Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
 
 # Depends on / feeds into

@@ -5,42 +5,94 @@ category: marketing
 status: implemented
 phase: later
 type: prompt-only
-batch: 8
+batch: D
+schema: selection
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when writes marketing copy for the video for a video in `projects/<project>/`.
+Use after final-test and before description-maker, when the video is approved but the supporting words are still missing.
 
 # Purpose
 
-Writes marketing copy for the video.
+Choose one Bangla copy angle for the Short and produce the one-line pitch, description opening and hashtag set that match the audience persona.
 
 # Input
 
-- `final script + audience persona`
+- `projects/<project>/02-script/latest_script.json`
+- `projects/<project>/01-research/audience-persona-builder.json`
+- `config/channel.json` tone
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/09-description/copywriter.md`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `marketing copy`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Copy angle scoring
+
+1. Draft exactly three angles and pick one.
+2. Score each 0–10 for persona fit, clarity of money benefit and Bangla naturalness.
+3. Keep the pitch line under 60 Bangla characters.
+4. Use at most three hashtags, all written in Bangla.
+5. Never promise a guaranteed income or use words implying get-rich-quick results.
+
+# Output format (short example)
+
+Schema: `config/schemas/selection.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "copywriter",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "candidates": [
+    {
+      "id": "angle-01",
+      "score": 9,
+      "reason": "one coffee equals ৳120, under 60 characters"
+    },
+    {
+      "id": "angle-02",
+      "score": 6,
+      "reason": "too vague about the saving benefit"
+    },
+    {
+      "id": "angle-03",
+      "score": 7,
+      "reason": "good benefit but over 60 characters"
+    }
+  ],
+  "chosen_id": "angle-01",
+  "rationale": "Highest persona fit and clarity; pitch stays under 60 Bangla characters with three Bangla hashtags."
+}
+```
+
+# Quality rules
+
+1. There are three candidates and one chosen id from that list.
+2. No rationale contains an income guarantee.
+3. All hashtag examples are written in Bangla script.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final script + audience persona`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to writes marketing copy for the video, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/09-description/copywriter.md` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/09-description/copywriter.md` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read tone and language from project-memory before opening the persona shortlist.
+2. Validate the final script and extract its single money benefit.
+3. Draft three short Bangla angles and score them against the numeric rules.
+4. Select the winner and write a pitch line, description opening and three hashtags.
+5. Save the copy choice to projects/<project>/09-description/copywriter.json.
+6. Validate the selection schema and count the pitch characters.
 
 # How to test
 
-- Type: `Use the copywriter skill with PROJECT=<project>`. Expected: `projects/<project>/09-description/copywriter.md` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Validate projects/_template/09-description/copywriter.json with the selection schema, then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/selection.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +100,4 @@ final-test -> description-maker
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the persona shortlist is missing, report the path and stop. If no angle reaches 7 points, return WARN with the best angle instead of inventing a stronger claim.

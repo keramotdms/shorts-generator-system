@@ -5,42 +5,104 @@ category: growth
 status: implemented
 phase: later
 type: prompt-only
-batch: 8
+batch: D
+schema: plan
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when adapts videos for other platforms for a video in `projects/<project>/`.
+Use after handover and before scheduler-publisher, when the same video must serve Facebook and another configured platform.
 
 # Purpose
 
-Adapts videos for other platforms.
+Plan local crops and caption adjustments for reposting one finished Short to two additional platforms without new scripting or API calls.
 
 # Input
 
-- `final video`
+- `projects/<project>/08-final-test/final-video.mp4`
+- `config/channel.json` platform list
+- `config/defaults.json` resolution
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/10-publish/cross-platform-repurposer.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `platform-specific variants`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Repurposing constraints
+
+1. Plan at most two additional platforms beyond the primary one.
+2. Keep the 9:16 layout for Reels-style feeds and never stretch to 16:9.
+3. Move captions inward by 5% of width for platforms with right-side controls.
+4. Keep the original 30–60 second duration; do not add intro cards.
+5. List only platforms present in config/channel.json.
+
+# Output format (short example)
+
+Schema: `config/schemas/plan.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "cross-platform-repurposer",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "items": [
+    {
+      "id": 1,
+      "action": "Export 9:16 copy for Facebook Reels",
+      "start_sec": 0,
+      "end_sec": 45,
+      "reason": "same frame size, caption inset 5%"
+    },
+    {
+      "id": 2,
+      "action": "Export square crop preview for the feed",
+      "start_sec": 0,
+      "end_sec": 45,
+      "reason": " centred crop keeps the hook object visible"
+    },
+    {
+      "id": 3,
+      "action": "Replace the CTA with a Bangla follow line",
+      "start_sec": 42,
+      "end_sec": 45,
+      "reason": "platform-specific ending, same duration"
+    }
+  ],
+  "constraints": [
+    "max 2 extra platforms",
+    "no 16:9 stretch",
+    "original duration preserved"
+  ],
+  "summary": "Two local export plans and one CTA swap, all using the finished video without external services."
+}
+```
+
+# Quality rules
+
+1. Every item names a configured platform or a local crop action.
+2. No action increases the video duration.
+3. Constraints include the no-16:9-stretch rule.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final video`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to adapts videos for other platforms, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/10-publish/cross-platform-repurposer.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/10-publish/cross-platform-repurposer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read the platform list and resolution from project-memory before opening the final video path.
+2. Confirm projects/<project>/08-final-test/final-video.mp4 exists locally.
+3. Choose at most two configured platforms and state the crop rule for each.
+4. Adjust caption inset by 5% in the plan for platforms with overlays.
+5. Write the repurposing plan to projects/<project>/10-publish/cross-platform-repurposer.json.
+6. Validate the plan schema and confirm no platform name is invented.
 
 # How to test
 
-- Type: `Use the cross-platform-repurposer skill with PROJECT=<project>`. Expected: `projects/<project>/10-publish/cross-platform-repurposer.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Validate projects/_template/10-publish/cross-platform-repurposer.json with the plan schema, then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/plan.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +110,4 @@ handover -> other platforms
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the final video is missing, name the path and stop. If only one platform is configured, return WARN with a single-platform plan instead of inventing a destination.

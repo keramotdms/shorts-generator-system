@@ -5,42 +5,97 @@ category: growth
 status: implemented
 phase: later
 type: prompt-only
-batch: 8
+batch: D
+schema: manual-input
+api_needed: later
+data_source: manual-file
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when analyzes channel performance for a video in `projects/<project>/`.
+Use after videos are published and the analytics file has been exported to 10-publish/inputs/, before analytics-feedback-loop.
 
 # Purpose
 
-Analyzes channel performance.
+Summarise a manual YouTube analytics export into three scored dimensions that describe retention, reach and saving behaviour.
 
 # Input
 
-- `YouTube analytics data`
+- `projects/<project>/10-publish/inputs/youtube-analytics-export.json` (manual export; no API access)
+- `config/channel.json` length target
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/10-publish/youtube-analyst.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `performance report`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Analysis dimensions
+
+1. Require at least 5 exported videos before scoring a dimension.
+2. Score retention from average view duration divided by the video length, capped at 10.
+3. Score reach from impressions relative to the median of the exported set.
+4. Score saves from the save count relative to views, multiplied by 100 and capped at 10.
+5. Never report a metric that is absent from the export; write unavailable instead.
+
+# Output format (short example)
+
+Schema: `config/schemas/manual-input.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "youtube-analyst",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "api_needed": "later",
+  "source_file": "projects/<project>/10-publish/inputs/youtube-analytics-export.json",
+  "rows": [
+    {
+      "video": "coffee-price",
+      "views": 4200,
+      "avg_view_sec": 31,
+      "video_sec": 45,
+      "impressions": 9000,
+      "saves": 310
+    },
+    {
+      "video": "side-hustle",
+      "views": 2800,
+      "avg_view_sec": 38,
+      "video_sec": 45,
+      "impressions": 5200,
+      "saves": 260
+    }
+  ],
+  "summary": "Five exported videos scored: retention 7/10, reach 6/10, saves 8/10; saving behaviour is the strongest signal."
+}
+```
+
+# Quality rules
+
+1. Summary reports exactly three scores in the form n/10.
+2. No row contains a metric missing from the export.
+3. Scores never exceed 10.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `YouTube analytics data`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to analyzes channel performance, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/10-publish/youtube-analyst.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/10-publish/youtube-analyst.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Confirm the manual export exists under projects/<project>/10-publish/inputs/.
+2. Read the target length from project-memory and count exported rows.
+3. Compute retention, reach and save scores using only exported fields.
+4. Write the three scores and their evidence into the summary.
+5. Save the report to projects/<project>/10-publish/youtube-analyst.json.
+6. Validate the manual-input schema and mark api_needed as later.
 
 # How to test
 
-- Type: `Use the youtube-analyst skill with PROJECT=<project>`. Expected: `projects/<project>/10-publish/youtube-analyst.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Export five sample analytics rows under projects/_template/10-publish/inputs/ then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/manual-input.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +103,4 @@ published video -> research loop
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If fewer than five rows are exported, write INSUFFICIENT DATA in the summary. Never call the YouTube API or fabricate impressions, views or saves.

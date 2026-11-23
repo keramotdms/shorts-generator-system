@@ -5,42 +5,93 @@ category: growth
 status: implemented
 phase: later
 type: prompt-only
-batch: 8
+batch: D
+schema: manual-input
+api_needed: later
+data_source: manual-file
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when feeds results back into research for a video in `projects/<project>/`.
+Use after youtube-analyst and before the next research phase, when the team needs to change its topic choices based on past results.
 
 # Purpose
 
-Feeds results back into research.
+Convert a manually exported performance report into three research notes that the next story-thinker run can actually use.
 
 # Input
 
-- `analytics reports`
+- `projects/<project>/10-publish/inputs/analytics-report.json` (manual export; no API access)
+- `research/niche-report.md`
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/10-publish/analytics-feedback-loop.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `insight notes for research`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Feedback rules
+
+1. Use at least 5 published videos from the export before drawing a conclusion.
+2. Rank videos by save rate, not by raw views, because this niche is educational.
+3. Write exactly three research notes in the summary.
+4. Each note must name a topic or format from research/niche-report.md.
+5. Never infer demographics that are absent from the export.
+
+# Output format (short example)
+
+Schema: `config/schemas/manual-input.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "analytics-feedback-loop",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "api_needed": "later",
+  "source_file": "projects/<project>/10-publish/inputs/analytics-report.json",
+  "rows": [
+    {
+      "video": "coffee-price",
+      "views": 4200,
+      "saves": 310,
+      "save_rate": 0.074
+    },
+    {
+      "video": "side-hustle",
+      "views": 2800,
+      "saves": 260,
+      "save_rate": 0.093
+    }
+  ],
+  "summary": "Top save rate is the side-hustle format; add two more side-hustle topics and keep the coffee hook style in the next research round."
+}
+```
+
+# Quality rules
+
+1. Summary contains exactly three research notes.
+2. Each note mentions a topic present in the niche report.
+3. No row contains a demographic field that was not exported.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `analytics reports`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to feeds results back into research, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/10-publish/analytics-feedback-loop.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/10-publish/analytics-feedback-loop.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Check that projects/<project>/10-publish/inputs/analytics-report.json exists before reading anything.
+2. Count rows and stop with WARN when fewer than five videos are present.
+3. Rank the exported videos by save rate and note the top format.
+4. Compare that format with topics listed in research/niche-report.md.
+5. Write three concrete research notes into the summary.
+6. Save the feedback file to projects/<project>/10-publish/analytics-feedback-loop.json and validate its schema.
 
 # How to test
 
-- Type: `Use the analytics-feedback-loop skill with PROJECT=<project>`. Expected: `projects/<project>/10-publish/analytics-feedback-loop.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Export five sample rows under projects/_template/10-publish/inputs/ then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/manual-input.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +99,4 @@ youtube-analyst -> research stage
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the manual analytics export is missing, name the path and stop. Never call a YouTube API or invent view and save numbers.

@@ -5,42 +5,94 @@ category: growth
 status: implemented
 phase: later
 type: prompt-only
-batch: 8
+batch: D
+schema: manual-input
+api_needed: later
+data_source: manual-file
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when schedules and publishes videos for a video in `projects/<project>/`.
+Use after handover and marketing-specialist, when posting times are agreed and a human will perform the upload.
 
 # Purpose
 
-Schedules and publishes videos.
+Produce a validated publishing schedule from a manual request file; this skill never contacts a platform and never marks a video as actually published.
 
 # Input
 
-- `final assets + content calendar`
+- projects/<project>/10-publish/inputs/schedule-requests.json (manual export; no API access)
+- projects/<project>/01-research/content-calendar.json
+- projects/<project>/10-publish/handover.md
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/10-publish/scheduler-publisher.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `scheduled or published video`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Schedule checks
+
+1. Require the handover file to exist before accepting any request row.
+2. Allow at most one upload per platform per calendar day.
+3. Keep every posted time in Bangladesh local time and label it BST.
+4. Compare each request with the content calendar and flag unplanned videos.
+5. Mark every row as planned only; never write published or live as a status.
+
+# Output format (short example)
+
+Schema: `config/schemas/manual-input.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "scheduler-publisher",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "api_needed": "later",
+  "source_file": "projects/<project>/10-publish/inputs/schedule-requests.json",
+  "rows": [
+    {
+      "platform": "youtube",
+      "video": "coffee-price",
+      "when": "2026-11-23 19:00 BST",
+      "status": "planned"
+    },
+    {
+      "platform": "facebook",
+      "video": "coffee-price",
+      "when": "2026-11-23 20:15 BST",
+      "status": "planned"
+    }
+  ],
+  "summary": "Two planned uploads validated against the calendar; a human must perform the actual publishing."
+}
+```
+
+# Quality rules
+
+1. Every row status is exactly planned.
+2. No platform has two rows on the same date.
+3. Each when value ends with BST.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `final assets + content calendar`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to schedules and publishes videos, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/10-publish/scheduler-publisher.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/10-publish/scheduler-publisher.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Verify projects/<project>/10-publish/handover.md exists and read the calendar through project-memory.
+2. Load the manual schedule requests from projects/<project>/10-publish/inputs/schedule-requests.json.
+3. Reject duplicate platform-and-day pairs and unplanned video names.
+4. Normalise every timestamp to a BST-labelled string.
+5. Write the validated schedule to projects/<project>/10-publish/scheduler-publisher.json.
+6. Validate the manual-input schema and assert no row claims a published state.
 
 # How to test
 
-- Type: `Use the scheduler-publisher skill with PROJECT=<project>`. Expected: `projects/<project>/10-publish/scheduler-publisher.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Save two schedule rows under projects/_template/10-publish/inputs/ then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/manual-input.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +100,4 @@ handover -> platforms
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If handover.md is missing, stop and name the path. This skill cannot publish; if the user expects a live upload, tell them to use GitHub Desktop sign-in or `gh auth login` for a future API-enabled version.

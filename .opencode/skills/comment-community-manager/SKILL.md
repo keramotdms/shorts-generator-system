@@ -5,42 +5,93 @@ category: growth
 status: implemented
 phase: later
 type: prompt-only
-batch: 8
+batch: D
+schema: manual-input
+api_needed: later
+data_source: manual-file
 ---
 
 > Context is always loaded via project-memory; all generated data lives under projects/<project>/.
 
 # When to use
 
-Use when manages comments and community replies for a video in `projects/<project>/`.
+Use after a video is published and its comments have been exported to 10-publish/inputs/, before the next research round.
 
 # Purpose
 
-Manages comments and community replies.
+Sort a manual comment export into questions, praise and objections, then draft Bangla replies for the questions and objections only.
 
 # Input
 
-- `viewer comments`
+- `projects/<project>/10-publish/inputs/comments-export.json` (manual export; no API access)
+- `config/channel.json` tone
 - `config/channel.json` and `config/style-bible.json`, read through project-memory
 - `PROJECT` environment variable (defaults to `_template`)
 
 # Output
 
-- `projects/<project>/10-publish/comment-community-manager.json`
-- A `status`, `skill`, `project` and `generated_at` record inside the output where the format allows it
+- `reply plan`
+- `status`, `skill`, `project` and `generated_at` are written into the JSON output
+
+# Reply rules
+
+1. Require at least 5 exported comments before drafting any reply.
+2. Classify every row as question, praise or objection.
+3. Draft replies only for questions and objections.
+4. Write each reply in Bangla and keep it under 120 characters.
+5. Never promise a personal finance outcome or ask for private financial details.
+
+# Output format (short example)
+
+Schema: `config/schemas/manual-input.json`
+
+```json
+{
+  "status": "PASS",
+  "skill": "comment-community-manager",
+  "project": "_template",
+  "generated_at": "2026-11-23T10:00:00Z",
+  "language": "bn",
+  "api_needed": "later",
+  "source_file": "projects/<project>/10-publish/inputs/comments-export.json",
+  "rows": [
+    {
+      "id": 1,
+      "text": "এই টাকা কীভাবে বাঁচাব?",
+      "type": "question",
+      "reply": "প্রতিদিন ২০ টাকা আলাদা রাখুন, তারপর মাসে যোগ করুন।"
+    },
+    {
+      "id": 2,
+      "text": "ভালো ভিডিও",
+      "type": "praise",
+      "reply": ""
+    }
+  ],
+  "summary": "Two exported comments sorted; one Bangla reply drafted for the question, praise left unanswered by design."
+}
+```
+
+# Quality rules
+
+1. Every row has exactly one of the three allowed types.
+2. Praise rows have an empty reply string.
+3. All drafted replies are under 120 characters and written in Bangla.
 
 # Steps
 
-1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
-2. Validate the input at `viewer comments`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to manages comments and community replies, using only the context loaded in step 1.
-4. Write the result to `projects/<project>/10-publish/comment-community-manager.json` inside the current project under projects/<project>/; create parent folders first.
-5. Re-open `projects/<project>/10-publish/comment-community-manager.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Confirm projects/<project>/10-publish/inputs/comments-export.json exists and read the tone from project-memory.
+2. Validate that every exported row has text and an id.
+3. Label each row as question, praise or objection.
+4. Draft short Bangla replies for non-praise rows and leave praise replies empty.
+5. Write the reply set to projects/<project>/10-publish/comment-community-manager.json.
+6. Validate the manual-input schema and check reply character counts.
 
 # How to test
 
-- Type: `Use the comment-community-manager skill with PROJECT=<project>`. Expected: `projects/<project>/10-publish/comment-community-manager.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- Export five sample comments under projects/_template/10-publish/inputs/ then run `python tests/test_no_template.py`.
+- Run `python tests/test_no_template.py` and confirm this skill is not listed.
+- The filled example above is validated against `config/schemas/manual-input.json` by `tests/test_no_template.py`.
 
 # Depends on / feeds into
 
@@ -48,4 +99,4 @@ published video -> research stage
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If the export is missing, report the path and stop. Never invent a viewer comment or reply as if it came from a real user.

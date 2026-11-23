@@ -35,7 +35,7 @@ Builds scene layouts and visual plans.
 
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.
 2. Validate the input at `collector output + style bible`; if it is missing or malformed, follow Failure handling and stop.
-3. Follow this skill's prompt instructions to builds scene layouts and visual plans, using only the context loaded in step 1.
+3. Lay out the scene as flat shapes: background colour from the character JSON palette, the character placed inside the 9:16 frame, and one prop that matches the scene visual prompt.
 4. Write the result to `projects/<project>/05-scene/scenario-designer.json` inside the current project under projects/<project>/; create parent folders first.
 5. Re-open `projects/<project>/05-scene/scenario-designer.json` and verify it is valid and non-empty; record any problem via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
 6. Draw the scene with `python scripts/svg_scene_builder.py scene --character assets/characters/<character-id>.json --description "<scene visual prompt>" --out assets/scenes/<scene-id> --background-out assets/scenes/<scene-id>-background`. The helper infers expression and pose from the description, draws a flat-shape background plus character, validates the SVG, rasterizes both PNGs with the already-installed Edge renderer, and prints the exact paths.

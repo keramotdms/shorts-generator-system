@@ -48,6 +48,7 @@ REQUIRED_FILES = [
     "scripts/effect_ffmpeg.py",
     "scripts/svg_scene_builder.py",
     "scripts/rewrite_template_skills.py",
+    "scripts/audit_skill_status.py",
     "scripts/orchestrator.py",
     "config/defaults.json",
     "tests/test_skills.py",

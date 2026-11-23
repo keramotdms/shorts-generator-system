@@ -120,15 +120,16 @@
       "batch": 2
     },
     "trend-finder": {
-      "input": "config/channel.json + projects/<project>/01-research/trend-cache/",
-      "output": "projects/<project>/01-research/trend-report.json",
+      "input": "config/channel.json + research/trend-inputs/ + research/trend-cache/",
+      "output": "research/trend-cache/trend-report.json",
       "upstream": "channel config",
       "downstream": "story-thinker",
       "category": "research",
       "status": "implemented",
       "phase": "1",
-      "type": "prompt-only",
-      "batch": 2
+      "type": "script-backed",
+      "batch": 2,
+      "schema": "trend-report"
     },
     "competitor-analyzer": {
       "input": "projects/<project>/01-research/niche-report.md + config/channel.json",
@@ -167,7 +168,7 @@
       "schema": "analysis"
     },
     "content-calendar": {
-      "input": "projects/<project>/01-research/niche-report.md + projects/<project>/01-research/trend-report.json",
+      "input": "projects/<project>/01-research/niche-report.md + research/trend-cache/trend-report.json",
       "output": "projects/<project>/01-research/content-calendar.json",
       "upstream": "research outputs",
       "downstream": "scheduler-publisher",
@@ -179,7 +180,7 @@
       "schema": "plan"
     },
     "story-thinker": {
-      "input": "projects/<project>/01-research/niche-report.md + projects/<project>/01-research/trend-report.json + config/channel.json",
+      "input": "projects/<project>/01-research/niche-report.md + research/trend-cache/trend-report.json + config/channel.json",
       "output": "projects/<project>/02-script/story.json",
       "upstream": "research outputs",
       "downstream": "hook-writer",

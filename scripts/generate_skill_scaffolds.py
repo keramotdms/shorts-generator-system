@@ -24,7 +24,7 @@ SKILLS: list[tuple[str, str, str, str, str, str, str]] = [
     ("pipeline-health-checker", "core", "", "Checks tools, skills, handoffs and final output.", "whole repository and final video", "PASS / WARN / FAIL report", "all stages -> final render gate"),
     # ---- research ----
     ("book-finder", "research", "", "Finds niche and topic ideas for the channel.", "config/channel.json", "research/niche-report.md", "channel config -> story-thinker"),
-    ("trend-finder", "research", "", "Finds location-based YouTube and Facebook trends.", "config/channel.json + research/trend-cache/", "research/trend-cache/*.json", "channel config -> story-thinker"),
+    ("trend-finder", "research", "", "Finds location-based YouTube and Facebook trends from free sources.", "config/channel.json + research/trend-inputs/ + research/trend-cache/", "research/trend-cache/trend-report.json", "channel config -> story-thinker"),
     ("competitor-analyzer", "research", "", "Analyzes competing channels and formats.", "research/niche-report.md", "competitor analysis report", "niche report -> story-thinker"),
     ("audience-persona-builder", "research", "", "Builds a clear viewer persona.", "config/channel.json + niche report", "audience persona profile", "research outputs -> hook-writer"),
     ("fact-checker", "research", "", "Verifies factual claims used in scripts.", "draft script claims", "fact-check notes", "draft script -> final-test"),

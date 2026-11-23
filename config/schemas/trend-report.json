@@ -1,40 +1,91 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "trend-report.json",
-  "title": "Location-based trend report",
+  "title": "Free-source trend report",
   "type": "object",
-  "required": ["region", "source_files", "trends"],
+  "required": [
+    "region",
+    "generated_on",
+    "niche",
+    "language",
+    "keywords",
+    "source_files",
+    "sources",
+    "trends",
+    "warnings",
+    "quota",
+    "status"
+  ],
   "properties": {
     "region": {"type": "string", "minLength": 3},
+    "generated_on": {"type": "string", "minLength": 8},
+    "niche": {"type": "string", "minLength": 3},
+    "language": {"type": "string", "enum": ["bn", "en"]},
+    "keywords": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"type": "string", "minLength": 3}
+    },
     "source_files": {
       "type": "array",
-      "minItems": 1,
+      "minItems": 0,
       "items": {"type": "string", "minLength": 3}
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "status", "detail", "items"],
+        "properties": {
+          "name": {"type": "string", "minLength": 3},
+          "status": {"type": "string", "enum": ["ok", "warn", "unavailable", "empty"]},
+          "detail": {"type": "string", "minLength": 3},
+          "items": {"type": "integer", "minimum": 0}
+        }
+      }
     },
     "trends": {
       "type": "array",
-      "minItems": 1,
-      "maxItems": 10,
+      "minItems": 0,
+      "maxItems": 50,
       "items": {
         "type": "object",
-        "required": ["platform", "topic", "signals", "observed_on", "source_file", "scores"],
+        "required": ["source", "sources", "date", "keyword", "score", "confidence"],
         "properties": {
-          "platform": {"type": "string", "enum": ["youtube-shorts", "facebook-reels"]},
+          "source": {"type": "string", "minLength": 3},
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 3}
+          },
+          "date": {"type": "string", "minLength": 8},
+          "keyword": {"type": "string", "minLength": 3},
           "topic": {"type": "string", "minLength": 3},
+          "score": {"type": "number", "minimum": 0, "maximum": 100},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "platform": {"type": "string", "minLength": 3},
           "signals": {"type": "object"},
-          "observed_on": {"type": "string", "minLength": 8},
-          "source_file": {"type": "string", "minLength": 3},
-          "scores": {
-            "type": "object",
-            "required": ["freshness", "local", "reuse"],
-            "properties": {
-              "freshness": {"type": "number", "minimum": 1, "maximum": 5},
-              "local": {"type": "number", "minimum": 1, "maximum": 5},
-              "reuse": {"type": "number", "minimum": 1, "maximum": 5}
-            }
-          }
+          "source_file": {"type": "string", "minLength": 3}
         }
       }
-    }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 3}
+    },
+    "quota": {
+      "type": "object",
+      "required": ["youtube_units", "autosuggest_units", "google_trends_units", "total_units"],
+      "properties": {
+        "youtube_units": {"type": "integer", "minimum": 0},
+        "autosuggest_units": {"type": "integer", "minimum": 0},
+        "google_trends_units": {"type": "integer", "minimum": 0},
+        "total_units": {"type": "integer", "minimum": 0},
+        "log_file": {"type": "string", "minLength": 3}
+      }
+    },
+    "status": {"type": "string", "enum": ["PASS", "WARN"]}
   }
 }

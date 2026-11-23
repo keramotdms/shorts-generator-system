@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CONTRACTS = ROOT / "config" / "skill-contracts.json"
 P = "projects/<project>/"
+TREND = "research/trend-cache/trend-report.json"
 FINAL = P + "08-final-test/final-video.mp4"
 
 # Dependency order (not folder order): every input must be made by an earlier skill.
@@ -98,8 +99,9 @@ def main() -> int:
     # Explicit regression checks for the 20 mismatches in docs/SKILL-REVIEW.md.
     checks = {
         "book-finder output": skills["book-finder"]["output"] == P + "01-research/niche-report.md",
-        "trend-finder output": skills["trend-finder"]["output"] == P + "01-research/trend-report.json",
-        "story-thinker reads exact research paths": P + "01-research/trend-report.json" in skills["story-thinker"]["input"],
+        "trend-finder output": skills["trend-finder"]["output"] == TREND,
+        "trend-finder reads manual exports": "research/trend-inputs/" in skills["trend-finder"]["input"],
+        "story-thinker reads exact research paths": TREND in skills["story-thinker"]["input"],
         "script-tester duplicate output fixed": skills["script-tester"]["output"] == P + "02-script/script-tester.json",
         "hook field mapping is explicit": "hook.json.text" in (ROOT / ".opencode/skills/script-writer/SKILL.md").read_text(encoding="utf-8"),
         "collector consumes character design": "assets/characters/creator-01.json" in skills["script-voice-character-collector"]["input"],

@@ -785,6 +785,9 @@ def self_test(skill: str) -> int:
         import effect_ffmpeg
         return effect_ffmpeg.self_test(skill)
 
+    if skill == "trend-finder":
+        import trend_finder
+        return trend_finder.self_test()
     if skill == "project-memory":
         ctx = lib.style_context()
         assert ctx["niche"] and ctx["language"] and ctx["audience_location"]
@@ -967,6 +970,9 @@ def main(argv: list[str] | None = None, skill_override: str | None = None) -> in
     try:
         if skill == "project-memory":
             cmd_project_memory(args)
+        elif skill == "trend-finder":
+            import trend_finder
+            trend_finder.run()
         elif skill == "asset-manager":
             cmd_asset_manager(args)
         elif skill == "task-tracker":

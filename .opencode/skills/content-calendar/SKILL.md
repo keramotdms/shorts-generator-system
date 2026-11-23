@@ -22,7 +22,7 @@ Turn research topics into a two-week posting calendar with fixed weekdays, local
 # Input
 
 - `projects/<project>/01-research/niche-report.md`
-- `projects/<project>/01-research/trend-report.json`
+- `research/trend-cache/trend-report.json`
 - Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
 - `PROJECT` environment variable (defaults to `_template`).
 

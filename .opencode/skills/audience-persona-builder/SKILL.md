@@ -80,7 +80,7 @@ Schema: `config/schemas/selection.json`
 # Steps
 
 1. Open project-memory first and copy the language and region values into the persona constraints.
-2. Read `projects/<project>/01-research/niche-report.md` and `projects/<project>/01-research/trend-report.json` without calling any external API.
+2. Read `projects/<project>/01-research/niche-report.md` and `research/trend-cache/trend-report.json` without calling any external API.
 3. Write three short viewer sketches with a taka income, a device and one money worry.
 4. Score the sketches against the three numeric thresholds above and select the top passing one.
 5. Save the shortlist to projects/<project>/01-research/audience-persona-builder.json.

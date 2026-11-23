@@ -19,7 +19,7 @@ Status: **93 OK | 0 FIX | 0 WEAK**. Every issue in the original read-only audit 
 | Contract paths | ~68 descriptive strings, 1 duplicate output | **0 errors** — 93 exact paths, no duplicates, every input produced upstream (`tests/test_chain.py` PASS) |
 | Legacy paths | `scripts/latest_script.json`, `output/voiceover.mp3` | **0 occurrences** in contracts or SKILL.md |
 | Chain hand-offs | 20 mismatches, 3 dry-run breaks | **0 mismatches** — all 11 dry-run steps exit 0; handover is `ready` |
-| Self-tests | 16 assert nothing; 47 PASS overstated | **0 print-only bodies** — 48 self-tests PASS, 0 BLOCKED, counted honestly |
+| Self-tests | 16 assert nothing; 47 PASS overstated | **0 print-only bodies** — 49 self-tests PASS, 0 BLOCKED, counted honestly |
 | Steps similarity | 99 pairs >80% (100% worst case) | **0 pairs >80% and 0 pairs >60%** after removing skill names |
 | Bangla rules | 9 skills lacked explicit rules | **0 gaps** — 12 skills now carry explicit Bangla/Noto Sans Bengali/৳ rules |
 | Numeric criteria | missing in generic checker/editor Steps | **0 gaps** — every Steps section has numeric, checkable criteria |
@@ -27,8 +27,8 @@ Status: **93 OK | 0 FIX | 0 WEAK**. Every issue in the original read-only audit 
 ## 3. Required test evidence
 
 ```text
-python scripts/health_check.py          -> 63 PASS | 0 WARN | 0 BLOCKED | 0 FAIL
-python tests/test_skills.py             -> 93 skills validated, 48 self-tests passed, 0 blocked
+python scripts/health_check.py          -> 66 PASS | 0 WARN | 0 BLOCKED | 0 FAIL
+python tests/test_skills.py             -> 93 skills validated, 49 self-tests passed, 0 blocked
 python tests/smoke/run_dummy_pipeline.py-> 93 PASS | 0 FAIL | 0 BLOCKED
 python tests/test_no_template.py        -> 55 implemented skills checked, 0 template skills
 python tests/test_chain.py              -> PASS: exact paths, no duplicate outputs, every input produced upstream

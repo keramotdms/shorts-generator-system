@@ -1,72 +1,101 @@
 ---
 name: trend-finder
-description: Finds location-based YouTube and Facebook trends.
+description: Finds location-based YouTube and Facebook trends from free sources.
 category: research
 status: implemented
 phase: 1
-type: prompt-only
+type: script-backed
 batch: 2
 schema: trend-report
 ---
 
-> Context is always loaded via project-memory; all generated data lives under projects/<project>/.
+> Context is always loaded via project-memory; generated research lives under `research/` and per-project work stays in `projects/<project>/`.
 
 # When to use
 
-Use when finds location-based youtube and facebook trends for a video in `projects/<project>/`.
+Use when you need current, location-based topic signals before `story-thinker` chooses a story angle.
 
 # Purpose
 
-Finds location-based YouTube and Facebook trends.
+Collect free trend signals from YouTube, Google Trends, YouTube autosuggest and user exports, merge them, and write a transparent scored report. No source is called with a paid API and no missing metric is invented.
 
 # Input
 
 - `config/channel.json`
-- `projects/<project>/01-research/trend-cache/`
+- `research/trend-inputs/`
+- `research/trend-cache/`
+- `YOUTUBE_API_KEY` in `.env` (never commit the key; `.env.example` contains only the empty placeholder)
 - Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
 - `PROJECT` environment variable (defaults to `_template`).
 
 # Output
 
-- `projects/<project>/01-research/trend-report.json`
+- `research/trend-cache/trend-report.json`
+- `research/trend-cache/quota-log.jsonl` (one line per YouTube API call; no key is written)
 
 # Steps
 
-1. Read `config/channel.json` and `config/style-bible.json` through project-memory. Use `audience_location` as the filtering region; do not assume a global trend applies to Bangladesh.
-2. Look for source data inside `projects/<project>/01-research/trend-cache/` (user-supplied CSV/JSON exports or an earlier run). Create that folder if it does not exist. If there is no source file, ask the user to drop an export there and stop; do not install or call a paid API.
-3. For each source row keep only items where the topic maps to the channel niche and the region from `config/channel.json`. Record `platform` (`youtube-shorts` or `facebook-reels`), `topic`, `signals` (views/shares or rank), `observed_on`, and `source_file`.
-4. Score every kept item 1-5 for freshness, local relevance, and reuse as a 30-60 s Short. Sort by the total and keep at most 10 items.
-5. Write the result to `projects/<project>/01-research/trend-report.json`; create `projects/<project>/01-research/` first. Re-open it, confirm it parses and is non-empty, and log problems via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`.
+1. Read `config/channel.json` through project-memory. Use `niche` for filtering and search seeds, `language` for autosuggest language, and `audience_location` for the region code (`BD` for Bangladesh).
+2. Build exactly 5 niche search keywords from the configured niche. Do not use a fixed topic list.
+3. Read `YOUTUBE_API_KEY` from `.env` and request the YouTube Data API v3 `videos.list` endpoint with `chart=mostPopular`, `regionCode=BD` and `part=snippet,statistics`. Keep only videos whose title, description or tags match the niche tokens. Record 1 quota unit and append it to `research/trend-cache/quota-log.jsonl`.
+4. Request YouTube search autosuggest for each of the 5 niche keywords. This endpoint needs no API key. Keep at most 3 suggestions per seed.
+5. Try Google Trends through `pytrends` for the same 5 keywords. This source is optional: if the package is missing or the request fails, write a `warn` source status and continue.
+6. Read every CSV, JSON, Markdown and text export in `research/trend-inputs/`, including YouTube Studio Research CSV, Facebook notes and vidIQ notes. Merge rows by keyword and keep the strongest score and confidence.
+7. Write `research/trend-cache/trend-report.json` with `source`, `date`, `keyword`, `score` (0-100), `confidence` (0-1) and per-source status. If a source is unavailable, put that exact fact in `sources` and `warnings`; never replace it with a made-up trend. Validate the file with `python scripts/schema_validator.py trend-report research/trend-cache/trend-report.json`.
 
 **Acceptance criteria**
-- `projects/<project>/01-research/trend-report.json` exists under the current project and parses.
-- Every entry has `platform`, `topic`, `signals`, `observed_on`, `source_file`, and 3 scores.
-- Every entry cites a real file inside `projects/<project>/01-research/trend-cache/`.
-- No entry is older than 30 days from `observed_on`.
+- The report contains exactly 5 `keywords`, copied or derived from the configured niche.
+- Every `trends[]` item has `source`, `date`, `keyword`, `score` (0-100) and `confidence` (0-1).
+- At least one `sources[]` entry explains each unavailable or failed source; no fabricated values appear.
+- YouTube quota use is recorded in `quota` and appended to `research/trend-cache/quota-log.jsonl` when the API is called.
+- The report passes `config/schemas/trend-report.json` and `research/trend-cache/trend-report.json` exists.
 
 **Output format (short example)**
 ```json
 {
   "region": "Bangladesh / Bangla-speaking",
-  "source_files": ["projects/<project>/01-research/trend-cache/youtube-export.csv"],
+  "generated_on": "2026-11-23",
+  "niche": "Personal finance / side hustles",
+  "language": "bn",
+  "keywords": ["personal finance", "side hustles", "personal finance ideas", "side hustles ideas", "personal finance tips"],
+  "source_files": ["research/trend-inputs/studio-research.csv"],
+  "sources": [
+    {"name": "youtube-most-popular", "status": "ok", "detail": "4 niche-matched items from mostPopular", "items": 4},
+    {"name": "google-trends", "status": "warn", "detail": "pytrends not installed; optional source skipped", "items": 0},
+    {"name": "youtube-autosuggest", "status": "ok", "detail": "12 suggestions from 5 niche keywords", "items": 12},
+    {"name": "manual-inputs", "status": "ok", "detail": "3 rows merged from 1 manual file", "items": 3}
+  ],
   "trends": [
-    {"platform": "youtube-shorts", "topic": "low-cost side hustle",
-     "signals": {"views": 120000}, "observed_on": "2026-11-20",
-     "source_file": "projects/<project>/01-research/trend-cache/youtube-export.csv",
-     "scores": {"freshness": 5, "local": 5, "reuse": 4}}
-  ]
+    {
+      "source": "youtube-most-popular",
+      "sources": ["youtube-most-popular", "manual:studio-research.csv"],
+      "date": "2026-11-20",
+      "keyword": "low-cost side hustle for students",
+      "score": 88.5,
+      "confidence": 0.93,
+      "platform": "youtube-shorts",
+      "signals": {"views": 120000, "rank": 1},
+      "source_file": "youtube-api:mostPopular?regionCode=BD"
+    }
+  ],
+  "warnings": ["google-trends: pytrends not installed; optional source skipped"],
+  "quota": {"youtube_units": 1, "autosuggest_units": 0, "google_trends_units": 0, "total_units": 1, "log_file": "research/trend-cache/quota-log.jsonl"},
+  "status": "WARN"
 }
 ```
 
 **Quality rules**
-1. Never guess a view count or rank; copy it from a cited source file.
-2. Drop any trend that cannot be shown in a vertical 9:16 frame.
-3. Keep `region` copied from `config/channel.json`, not rewritten by hand.
+1. Never invent views, search volume, rank, date or a trend. Copy the value from the cited API response or manual file.
+2. Keep the key secret: never print `YOUTUBE_API_KEY`, never put it in `trend-report.json`, and never commit `.env`.
+3. Treat `pytrends` as optional. A missing package is a `warn` status, not a failed pipeline.
+4. Keep only the configured region and niche. Drop unrelated trending videos instead of relabelling them.
+5. Keep the report useful when a source is down: write the source status and continue with the other free sources.
 
 # How to test
 
-- Type: `Use the trend-finder skill with PROJECT=<project>`. Expected: `projects/<project>/01-research/trend-report.json` exists, parses cleanly, and contains no hardcoded niche or language value.
-- Checklist: context came from project-memory; input validated; output path is exact; no placeholder steps remain.
+- `python scripts/skill_tools.py trend-finder --self-test` → runs with fake YouTube, autosuggest and pytrends responses; expected `PASS trend-finder: ...`.
+- Put a YouTube Studio Research CSV, Facebook notes or vidIQ notes in `research/trend-inputs/`, then run `python scripts/skill_tools.py trend-finder run`; inspect `research/trend-cache/trend-report.json` and `research/trend-cache/quota-log.jsonl`.
+- Checklist: context came from project-memory; 5 niche keywords exist; every item has source/date/keyword/score/confidence; unavailable sources are named; no key appears anywhere in the report.
 
 # Depends on / feeds into
 
@@ -74,4 +103,4 @@ channel config -> story-thinker
 
 # Failure handling
 
-If a required input is missing or invalid, stop without writing a partial output, log the reason to `projects/<project>/08-final-test/error-log.jsonl` via error-log-keeper, and report the exact missing path. If the output fails validation, delete it and re-run after fixing the input. For FFmpeg-required skills, report `BLOCKED: ffmpeg` with the `FFMPEG_PATH` hint instead of FAIL; do not change Windows application-control settings.
+If `config/channel.json` is missing or invalid, stop and report the exact path. If `YOUTUBE_API_KEY` is absent, write `youtube-most-popular` as `unavailable`, continue with autosuggest/manual inputs, and do not fabricate YouTube rows. If `pytrends` is absent or fails, write `google-trends` as `warn`, continue, and log the reason via error-log-keeper at `projects/<project>/08-final-test/error-log.jsonl`. If no source returns data, still write a valid report with an empty `trends` list, `status: WARN`, and the exact source reasons. Never change Windows settings or install a package without user approval.

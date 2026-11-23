@@ -54,6 +54,13 @@ projects/*/0[3-8]-*/*.webm
 projects/dummy/
 tests/fixtures/dummy_pipeline/
 
+# ===== Research cache / manual exports =====
+research/trend-cache/*.json
+research/trend-cache/*.jsonl
+research/trend-inputs/*
+!research/trend-cache/.gitkeep
+!research/trend-inputs/.gitkeep
+
 # ===== Generated / temporary files =====
 cache/
 .tmp/

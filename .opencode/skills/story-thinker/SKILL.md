@@ -21,7 +21,7 @@ Turns research into a short story concept.
 # Input
 
 - `projects/<project>/01-research/niche-report.md`
-- `projects/<project>/01-research/trend-report.json`
+- `research/trend-cache/trend-report.json`
 - `config/channel.json`
 - Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
 - `PROJECT` environment variable (defaults to `_template`).
@@ -32,7 +32,7 @@ Turns research into a short story concept.
 
 # Steps
 
-1. Read `projects/<project>/01-research/niche-report.md` (winner and ranking) plus `config/channel.json` and `config/style-bible.json` through project-memory. Read `projects/<project>/01-research/trend-report.json` if it exists and use its top local trend as a timing hint.
+1. Read `projects/<project>/01-research/niche-report.md` (winner and ranking) plus `config/channel.json` and `config/style-bible.json` through project-memory. Read `research/trend-cache/trend-report.json` if it exists and use its highest-scoring local trend as a timing hint.
 2. Pick the single winner topic. Write one sentence naming the viewer's pain in Bangladesh, one sentence naming the promised outcome, and one `hook_seed` phrased as a question or bold claim in the project language.
 3. Split the story into exactly 3 beats: (1) show the pain, (2) give one cheap action, (3) return to the hook for the loop. Each beat must be visualisable in one 9:16 frame.
 4. Write `projects/<project>/02-script/story.json` using the schema fields below; create the `02-script` folder first. Copy `niche` and `audience` from channel config.

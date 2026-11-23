@@ -3,3 +3,7 @@
 
 # Voiceover generation (used by scripts/generate_audio.py)
 edge-tts>=7.0
+
+# Optional Google Trends source for trend-finder.
+# Ask before installing: pip install "pytrends>=4.9"
+# pytrends>=4.9

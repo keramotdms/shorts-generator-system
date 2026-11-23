@@ -45,7 +45,7 @@ Research -> Script -> Voice -> Character -> Scene -> Video -> Edit -> Final Test
 - script-writer
 
 ### Phase 3 — Production
-- voice-over-generator
+- voiceover-generator
 - character-designer
 - script-voice-character-collector
 - video-maker
@@ -62,4 +62,4 @@ Research -> Script -> Voice -> Character -> Scene -> Video -> Edit -> Final Test
 
 ## Legacy compatibility
 
-- `voiceover-captions` currently combines voice + captions. See `config/skill-contracts.json` for the proposed split into `voice-over-generator` and `caption-maker`. Do not write those new skill contents yet.
+- `voiceover-captions` currently combines voice + captions. See `config/skill-contracts.json` for the proposed split into `voiceover-generator` and `caption-maker`. Do not write those new skill contents yet.

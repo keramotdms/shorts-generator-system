@@ -157,6 +157,8 @@ def ffmpeg_executable() -> Path | None:
         candidates.append(found)
     for value in candidates:
         path = Path(value)
+        if not path.is_absolute():
+            path = ROOT / path
         if path.is_file():
             return path
     return None

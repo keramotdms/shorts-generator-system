@@ -172,9 +172,9 @@ Research -> Script -> Voice -> Character -> Scene -> Video -> Edit -> Final Test
 - ab-tester — implemented, phase later
 - monetization-tracker — implemented, phase later
 
-## Pending decisions
+## Resolved decisions
 
-- FFmpeg: installed but `ffmpeg.exe` is blocked by Windows Smart App Control. Revisit before video skills.
-- Niche and language remain pending confirmation in the live pipeline (config defaults are placeholders).
+- FFmpeg: the winget `ffmpeg.exe` is blocked by Windows Application Control. A working `imageio-ffmpeg` binary in `.venv` is configured through `FFMPEG_PATH` and `config/defaults.json`. No Windows security setting was changed.
+- Niche and language are confirmed in `config/channel.json`: Personal finance / side hustles, Bangla (`bn`), Bangladesh / Bangla-speaking.
 
 Full skill table: `docs/SKILL-INDEX.md`.

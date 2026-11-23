@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "source": "config/channel.json (read through project-memory)",
+  "style": {
+    "tone": "natural, conversational",
+    "visual_style": "flat 2D illustration, bold shapes, high contrast",
+    "palette": [
+      "#111827",
+      "#F9FAFB",
+      "#F59E0B",
+      "#10B981"
+    ],
+    "font": "Noto Sans Bengali"
+  },
+  "characters": {
+    "default": "friendly young Bangla-speaking creator"
+  },
+  "voice": {
+    "language": "bn",
+    "default_gender": "male"
+  },
+  "channel": {
+    "niche": "Personal finance / side hustles",
+    "language": "bn",
+    "audience_location": "Bangladesh / Bangla-speaking",
+    "video": {
+      "length_sec": [
+        30,
+        60
+      ],
+      "aspect_ratio": "9:16",
+      "resolution": "1080x1920"
+    },
+    "platforms": [
+      "YouTube Shorts",
+      "Facebook Reels"
+    ]
+  }
+}

@@ -43,6 +43,16 @@
 - **Schemas were missing, so "valid JSON" did not mean "correct shape".** Fix: six JSON schemas in `config/schemas/`, a stdlib validator, and schema checks in `skill_tools.py` and `generate_audio.py`.
 - **Step text was near-identical in 87 of 93 skills.** Fix: rewrote the 10 most important Steps with real acceptance criteria, an output example and 3 quality rules each.
 
+## 2026-11-23 — Toolchain setup on this PC
+
+- **`py` was missing and `python` was only the Microsoft Store stub.** Installed real Python 3.12.10 with `winget install Python.Python.3.12 --scope user --custom "/quiet InstallAllUsers=0 PrependPath=1 Include_test=0"`. Verified `python --version` -> `Python 3.12.10`, `python -m pip --version` -> `pip 25.0.1`. Existing shells needed a USER PATH reload before `python` resolved to the real interpreter.
+- **Installed `edge-tts` 7.3.1 inside `.venv` and verified `import edge_tts` works.** `.venv/` was already in `.gitignore`. Keep running project scripts with `.venv\Scripts\python.exe` unless the venv is activated.
+- **`git` was not on PATH.** Did not install a second Git: added GitHub Desktop 3.6.4's bundled `git\cmd` folder to USER PATH. Verified `git --version` -> `git version 2.53.0.windows.4` and `git status` is clean. Caveat: this path includes the Desktop version number, so re-add it after a GitHub Desktop update if `git` disappears.
+- **FFmpeg is blocked on this PC too, but there is a workaround.** Installed `Gyan.FFmpeg` 9.1 per-user; `ffmpeg.exe` fails with `An Application Control policy has blocked this file` and `ffprobe.exe` hangs with no output. Did **not** disable Smart App Control or change any Windows security setting. `imageio-ffmpeg` 0.8.1 in the venv supplies a working `ffmpeg 9.0.2` binary.
+- **Set `FFMPEG_PATH` in `.env` (gitignored) and a repo-relative path in `config/defaults.json`.** Fixed `skill_lib.ffmpeg_executable()` to resolve relative paths against the repo root, and fixed `health_check.py` to use `ffmpeg_status()` instead of only `shutil.which("ffmpeg")`. Otherwise the health check would still mark 28 skills BLOCKED even though the configured binary works.
+- **Final verification:** health check `40 PASS | 1 WARN | 0 BLOCKED | 0 FAIL` (the WARN is `ffprobe` unavailable); `tests/test_skills.py` -> `PASS: 93 skills validated, 47 self-tests passed or blocked`; dummy pipeline -> `93 PASS | 0 FAIL | 0 BLOCKED`. All 28 ffmpeg-required skills are unblocked.
+- **Created `config/style-bible.json` with the `project-memory` skill** from `config/channel.json`. Fixed doc drift: README now says 93 skills are implemented, ROADMAP niche/language are resolved, and both `AGENTS.md` occurrences use `voiceover-generator`.
+
 ## Rules for future mistakes
 
 - Log the mistake, why it happened, and the fix here immediately.

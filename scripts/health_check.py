@@ -14,6 +14,9 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS_DIR = ROOT / ".opencode" / "skills"
 CONTRACTS_PATH = ROOT / "config" / "skill-contracts.json"
 
+sys.path.insert(0, str(ROOT / "scripts"))
+import skill_lib as lib  # noqa: E402
+
 REQUIRED_DIRS = [
     ".opencode/skills",
     "config",
@@ -67,44 +70,33 @@ def check_python() -> None:
 
 
 def check_ffmpeg() -> None:
-    """Verify ffmpeg/ffprobe are on PATH AND can actually execute."""
-    ffmpeg = shutil.which("ffmpeg")
-    ffprobe = shutil.which("ffprobe")
-    if not ffmpeg or not ffprobe:
-        report("WARN", "FFmpeg/ffprobe not found on PATH (need approval before installing)")
-        return
+    """Verify the configured ffmpeg actually executes (FFMPEG_PATH is honored)."""
+    status, detail = lib.ffmpeg_status()
+    if status == "OK":
+        report("PASS", f"ffmpeg runs: {detail}")
+    else:
+        report("WARN", f"ffmpeg {status}: {detail}")
 
-    for name, executable in (("ffmpeg", ffmpeg), ("ffprobe", ffprobe)):
-        try:
-            result = subprocess.run(
-                [executable, "-version"],
-                capture_output=True,
-                text=True,
-                timeout=20,
-            )
-            if result.returncode == 0:
-                first_line = result.stdout.splitlines()[0] if result.stdout else "no output"
-                report("PASS", f"{name} runs: {first_line}")
-            else:
-                report("WARN", f"{name} found but exited with code {result.returncode}")
-        except (OSError, subprocess.SubprocessError) as exc:
-            report("WARN", f"{name} found but cannot run: {exc}")
+    ffprobe = shutil.which("ffprobe")
+    if not ffprobe:
+        report("WARN", "ffprobe not on PATH (the venv imageio-ffmpeg binary provides ffmpeg only)")
+        return
+    try:
+        result = subprocess.run(
+            [ffprobe, "-version"], capture_output=True, text=True, timeout=10
+        )
+        if result.returncode == 0:
+            first_line = result.stdout.splitlines()[0] if result.stdout else "no output"
+            report("PASS", f"ffprobe runs: {first_line}")
+        else:
+            report("WARN", f"ffprobe exited with code {result.returncode}")
+    except (OSError, subprocess.SubprocessError) as exc:
+        report("WARN", f"ffprobe found but cannot run: {exc}")
 
 
 def ffmpeg_usable() -> tuple[bool, str]:
-    """True only when ffmpeg is on PATH and actually executes."""
-    ffmpeg = shutil.which("ffmpeg")
-    if not ffmpeg:
-        return False, "ffmpeg not on PATH (set FFMPEG_PATH)"
-    try:
-        result = subprocess.run(
-            [ffmpeg, "-version"], capture_output=True, text=True, timeout=20
-        )
-    except (OSError, subprocess.SubprocessError) as exc:
-        return False, str(exc)
-    if result.returncode == 0:
-        return True, "OK"
-    return False, f"exit code {result.returncode}: {result.stderr.strip()[:120]}"
+    """True only when the configured ffmpeg actually executes."""
+    return lib.ffmpeg_status()
 
 
 def check_blocked_skills() -> None:

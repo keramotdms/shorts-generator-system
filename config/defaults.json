@@ -1,8 +1,8 @@
 {
-  "ffmpeg_path": null,
+  "ffmpeg_path": ".venv/Lib/site-packages/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v9.0.2.exe",
   "ffmpeg_env_var": "FFMPEG_PATH",
   "default_project": "_template",
   "resolution": "1080x1920",
   "aspect_ratio": "9:16",
-  "notes": "Set ffmpeg_path here or export FFMPEG_PATH. Leave null while ffmpeg.exe is blocked."
+  "notes": "Repo-relative path to the working imageio-ffmpeg binary. The winget ffmpeg.exe is blocked by Application Control; do not change Windows security settings."
 }

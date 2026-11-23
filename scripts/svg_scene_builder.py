@@ -25,7 +25,7 @@ import skill_lib as lib
 ROOT = lib.ROOT
 WIDTH = 1080
 HEIGHT = 1920
-SAMPLE_CHARACTER = ROOT / "assets" / "characters" / "creator-01.json"
+SAMPLE_CHARACTER = ROOT / "assets" / "characters" / "creator-01" / "character.json"
 SAMPLE_SOURCE = ROOT / "tests" / "fixtures" / "valid" / "character.json"
 
 EXPRESSION_ALIASES = {
@@ -193,6 +193,10 @@ def arms_markup(pose: str, skin: str, outline: str) -> str:
 
 
 def character_markup(character: dict[str, Any], expression: str, pose: str) -> str:
+    if isinstance(character.get("parts"), dict):
+        import character_designer
+
+        return character_designer.character_markup(character, expression, pose)
     appearance = character.get("appearance", {})
     palette = palette_of(character)
     outline = palette[0] if palette else "#111827"

@@ -1,21 +1,98 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "character.json",
-  "title": "2D character design",
+  "title": "Locked parametric 2D character design",
   "type": "object",
-  "required": ["id", "name", "appearance", "voice", "style_source"],
+  "required": [
+    "id",
+    "name",
+    "style_source",
+    "brief",
+    "parts",
+    "proportions",
+    "appearance",
+    "voice",
+    "expressions",
+    "poses",
+    "mouth_shapes",
+    "locked"
+  ],
   "properties": {
     "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
     "name": {"type": "string", "minLength": 1},
-    "style_source": {"type": "string"},
+    "style_source": {"type": "string", "minLength": 3},
+    "brief": {
+      "type": "object",
+      "required": ["role", "age", "gender", "personality", "niche", "language"],
+      "properties": {
+        "role": {"type": "string", "minLength": 3},
+        "role_label": {"type": "string", "minLength": 1},
+        "age": {"type": "integer", "minimum": 12, "maximum": 80},
+        "gender": {"type": "string", "minLength": 3},
+        "personality": {"type": "string", "minLength": 3},
+        "niche": {"type": "string", "minLength": 3},
+        "language": {"type": "string", "enum": ["bn", "en"]}
+      }
+    },
+    "parts": {
+      "type": "object",
+      "required": [
+        "head",
+        "hair",
+        "eyes",
+        "brows",
+        "mouth",
+        "body",
+        "outfit",
+        "accessory",
+        "skin",
+        "hair_color",
+        "eye_color",
+        "outfit_color",
+        "accent",
+        "outline",
+        "light"
+      ],
+      "properties": {
+        "head": {"type": "string", "pattern": "^head-[a-z-]+$"},
+        "hair": {"type": "string", "pattern": "^hair-[a-z-]+$"},
+        "eyes": {"type": "string", "pattern": "^eyes-[a-z-]+$"},
+        "brows": {"type": "string", "pattern": "^brows-[a-z-]+$"},
+        "mouth": {"type": "string", "pattern": "^mouth-[a-z-]+$"},
+        "body": {"type": "string", "pattern": "^body-[a-z-]+$"},
+        "outfit": {"type": "string", "pattern": "^outfit-[a-z-]+$"},
+        "accessory": {"type": "string", "pattern": "^accessory-[a-z-]+$"},
+        "skin": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "hair_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "eye_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "outfit_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "accent": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "outline": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "light": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}
+      }
+    },
+    "proportions": {
+      "type": "object",
+      "required": ["head_height", "total_height", "head_to_body", "shoulder_width"],
+      "properties": {
+        "head_height": {"type": "integer", "minimum": 200, "maximum": 500},
+        "total_height": {"type": "integer", "minimum": 900, "maximum": 1800},
+        "head_to_body": {"type": "number", "minimum": 0.18, "maximum": 0.3},
+        "shoulder_width": {"type": "integer", "minimum": 120, "maximum": 400}
+      }
+    },
     "appearance": {
       "type": "object",
       "required": ["body", "hair", "clothing", "palette"],
       "properties": {
-        "body": {"type": "string", "minLength": 2},
-        "hair": {"type": "string", "minLength": 2},
-        "clothing": {"type": "string", "minLength": 2},
-        "palette": {"type": "array", "minItems": 2, "items": {"type": "string"}}
+        "body": {"type": "string", "minLength": 3},
+        "hair": {"type": "string", "minLength": 3},
+        "clothing": {"type": "string", "minLength": 3},
+        "palette": {
+          "type": "array",
+          "minItems": 3,
+          "items": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}
+        }
       }
     },
     "voice": {
@@ -25,6 +102,24 @@
         "gender": {"type": "string", "enum": ["male", "female"]},
         "tone": {"type": "string", "minLength": 2}
       }
-    }
+    },
+    "expressions": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"type": "string", "enum": ["neutral", "happy", "worried", "surprised", "thinking"]}
+    },
+    "poses": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "string", "enum": ["idle", "wave", "point"]}
+    },
+    "mouth_shapes": {
+      "type": "array",
+      "minItems": 4,
+      "items": {"type": "string", "enum": ["closed", "open", "wide", "smile"]}
+    },
+    "locked": {"type": "boolean"}
   }
 }

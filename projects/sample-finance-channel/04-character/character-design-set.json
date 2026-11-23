@@ -1,0 +1,81 @@
+{
+  "project": "sample-finance-channel",
+  "brief": {
+    "project": "sample-finance-channel",
+    "role": "teacher",
+    "role_label": "শিক্ষক",
+    "age": 32,
+    "gender": "male",
+    "personality": "warm",
+    "niche": "Personal finance / side hustles",
+    "language": "bn",
+    "name": "রাফি",
+    "character_id": "creator-01"
+  },
+  "style_source": "config/style-bible.json",
+  "candidates": [
+    {
+      "id": "creator-01-candidate-01",
+      "approach": "শিক্ষক",
+      "signature": "head-oval|hair-short-crop|eyes-round|brows-soft|mouth-smile|body-slim|outfit-shirt-vest|accessory-glasses|#F6D5B8",
+      "fit_score": 100,
+      "skin_tone": "#F6D5B8",
+      "head_to_body": 0.276,
+      "character": "assets\\characters\\creator-01-candidate-01\\character.json",
+      "layered_svg": "assets\\characters\\creator-01-candidate-01\\layered.svg",
+      "preview_png": "assets\\characters\\creator-01-candidate-01\\preview.png"
+    },
+    {
+      "id": "creator-01-candidate-02",
+      "approach": "শিক্ষক",
+      "signature": "head-square|hair-side-part|eyes-happy|brows-raised|mouth-neutral|body-average|outfit-formal|accessory-lanyard|#E8B98E",
+      "fit_score": 60,
+      "skin_tone": "#E8B98E",
+      "head_to_body": 0.238,
+      "character": "assets\\characters\\creator-01-candidate-02\\character.json",
+      "layered_svg": "assets\\characters\\creator-01-candidate-02\\layered.svg",
+      "preview_png": "assets\\characters\\creator-01-candidate-02\\preview.png"
+    },
+    {
+      "id": "creator-01-candidate-03",
+      "approach": "শিক্ষক",
+      "signature": "head-heart|hair-fade|eyes-round|brows-soft|mouth-grin|body-tall|outfit-panjabi|accessory-watch|#D9A066",
+      "fit_score": 65,
+      "skin_tone": "#D9A066",
+      "head_to_body": 0.272,
+      "character": "assets\\characters\\creator-01-candidate-03\\character.json",
+      "layered_svg": "assets\\characters\\creator-01-candidate-03\\layered.svg",
+      "preview_png": "assets\\characters\\creator-01-candidate-03\\preview.png"
+    }
+  ],
+  "chosen": {
+    "id": "creator-01",
+    "from_candidate": "creator-01-candidate-01",
+    "signature": "head-oval|hair-short-crop|eyes-round|brows-soft|mouth-smile|body-slim|outfit-shirt-vest|accessory-glasses|#F6D5B8",
+    "fit_score": 100,
+    "character": "assets\\characters\\creator-01\\character.json",
+    "layered_svg": "assets\\characters\\creator-01\\layered.svg",
+    "preview_png": "assets\\characters\\creator-01\\preview.png",
+    "preview_sheet_png": "assets\\characters\\creator-01\\preview-sheet.png"
+  },
+  "locked": true,
+  "criteria": {
+    "head_to_body": 0.276,
+    "min_contrast": 3.0,
+    "contrast": 12.78,
+    "min_palette_colors": 3,
+    "palette_colors": 5,
+    "layers": [
+      "body",
+      "outfit",
+      "arms",
+      "neck",
+      "head",
+      "hair",
+      "brows",
+      "eyes",
+      "mouth",
+      "accessory"
+    ]
+  }
+}

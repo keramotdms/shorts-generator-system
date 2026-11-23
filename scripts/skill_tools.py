@@ -158,6 +158,7 @@ def cmd_project_memory(args: argparse.Namespace) -> None:
             "tone": "natural, conversational",
             "visual_style": "flat 2D illustration, bold shapes, high contrast",
             "palette": ["#111827", "#F9FAFB", "#F59E0B", "#10B981"],
+            "skin_palette": ["#F6D5B8", "#E8B98E", "#D9A066", "#C68642", "#A9683A", "#96603A"],
             "font": "Noto Sans Bengali",
         },
         "characters": {"default": "friendly young Bangla-speaking creator"},
@@ -271,7 +272,9 @@ def cmd_collector(args: argparse.Namespace) -> None:
     script_data = lib.read_json(lib.stage(2, "latest_script.json"))
     voice = lib.stage(3, "voiceover.mp3")
     style_bible = lib.read_json(lib.CONFIG_DIR / "style-bible.json", required=False) or {}
-    design_path = lib.ROOT / "assets" / "characters" / "creator-01.json"
+    design_path = lib.ROOT / "assets" / "characters" / "creator-01" / "character.json"
+    if not design_path.is_file():
+        design_path = lib.ROOT / "assets" / "characters" / "creator-01.json"
     design = lib.read_json(design_path, required=False) or {}
     if not design:
         raise lib.SkillError(f"Missing input file: {lib.relative(design_path)}")
@@ -788,6 +791,9 @@ def self_test(skill: str) -> int:
     if skill == "trend-finder":
         import trend_finder
         return trend_finder.self_test()
+    if skill == "character-designer":
+        import character_designer
+        return character_designer.self_test()
     if skill == "project-memory":
         ctx = lib.style_context()
         assert ctx["niche"] and ctx["language"] and ctx["audience_location"]
@@ -830,6 +836,12 @@ def self_test(skill: str) -> int:
         script = lib.read_json(VALID / "latest_script.json")
         assert len(script["scenes"]) >= 3 and script["total_duration_sec"] >= 30, script
         print(f"PASS {skill}: script and caption schemas verified ({script['total_duration_sec']} sec)")
+    elif skill == "character-qa-tester":
+        import character_designer
+        return character_designer.qa_self_test()
+    elif skill == "consistency-guardian":
+        import character_designer
+        return character_designer.consistency_self_test()
     elif skill in CHECKER_TARGETS:
         for kind, schema_name, _stage, _pattern in CHECKER_TARGETS[skill]:
             if kind in ("json", "characters"):
@@ -973,6 +985,9 @@ def main(argv: list[str] | None = None, skill_override: str | None = None) -> in
         elif skill == "trend-finder":
             import trend_finder
             trend_finder.run()
+        elif skill == "character-designer":
+            import character_designer
+            character_designer.run()
         elif skill == "asset-manager":
             cmd_asset_manager(args)
         elif skill == "task-tracker":

@@ -1,15 +1,51 @@
 {
   "id": "creator-01",
-  "name": "অনিক",
+  "name": "রাফি",
   "style_source": "config/style-bible.json",
+  "brief": {
+    "role": "teacher",
+    "role_label": "শিক্ষক",
+    "age": 29,
+    "gender": "male",
+    "personality": "warm",
+    "niche": "Personal finance / side hustles",
+    "language": "bn"
+  },
+  "parts": {
+    "head": "head-oval",
+    "hair": "hair-side-part",
+    "eyes": "eyes-round",
+    "brows": "brows-soft",
+    "mouth": "mouth-smile",
+    "body": "body-average",
+    "outfit": "outfit-shirt-vest",
+    "accessory": "accessory-glasses",
+    "skin": "#C68642",
+    "hair_color": "#111827",
+    "eye_color": "#111827",
+    "outfit_color": "#10B981",
+    "accent": "#F59E0B",
+    "outline": "#111827",
+    "light": "#F9FAFB"
+  },
+  "proportions": {
+    "head_height": 356,
+    "total_height": 1300,
+    "head_to_body": 0.274,
+    "shoulder_width": 210
+  },
   "appearance": {
-    "body": "slim, friendly young adult",
-    "hair": "short black hair",
-    "clothing": "simple blue shirt",
-    "palette": ["#111827", "#F9FAFB", "#F59E0B", "#10B981"]
+    "body": "body-average",
+    "hair": "hair-side-part",
+    "clothing": "outfit-shirt-vest",
+    "palette": ["#111827", "#F9FAFB", "#F59E0B", "#10B981", "#C68642"]
   },
   "voice": {
     "gender": "male",
-    "tone": "calm and conversational"
-  }
+    "tone": "warm and conversational"
+  },
+  "expressions": ["neutral", "happy", "worried", "surprised", "thinking"],
+  "poses": ["idle", "wave", "point"],
+  "mouth_shapes": ["closed", "open", "wide", "smile"],
+  "locked": true
 }

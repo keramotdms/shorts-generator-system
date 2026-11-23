@@ -10,6 +10,14 @@
       "#F59E0B",
       "#10B981"
     ],
+    "skin_palette": [
+      "#F6D5B8",
+      "#E8B98E",
+      "#D9A066",
+      "#C68642",
+      "#A9683A",
+      "#96603A"
+    ],
     "font": "Noto Sans Bengali"
   },
   "characters": {

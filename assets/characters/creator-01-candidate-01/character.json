@@ -1,0 +1,73 @@
+{
+  "id": "creator-01-candidate-01",
+  "name": "রাফি",
+  "style_source": "config/style-bible.json",
+  "brief": {
+    "role": "teacher",
+    "role_label": "শিক্ষক",
+    "age": 32,
+    "gender": "male",
+    "personality": "warm",
+    "niche": "Personal finance / side hustles",
+    "language": "bn"
+  },
+  "parts": {
+    "head": "head-oval",
+    "hair": "hair-short-crop",
+    "eyes": "eyes-round",
+    "brows": "brows-soft",
+    "mouth": "mouth-smile",
+    "body": "body-slim",
+    "outfit": "outfit-shirt-vest",
+    "accessory": "accessory-glasses",
+    "skin": "#F6D5B8",
+    "hair_color": "#111827",
+    "eye_color": "#111827",
+    "outfit_color": "#10B981",
+    "accent": "#F59E0B",
+    "outline": "#111827",
+    "light": "#F9FAFB"
+  },
+  "proportions": {
+    "head_height": 356,
+    "total_height": 1290,
+    "head_to_body": 0.276,
+    "shoulder_width": 170
+  },
+  "appearance": {
+    "body": "body-slim",
+    "hair": "hair-short-crop",
+    "clothing": "outfit-shirt-vest",
+    "palette": [
+      "#111827",
+      "#F9FAFB",
+      "#F59E0B",
+      "#10B981",
+      "#F6D5B8"
+    ]
+  },
+  "voice": {
+    "gender": "male",
+    "tone": "warm and conversational"
+  },
+  "expressions": [
+    "neutral",
+    "happy",
+    "worried",
+    "surprised",
+    "thinking"
+  ],
+  "poses": [
+    "idle",
+    "wave",
+    "point"
+  ],
+  "mouth_shapes": [
+    "closed",
+    "open",
+    "wide",
+    "smile"
+  ],
+  "locked": false,
+  "fit_score": 100
+}

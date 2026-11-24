@@ -24,8 +24,22 @@ Beginner-friendly, step-by-step build of an automated system for 2D animated You
 8. Every skill must have: purpose, input, output, steps, and a way to test it.
 9. Skill naming rule: lowercase-kebab-case, no `shorts-` prefix.
 10. Generated project data lives under `projects/<project>/<stage>/`, never inside skill folders.
-11. When I write "Login into Home PC" or "Login into Office PC", first run `git pull origin main`, then read `docs/SESSION-LOG.md`, and reply with: which PC I am on, the last 3 tasks, what is pending, and the suggested next step. Then wait.
-12. At the end of every session, or when I say "end session", add a new entry to `docs/SESSION-LOG.md`, run `health_check.py`, commit and push, confirm `main == origin/main`.
+## LOGIN RULE
+
+- Trigger: I write "Login into Home PC" / "Log in to Home PC" (also accept "Office", and small spelling variations).
+- Step 1: git pull origin main. Show the latest commit.
+- Step 2: Remember which PC I am on in this session (Home or Office).
+- Step 3: Read docs/SESSION-LOG.md and select the last 3 entries from the OTHER PC only:
+  * I log in to Home -> show the last 3 Office PC sessions
+  * I log in to Office -> show the last 3 Home PC sessions
+- Step 4: For each of the 3 entries show: date, commit hash, what was done, what is pending. Then give a combined "pending list" and one suggested next step. Then wait.
+- If the other PC has fewer than 3 entries, show what exists and say how many. If it has none, say so clearly. Do not invent entries.
+- Never show this PC's own entries unless I ask.
+
+## END SESSION RULE
+
+- When I say "end session" (or the session finishes), add an entry to docs/SESSION-LOG.md with: date, PC (Home or Office, from my login message; if unknown, ask me once), last commit hash, what was done (3-5 lines), what is pending, next step.
+- Then run health_check.py, commit, push, confirm main == origin/main.
 
 ## Pipeline order
 

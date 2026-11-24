@@ -31,6 +31,8 @@ Summarise a manually exported revenue file in Bangla taka and flag any row where
 
 - `projects/<project>/10-publish/monetization-tracker.json`
 
+- Format `json_utf8`: `projects/<project>/10-publish/monetization-tracker.json`
+
 # Revenue checks
 
 1. Require at least 3 exported rows before reporting a trend.

@@ -31,6 +31,8 @@ Sort a manual comment export into questions, praise and objections, then draft B
 
 - `projects/<project>/10-publish/comment-community-manager.json`
 
+- Format `json_utf8`: `projects/<project>/10-publish/comment-community-manager.json`
+
 # Reply rules
 
 1. Require at least 5 exported comments before drafting any reply.

@@ -56,6 +56,8 @@ Audits script quality across five pillars.
 
 - `projects/<project>/02-script/script-tester.json`
 
+- Format `json_utf8`: `projects/<project>/02-script/script-tester.json`
+
 # Steps
 
 1. Read language and style through project-memory (`config/channel.json` + `config/style-bible.json`); use that language for all pacing estimates.

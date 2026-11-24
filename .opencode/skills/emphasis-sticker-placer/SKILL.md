@@ -32,6 +32,8 @@ Flash a translucent palette-coloured highlight behind the first key line of a Sh
 
 - `projects/<project>/07-edit/emphasis-sticker-placer.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/emphasis-sticker-placer.json`
+
 # Highlight placement
 
 1. Set the highlight x to 8% of width and y to 12% of height.

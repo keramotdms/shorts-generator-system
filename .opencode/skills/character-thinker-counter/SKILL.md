@@ -30,6 +30,8 @@ Generate five character concepts from the script and style bible, then shortlist
 
 - `projects/<project>/04-character/character-thinker-counter.json`
 
+- Format `json_utf8`: `projects/<project>/04-character/character-thinker-counter.json`
+
 # Character score criteria
 
 1. Produce exactly five candidates before scoring; shortlist exactly three.

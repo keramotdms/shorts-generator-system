@@ -29,6 +29,8 @@ Register the flat body, mouth and prop layers that the SVG builder can swap inde
 
 - `projects/<project>/04-character/character-setup-manager.json`
 
+- Format `json_utf8`: `projects/<project>/04-character/character-setup-manager.json`
+
 # Rig rules
 
 1. Exactly three layers per character: body, mouth and prop.

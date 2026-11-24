@@ -29,6 +29,8 @@ Check every number and named claim in a draft Bangla script against local source
 
 - `projects/<project>/01-research/fact-checker.json`
 
+- Format `json_utf8`: `projects/<project>/01-research/fact-checker.json`
+
 # Claim criteria
 
 1. Extract every claim containing a digit, a ৳ symbol or a percentage from the script.

@@ -29,6 +29,8 @@ Keep one canonical JSON file per character id and produce an inventory that maps
 
 - `projects/<project>/04-character/character-organizer.json`
 
+- Format `json_utf8`: `projects/<project>/04-character/character-organizer.json`
+
 # Naming and version rules
 
 1. One JSON file per character id; duplicate ids are a FAIL.

@@ -30,6 +30,8 @@ Build a three-channel promotion plan with fixed posting windows so one Short can
 
 - `projects/<project>/09-description/marketing-specialist.md`
 
+- Format `markdown`: `projects/<project>/09-description/marketing-specialist.md`
+
 # Promotion constraints
 
 1. Use at most three channels from config/channel.json.

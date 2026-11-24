@@ -31,6 +31,8 @@ Register the small set of edit presets that may be reused across Shorts and keep
 
 - `projects/<project>/07-edit/template-preset-manager.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/template-preset-manager.json`
+
 # Preset rules
 
 1. Maintain exactly three preset types: grade, caption and brand.

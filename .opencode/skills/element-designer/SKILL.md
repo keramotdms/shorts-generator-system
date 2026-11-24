@@ -30,6 +30,8 @@ Define a small set of flat 2D scene elements drawn from the style-bible palette 
 
 - `projects/<project>/05-scene/element-designer.json`
 
+- Format `json_utf8`: `projects/<project>/05-scene/element-designer.json`
+
 # Element design rules
 
 1. Design at most 6 elements for one Short.

@@ -29,6 +29,8 @@ Collect structured feedback from at least five manually recruited viewers and tu
 
 - `projects/<project>/02-script/script-user-tester.json`
 
+- Format `json_utf8`: `projects/<project>/02-script/script-user-tester.json`
+
 # Viewer scoring criteria
 
 1. Require at least 5 responses; fewer than 5 is a WARN, not a PASS.

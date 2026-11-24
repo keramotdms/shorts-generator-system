@@ -30,6 +30,8 @@ Select a background music track and a short sound-effect list that fit the scene
 
 - `projects/<project>/03-voice/music-sfx-selector.json`
 
+- Format `json_utf8`: `projects/<project>/03-voice/music-sfx-selector.json`
+
 # Selection criteria
 
 1. Choose at most one music bed and at most three SFX cues for a 60-second Short.

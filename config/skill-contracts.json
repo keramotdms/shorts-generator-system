@@ -51,7 +51,10 @@
       "status": "implemented",
       "phase": "1",
       "type": "script-backed",
-      "batch": 1
+      "batch": 1,
+      "format": {
+        "projects/<project>/orchestrator.json": "json_utf8"
+      }
     },
     "project-memory": {
       "input": "config/channel.json",
@@ -62,7 +65,10 @@
       "status": "implemented",
       "phase": "1",
       "type": "script-backed",
-      "batch": 1
+      "batch": 1,
+      "format": {
+        "config/style-bible.json": "json_utf8"
+      }
     },
     "task-tracker": {
       "input": "projects/<project>/pipeline-state.json",
@@ -73,7 +79,10 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 1
+      "batch": 1,
+      "format": {
+        "projects/<project>/task-tracker.json": "json_utf8"
+      }
     },
     "asset-manager": {
       "input": "config/channel.json + projects/<project>/",
@@ -84,7 +93,10 @@
       "status": "implemented",
       "phase": "1",
       "type": "script-backed",
-      "batch": 1
+      "batch": 1,
+      "format": {
+        "projects/<project>/asset-manager.json": "json_utf8"
+      }
     },
     "error-log-keeper": {
       "input": "projects/<project>/08-final-test/",
@@ -95,7 +107,10 @@
       "status": "implemented",
       "phase": "later",
       "type": "script-backed",
-      "batch": 1
+      "batch": 1,
+      "format": {
+        "projects/<project>/08-final-test/error-log.jsonl": "jsonl"
+      }
     },
     "pipeline-health-checker": {
       "input": "config/skill-contracts.json + projects/<project>/08-final-test/final-video.mp4",
@@ -106,7 +121,10 @@
       "status": "implemented",
       "phase": "1",
       "type": "checker",
-      "batch": 1
+      "batch": 1,
+      "format": {
+        "projects/<project>/pipeline-health-checker.json": "json_utf8"
+      }
     },
     "book-finder": {
       "input": "config/channel.json",
@@ -117,7 +135,10 @@
       "status": "implemented",
       "phase": "1",
       "type": "prompt-only",
-      "batch": 2
+      "batch": 2,
+      "format": {
+        "projects/<project>/01-research/niche-report.md": "markdown"
+      }
     },
     "trend-finder": {
       "input": "config/channel.json + research/trend-inputs/ + research/trend-cache/",
@@ -129,7 +150,10 @@
       "phase": "1",
       "type": "script-backed",
       "batch": 2,
-      "schema": "trend-report"
+      "schema": "trend-report",
+      "format": {
+        "research/trend-cache/trend-report.json": "json_utf8"
+      }
     },
     "competitor-analyzer": {
       "input": "projects/<project>/01-research/niche-report.md + config/channel.json",
@@ -141,7 +165,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "B",
-      "schema": "analysis"
+      "schema": "analysis",
+      "format": {
+        "projects/<project>/01-research/competitor-analyzer.json": "json_utf8"
+      }
     },
     "audience-persona-builder": {
       "input": "projects/<project>/01-research/niche-report.md + config/channel.json",
@@ -153,7 +180,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "B",
-      "schema": "selection"
+      "schema": "selection",
+      "format": {
+        "projects/<project>/01-research/audience-persona-builder.json": "json_utf8"
+      }
     },
     "fact-checker": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -165,7 +195,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "B",
-      "schema": "analysis"
+      "schema": "analysis",
+      "format": {
+        "projects/<project>/01-research/fact-checker.json": "json_utf8"
+      }
     },
     "content-calendar": {
       "input": "projects/<project>/01-research/niche-report.md + research/trend-cache/trend-report.json",
@@ -177,7 +210,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "B",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/01-research/content-calendar.json": "json_utf8"
+      }
     },
     "story-thinker": {
       "input": "projects/<project>/01-research/niche-report.md + research/trend-cache/trend-report.json + config/channel.json",
@@ -188,7 +224,10 @@
       "status": "implemented",
       "phase": "2",
       "type": "prompt-only",
-      "batch": 3
+      "batch": 3,
+      "format": {
+        "projects/<project>/02-script/story.json": "json_utf8"
+      }
     },
     "story-organizer": {
       "input": "projects/<project>/02-script/story.json",
@@ -200,7 +239,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/02-script/story-organizer.json": "json_utf8"
+      }
     },
     "hook-writer": {
       "input": "projects/<project>/02-script/story.json + config/channel.json",
@@ -211,7 +253,10 @@
       "status": "implemented",
       "phase": "2",
       "type": "prompt-only",
-      "batch": 3
+      "batch": 3,
+      "format": {
+        "projects/<project>/02-script/hook.json": "json_utf8"
+      }
     },
     "script-writer": {
       "input": "projects/<project>/02-script/story.json + projects/<project>/02-script/hook.json + config/channel.json",
@@ -222,7 +267,10 @@
       "status": "implemented",
       "phase": "2",
       "type": "prompt-only",
-      "batch": 3
+      "batch": 3,
+      "format": {
+        "projects/<project>/02-script/latest_script.json": "json_utf8"
+      }
     },
     "retention-pacing-optimizer": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -234,7 +282,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/02-script/retention-pacing-optimizer.json": "json_utf8"
+      }
     },
     "loop-cta-designer": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -246,7 +297,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "B",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/02-script/loop-cta-designer.json": "json_utf8"
+      }
     },
     "script-tester": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -257,7 +311,10 @@
       "status": "implemented",
       "phase": "later",
       "type": "checker",
-      "batch": 3
+      "batch": 3,
+      "format": {
+        "projects/<project>/02-script/script-tester.json": "json_utf8"
+      }
     },
     "script-user-tester": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -269,7 +326,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "analysis"
+      "schema": "analysis",
+      "format": {
+        "projects/<project>/02-script/script-user-tester.json": "json_utf8"
+      }
     },
     "localization": {
       "input": "projects/<project>/02-script/latest_script.json + config/channel.json",
@@ -281,7 +341,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "B",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/02-script/localization.json": "json_utf8"
+      }
     },
     "voiceover-organizer": {
       "input": "projects/<project>/02-script/latest_script.json + config/style-bible.json",
@@ -293,7 +356,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/03-voice/voiceover-organizer.json": "json_utf8"
+      }
     },
     "pronunciation-emotion-director": {
       "input": "projects/<project>/03-voice/voiceover-organizer.json + projects/<project>/02-script/latest_script.json",
@@ -305,7 +371,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/03-voice/pronunciation-emotion-director.json": "json_utf8"
+      }
     },
     "voiceover-generator": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -316,7 +385,11 @@
       "status": "implemented",
       "phase": "3",
       "type": "script-backed",
-      "batch": 4
+      "batch": 4,
+      "format": {
+        "projects/<project>/03-voice/voiceover.mp3": "mp3_voice",
+        "projects/<project>/03-voice/captions.json": "json_utf8"
+      }
     },
     "voiceover-tester": {
       "input": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/02-script/latest_script.json",
@@ -327,7 +400,10 @@
       "status": "implemented",
       "phase": "later",
       "type": "checker",
-      "batch": 4
+      "batch": 4,
+      "format": {
+        "projects/<project>/03-voice/voiceover-tester.json": "json_utf8"
+      }
     },
     "music-sfx-selector": {
       "input": "config/style-bible.json + projects/<project>/02-script/latest_script.json",
@@ -339,7 +415,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "selection"
+      "schema": "selection",
+      "format": {
+        "projects/<project>/03-voice/music-sfx-selector.json": "json_utf8"
+      }
     },
     "audio-mixer": {
       "input": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/music-sfx-selector.json",
@@ -351,7 +430,10 @@
       "phase": "later",
       "type": "script-backed",
       "batch": 4,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/03-voice/audio-mixer.json": "json_utf8"
+      }
     },
     "voiceover-captions": {
       "input": "projects/<project>/02-script/latest_script.json",
@@ -362,7 +444,11 @@
       "status": "legacy",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 4
+      "batch": 4,
+      "format": {
+        "projects/<project>/03-voice/voiceover.mp3": "mp3_voice",
+        "projects/<project>/03-voice/captions.json": "json_utf8"
+      }
     },
     "character-thinker-counter": {
       "input": "config/style-bible.json + projects/<project>/02-script/latest_script.json",
@@ -374,7 +460,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "selection"
+      "schema": "selection",
+      "format": {
+        "projects/<project>/04-character/character-thinker-counter.json": "json_utf8"
+      }
     },
     "character-organizer": {
       "input": "projects/<project>/04-character/character-thinker-counter.json",
@@ -386,7 +475,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "inventory"
+      "schema": "inventory",
+      "format": {
+        "projects/<project>/04-character/character-organizer.json": "json_utf8"
+      }
     },
     "character-designer": {
       "input": "config/style-bible.json + projects/<project>/04-character/character-brief.json + assets/character-parts/parts.json",
@@ -397,7 +489,20 @@
       "status": "implemented",
       "phase": "3",
       "type": "script-backed",
-      "batch": 5
+      "batch": 5,
+      "format": {
+        "assets/characters/creator-01/character.json": "json_utf8",
+        "assets/characters/creator-01/layered.svg": "svg_layered",
+        "assets/characters/creator-01/preview.png": "png_transparent",
+        "assets/characters/creator-01/preview-sheet.png": "png_transparent",
+        "assets/characters/creator-01-neutral.svg": "svg_layered",
+        "assets/characters/creator-01-neutral.png": "png_transparent",
+        "assets/characters/creator-01-smile.svg": "svg_layered",
+        "assets/characters/creator-01-smile.png": "png_transparent",
+        "assets/characters/creator-01-surprised.svg": "svg_layered",
+        "assets/characters/creator-01-surprised.png": "png_transparent",
+        "projects/<project>/04-character/character-design-set.json": "json_utf8"
+      }
     },
     "character-setup-manager": {
       "input": "assets/characters/creator-01/character.json",
@@ -409,7 +514,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "B",
-      "schema": "inventory"
+      "schema": "inventory",
+      "format": {
+        "projects/<project>/04-character/character-setup-manager.json": "json_utf8"
+      }
     },
     "expression-pose-library": {
       "input": "assets/characters/creator-01/character.json",
@@ -421,7 +529,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "inventory"
+      "schema": "inventory",
+      "format": {
+        "projects/<project>/04-character/expression-pose-library.json": "json_utf8"
+      }
     },
     "consistency-guardian": {
       "input": "projects/<project>/06-video/scenes/ + assets/characters/creator-01/character.json",
@@ -432,7 +543,10 @@
       "status": "implemented",
       "phase": "later",
       "type": "checker",
-      "batch": 5
+      "batch": 5,
+      "format": {
+        "projects/<project>/04-character/consistency-guardian.json": "json_utf8"
+      }
     },
     "character-qa-tester": {
       "input": "assets/characters/creator-01/character.json",
@@ -443,7 +557,10 @@
       "status": "implemented",
       "phase": "later",
       "type": "checker",
-      "batch": 5
+      "batch": 5,
+      "format": {
+        "projects/<project>/04-character/character-qa-tester.json": "json_utf8"
+      }
     },
     "element-designer": {
       "input": "config/style-bible.json + projects/<project>/02-script/latest_script.json",
@@ -455,7 +572,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "inventory"
+      "schema": "inventory",
+      "format": {
+        "projects/<project>/05-scene/element-designer.json": "json_utf8"
+      }
     },
     "element-organizer": {
       "input": "projects/<project>/05-scene/element-designer.json",
@@ -467,7 +587,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "inventory"
+      "schema": "inventory",
+      "format": {
+        "projects/<project>/05-scene/element-organizer.json": "json_utf8"
+      }
     },
     "scenario-designer": {
       "input": "projects/<project>/02-script/latest_script.json + config/style-bible.json",
@@ -478,7 +601,12 @@
       "status": "implemented",
       "phase": "later",
       "type": "prompt-only",
-      "batch": 5
+      "batch": 5,
+      "format": {
+        "projects/<project>/05-scene/scenario-designer.json": "json_utf8",
+        "assets/scenes/warm-desk-background.svg": "svg_layered",
+        "assets/scenes/scene-warm-desk-smile.png": "png_transparent"
+      }
     },
     "script-voice-character-collector": {
       "input": "projects/<project>/02-script/latest_script.json + projects/<project>/03-voice/voiceover.mp3 + assets/characters/creator-01/character.json + assets/scenes/scene-warm-desk-smile.png",
@@ -489,7 +617,10 @@
       "status": "implemented",
       "phase": "3",
       "type": "script-backed",
-      "batch": 6
+      "batch": 6,
+      "format": {
+        "projects/<project>/05-scene/collection.json": "json_utf8"
+      }
     },
     "lipsync-motion-planner": {
       "input": "projects/<project>/03-voice/captions.json + assets/characters/creator-01/character.json",
@@ -501,7 +632,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/06-video/lipsync-motion-planner.json": "json_utf8"
+      }
     },
     "video-maker": {
       "input": "projects/<project>/05-scene/collection.json",
@@ -513,7 +647,11 @@
       "phase": "3",
       "type": "script-backed",
       "batch": 6,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/06-video/scenes/": "mp4_clip",
+        "projects/<project>/06-video/video-maker-report.json": "json_utf8"
+      }
     },
     "video-quality-checker": {
       "input": "projects/<project>/06-video/scenes/",
@@ -525,7 +663,10 @@
       "phase": "later",
       "type": "checker",
       "batch": 6,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/06-video/video-quality-checker.json": "json_utf8"
+      }
     },
     "script-video-voice-collector": {
       "input": "projects/<project>/05-scene/collection.json + projects/<project>/06-video/scenes/",
@@ -537,7 +678,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "B",
-      "schema": "inventory"
+      "schema": "inventory",
+      "format": {
+        "projects/<project>/07-edit/script-video-voice-collector.json": "json_utf8"
+      }
     },
     "rough-cut-assembler": {
       "input": "projects/<project>/06-video/scenes/ + projects/<project>/05-scene/collection.json",
@@ -549,7 +693,11 @@
       "phase": "4",
       "type": "script-backed",
       "batch": 7,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/07-edit/rough-cut.mp4": "mp4_clip",
+        "projects/<project>/07-edit/rough-cut-assembler-report.json": "json_utf8"
+      }
     },
     "video-editor": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/07-edit/script-video-voice-collector.json",
@@ -562,7 +710,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/video-editor.json": "json_utf8"
+      }
     },
     "animator": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/05-scene/element-organizer.json",
@@ -575,7 +726,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/animator.json": "json_utf8"
+      }
     },
     "motion-graphic-editor": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + config/style-bible.json",
@@ -588,7 +742,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/motion-graphic-editor.json": "json_utf8"
+      }
     },
     "branding-manager": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + config/style-bible.json",
@@ -601,7 +758,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/branding-manager.json": "json_utf8"
+      }
     },
     "cut-rhythm-editor": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/02-script/latest_script.json",
@@ -614,7 +774,10 @@
       "type": "script-backed",
       "batch": "A",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/cut-rhythm-editor.json": "json_utf8"
+      }
     },
     "pattern-interrupt-inserter": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/02-script/hook.json",
@@ -627,7 +790,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/pattern-interrupt-inserter.json": "json_utf8"
+      }
     },
     "hook-visual-editor": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/02-script/hook.json",
@@ -640,7 +806,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/hook-visual-editor.json": "json_utf8"
+      }
     },
     "seamless-loop-editor": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + projects/<project>/02-script/loop-cta-designer.json",
@@ -653,7 +822,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/seamless-loop-editor.json": "json_utf8"
+      }
     },
     "virtual-camera-planner": {
       "input": "projects/<project>/05-scene/scenario-designer.json",
@@ -665,7 +837,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "C",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/07-edit/virtual-camera-planner.json": "json_utf8"
+      }
     },
     "transition-designer": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + config/style-bible.json",
@@ -677,7 +852,10 @@
       "phase": "later",
       "type": "script-backed",
       "batch": 7,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/07-edit/transition-designer.json": "json_utf8"
+      }
     },
     "color-grading-keeper": {
       "input": "projects/<project>/07-edit/rough-cut.mp4 + config/style-bible.json",
@@ -690,7 +868,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/color-grading-keeper.json": "json_utf8"
+      }
     },
     "broll-variety-planner": {
       "input": "projects/<project>/02-script/latest_script.json + projects/<project>/07-edit/stock-asset-finder.json",
@@ -703,7 +884,10 @@
       "type": "script-backed",
       "batch": "A",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/broll-variety-planner.json": "json_utf8"
+      }
     },
     "caption-maker": {
       "input": "projects/<project>/03-voice/captions.json + projects/<project>/07-edit/rough-cut.mp4",
@@ -714,7 +898,12 @@
       "status": "implemented",
       "phase": "4",
       "type": "script-backed",
-      "batch": 7
+      "batch": 7,
+      "format": {
+        "projects/<project>/07-edit/captions.json": "json_utf8",
+        "projects/<project>/07-edit/caption-maker.json": "json_utf8",
+        "projects/<project>/07-edit/captioned.mp4": "mp4_clip"
+      }
     },
     "kinetic-text-animator": {
       "input": "projects/<project>/07-edit/captions.json + projects/<project>/07-edit/captioned.mp4",
@@ -726,7 +915,10 @@
       "phase": "later",
       "type": "script-backed",
       "batch": 7,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/07-edit/kinetic-text-animator.json": "json_utf8"
+      }
     },
     "emphasis-sticker-placer": {
       "input": "projects/<project>/02-script/latest_script.json + projects/<project>/07-edit/captioned.mp4",
@@ -739,7 +931,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/emphasis-sticker-placer.json": "json_utf8"
+      }
     },
     "intro-outro-manager": {
       "input": "projects/<project>/07-edit/captioned.mp4 + config/style-bible.json",
@@ -752,7 +947,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/intro-outro-manager.json": "json_utf8"
+      }
     },
     "watermark-logo-placer": {
       "input": "projects/<project>/07-edit/captioned.mp4 + config/style-bible.json",
@@ -765,7 +963,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/watermark-logo-placer.json": "json_utf8"
+      }
     },
     "beat-sync-editor": {
       "input": "projects/<project>/07-edit/captioned.mp4 + projects/<project>/03-voice/music-sfx-selector.json",
@@ -778,7 +979,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/beat-sync-editor.json": "json_utf8"
+      }
     },
     "audio-ducking-controller": {
       "input": "projects/<project>/03-voice/voiceover.mp3 + projects/<project>/03-voice/music-sfx-selector.json",
@@ -790,7 +994,10 @@
       "phase": "later",
       "type": "script-backed",
       "batch": 7,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/07-edit/audio-ducking-controller.json": "json_utf8"
+      }
     },
     "sfx-timing-placer": {
       "input": "projects/<project>/07-edit/captioned.mp4 + projects/<project>/03-voice/music-sfx-selector.json",
@@ -803,7 +1010,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/sfx-timing-placer.json": "json_utf8"
+      }
     },
     "av-sync-checker": {
       "input": "projects/<project>/08-final-test/final-video.mp4",
@@ -815,7 +1025,10 @@
       "phase": "later",
       "type": "checker",
       "batch": 7,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/07-edit/av-sync-checker.json": "json_utf8"
+      }
     },
     "template-preset-manager": {
       "input": "config/style-bible.json + projects/<project>/07-edit/video-editor.json",
@@ -827,7 +1040,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "C",
-      "schema": "inventory"
+      "schema": "inventory",
+      "format": {
+        "projects/<project>/07-edit/template-preset-manager.json": "json_utf8"
+      }
     },
     "safe-zone-checker": {
       "input": "projects/<project>/07-edit/captions.json + projects/<project>/07-edit/captioned.mp4",
@@ -838,7 +1054,10 @@
       "status": "implemented",
       "phase": "4",
       "type": "checker",
-      "batch": 7
+      "batch": 7,
+      "format": {
+        "projects/<project>/07-edit/safe-zone-checker.json": "json_utf8"
+      }
     },
     "preview-frame-extractor": {
       "input": "projects/<project>/08-final-test/final-video.mp4",
@@ -851,7 +1070,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/preview-frame-extractor.json": "json_utf8"
+      }
     },
     "format-converter": {
       "input": "projects/<project>/08-final-test/final-video.mp4",
@@ -863,7 +1085,10 @@
       "phase": "later",
       "type": "script-backed",
       "batch": 7,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/07-edit/format-converter.json": "json_utf8"
+      }
     },
     "thumbnail-designer": {
       "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/02-script/latest_script.json",
@@ -876,7 +1101,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/thumbnail-designer.json": "json_utf8"
+      }
     },
     "render-export-optimizer": {
       "input": "projects/<project>/07-edit/captioned.mp4 + config/channel.json",
@@ -888,7 +1116,11 @@
       "phase": "later",
       "type": "script-backed",
       "batch": 7,
-      "requires": "ffmpeg"
+      "requires": "ffmpeg",
+      "format": {
+        "projects/<project>/08-final-test/final-video.mp4": "mp4_final",
+        "projects/<project>/07-edit/render-export-optimizer.json": "json_utf8"
+      }
     },
     "variant-batch-renderer": {
       "input": "projects/<project>/07-edit/template-preset-manager.json + projects/<project>/02-script/latest_script.json",
@@ -901,7 +1133,10 @@
       "type": "script-backed",
       "batch": "C",
       "requires": "ffmpeg",
-      "schema": "media-effect"
+      "schema": "media-effect",
+      "format": {
+        "projects/<project>/07-edit/variant-batch-renderer.json": "json_utf8"
+      }
     },
     "stock-asset-finder": {
       "input": "projects/<project>/02-script/latest_script.json + config/style-bible.json",
@@ -913,7 +1148,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "C",
-      "schema": "selection"
+      "schema": "selection",
+      "format": {
+        "projects/<project>/07-edit/stock-asset-finder.json": "json_utf8"
+      }
     },
     "red-team": {
       "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/02-script/latest_script.json",
@@ -925,7 +1163,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "A",
-      "schema": "analysis"
+      "schema": "analysis",
+      "format": {
+        "projects/<project>/08-final-test/red-team.json": "json_utf8"
+      }
     },
     "ruthless-team": {
       "input": "projects/<project>/08-final-test/final-video.mp4",
@@ -937,7 +1178,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "D",
-      "schema": "analysis"
+      "schema": "analysis",
+      "format": {
+        "projects/<project>/08-final-test/ruthless-team.json": "json_utf8"
+      }
     },
     "bug-finder": {
       "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/08-final-test/red-team.json + projects/<project>/08-final-test/ruthless-team.json",
@@ -948,7 +1192,10 @@
       "status": "implemented",
       "phase": "5",
       "type": "checker",
-      "batch": 8
+      "batch": 8,
+      "format": {
+        "projects/<project>/08-final-test/bug-finder.json": "json_utf8"
+      }
     },
     "solver": {
       "input": "projects/<project>/08-final-test/bug-finder.json",
@@ -960,7 +1207,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "D",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/08-final-test/solver.json": "json_utf8"
+      }
     },
     "copyright-policy-checker": {
       "input": "projects/<project>/02-script/latest_script.json + assets/characters/creator-01/character.json + projects/<project>/08-final-test/final-video.mp4",
@@ -971,7 +1221,10 @@
       "status": "implemented",
       "phase": "later",
       "type": "checker",
-      "batch": 8
+      "batch": 8,
+      "format": {
+        "projects/<project>/08-final-test/copyright-policy-checker.json": "json_utf8"
+      }
     },
     "platform-compliance-checker": {
       "input": "projects/<project>/08-final-test/final-video.mp4",
@@ -982,7 +1235,10 @@
       "status": "implemented",
       "phase": "later",
       "type": "checker",
-      "batch": 8
+      "batch": 8,
+      "format": {
+        "projects/<project>/08-final-test/platform-compliance-checker.json": "json_utf8"
+      }
     },
     "accessibility-safety-checker": {
       "input": "projects/<project>/07-edit/captions.json + projects/<project>/03-voice/voiceover.mp3 + projects/<project>/08-final-test/final-video.mp4",
@@ -993,7 +1249,10 @@
       "status": "implemented",
       "phase": "later",
       "type": "checker",
-      "batch": 8
+      "batch": 8,
+      "format": {
+        "projects/<project>/08-final-test/accessibility-safety-checker.json": "json_utf8"
+      }
     },
     "handover": {
       "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/07-edit/captions.json + projects/<project>/09-description/description.md",
@@ -1004,7 +1263,11 @@
       "status": "implemented",
       "phase": "5",
       "type": "script-backed",
-      "batch": 8
+      "batch": 8,
+      "format": {
+        "projects/<project>/10-publish/handover.md": "markdown",
+        "projects/<project>/10-publish/handover-check.json": "json_utf8"
+      }
     },
     "description-maker": {
       "input": "projects/<project>/02-script/latest_script.json + projects/<project>/08-final-test/bug-finder.json + config/channel.json",
@@ -1015,7 +1278,10 @@
       "status": "implemented",
       "phase": "5",
       "type": "prompt-only",
-      "batch": 8
+      "batch": 8,
+      "format": {
+        "projects/<project>/09-description/description.md": "markdown"
+      }
     },
     "copywriter": {
       "input": "projects/<project>/02-script/latest_script.json + projects/<project>/01-research/audience-persona-builder.json",
@@ -1027,7 +1293,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "D",
-      "schema": "selection"
+      "schema": "selection",
+      "format": {
+        "projects/<project>/09-description/copywriter.md": "markdown"
+      }
     },
     "seo-specialist": {
       "input": "projects/<project>/09-description/description.md + projects/<project>/02-script/latest_script.json",
@@ -1039,7 +1308,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "D",
-      "schema": "analysis"
+      "schema": "analysis",
+      "format": {
+        "projects/<project>/09-description/seo-specialist.md": "markdown"
+      }
     },
     "marketing-specialist": {
       "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/01-research/audience-persona-builder.json",
@@ -1051,7 +1323,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "D",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/09-description/marketing-specialist.md": "markdown"
+      }
     },
     "youtube-seo-specialist": {
       "input": "projects/<project>/10-publish/inputs/ + projects/<project>/09-description/description.md",
@@ -1064,7 +1339,10 @@
       "type": "prompt-only",
       "batch": "D",
       "schema": "manual-input",
-      "api_needed": "later"
+      "api_needed": "later",
+      "format": {
+        "projects/<project>/10-publish/youtube-seo-specialist.json": "json_utf8"
+      }
     },
     "youtube-analyst": {
       "input": "projects/<project>/10-publish/inputs/",
@@ -1077,7 +1355,10 @@
       "type": "prompt-only",
       "batch": "D",
       "schema": "manual-input",
-      "api_needed": "later"
+      "api_needed": "later",
+      "format": {
+        "projects/<project>/10-publish/youtube-analyst.json": "json_utf8"
+      }
     },
     "analytics-feedback-loop": {
       "input": "projects/<project>/10-publish/inputs/ + projects/<project>/10-publish/youtube-analyst.json",
@@ -1090,7 +1371,10 @@
       "type": "prompt-only",
       "batch": "D",
       "schema": "manual-input",
-      "api_needed": "later"
+      "api_needed": "later",
+      "format": {
+        "projects/<project>/10-publish/analytics-feedback-loop.json": "json_utf8"
+      }
     },
     "scheduler-publisher": {
       "input": "projects/<project>/10-publish/inputs/ + projects/<project>/10-publish/handover.md",
@@ -1103,7 +1387,10 @@
       "type": "prompt-only",
       "batch": "D",
       "schema": "manual-input",
-      "api_needed": "later"
+      "api_needed": "later",
+      "format": {
+        "projects/<project>/10-publish/scheduler-publisher.json": "json_utf8"
+      }
     },
     "cross-platform-repurposer": {
       "input": "projects/<project>/08-final-test/final-video.mp4 + projects/<project>/10-publish/handover.md",
@@ -1115,7 +1402,10 @@
       "phase": "later",
       "type": "prompt-only",
       "batch": "D",
-      "schema": "plan"
+      "schema": "plan",
+      "format": {
+        "projects/<project>/10-publish/cross-platform-repurposer.json": "json_utf8"
+      }
     },
     "comment-community-manager": {
       "input": "projects/<project>/10-publish/inputs/",
@@ -1128,7 +1418,10 @@
       "type": "prompt-only",
       "batch": "D",
       "schema": "manual-input",
-      "api_needed": "later"
+      "api_needed": "later",
+      "format": {
+        "projects/<project>/10-publish/comment-community-manager.json": "json_utf8"
+      }
     },
     "ab-tester": {
       "input": "projects/<project>/10-publish/inputs/",
@@ -1141,7 +1434,10 @@
       "type": "prompt-only",
       "batch": "D",
       "schema": "manual-input",
-      "api_needed": "later"
+      "api_needed": "later",
+      "format": {
+        "projects/<project>/10-publish/ab-tester.json": "json_utf8"
+      }
     },
     "monetization-tracker": {
       "input": "projects/<project>/10-publish/inputs/",
@@ -1154,7 +1450,10 @@
       "type": "prompt-only",
       "batch": "D",
       "schema": "manual-input",
-      "api_needed": "later"
+      "api_needed": "later",
+      "format": {
+        "projects/<project>/10-publish/monetization-tracker.json": "json_utf8"
+      }
     }
   }
 }

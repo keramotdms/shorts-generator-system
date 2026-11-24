@@ -29,6 +29,8 @@ Writes the first 3-second attention hook.
 
 - `projects/<project>/02-script/hook.json`
 
+- Format `json_utf8`: `projects/<project>/02-script/hook.json`
+
 # Steps
 
 1. Read `projects/<project>/02-script/story.json` (`hook_seed`, `angle`, first beat) and `config/channel.json` + `config/style-bible.json` through project-memory. Use `language` from channel config for the hook text.

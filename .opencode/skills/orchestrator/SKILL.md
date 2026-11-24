@@ -25,6 +25,8 @@ Keep the whole Shorts production pipeline organized. It remembers which stage we
 ## Output
 - `projects/<project>/orchestrator.json`
 
+- Format `json_utf8`: `projects/<project>/orchestrator.json`
+
 ## Stages (in order)
 1. `research` — Research (book/niche/trend finder)
 2. `script` — Script (story, hook, script writer)

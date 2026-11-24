@@ -32,6 +32,8 @@ Shorten a rough cut by trimming two halves of the source video and concatenating
 
 - `projects/<project>/07-edit/cut-rhythm-editor.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/cut-rhythm-editor.json`
+
 # Rhythm parameters
 
 1. Read output width and height from `config/defaults.json` resolution, not from a hardcoded string.

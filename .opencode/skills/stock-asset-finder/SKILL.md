@@ -31,6 +31,8 @@ Shortlist reusable local images and clips from assets/ for a script's visual gap
 
 - `projects/<project>/07-edit/stock-asset-finder.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/stock-asset-finder.json`
+
 # Asset scoring
 
 1. List only files already inside assets/; no network lookup is allowed.

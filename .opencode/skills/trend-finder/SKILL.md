@@ -33,6 +33,8 @@ Collect free trend signals from YouTube, Google Trends, YouTube autosuggest and 
 - `research/trend-cache/trend-report.json`
 - `research/trend-cache/quota-log.jsonl` (one line per YouTube API call; no key is written)
 
+- Format `json_utf8`: `research/trend-cache/trend-report.json`
+
 # Steps
 
 1. Read `config/channel.json` through project-memory. Use `niche` for filtering and search seeds, `language` for autosuggest language, and `audience_location` for the region code (`BD` for Bangladesh).

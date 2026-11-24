@@ -32,6 +32,8 @@ Overlay a small local logo in the top-right corner of every edited clip so the c
 
 - `projects/<project>/07-edit/watermark-logo-placer.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/watermark-logo-placer.json`
+
 # Watermark parameters
 
 1. Scale the logo to exactly 120 by 120 pixels.

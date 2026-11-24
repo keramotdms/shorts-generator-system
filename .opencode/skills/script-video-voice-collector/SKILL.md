@@ -31,6 +31,8 @@ Verify and index the exact script, rendered scene clips and voiceover file that 
 
 - `projects/<project>/07-edit/script-video-voice-collector.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/script-video-voice-collector.json`
+
 # Edit package rules
 
 1. Require exactly one script file, one voiceover file and at least one scene clip.

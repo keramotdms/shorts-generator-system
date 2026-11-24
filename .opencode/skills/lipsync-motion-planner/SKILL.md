@@ -30,6 +30,8 @@ Turn caption word timings into a minimal lip-sync and motion plan that the flat 
 
 - `projects/<project>/06-video/lipsync-motion-planner.json`
 
+- Format `json_utf8`: `projects/<project>/06-video/lipsync-motion-planner.json`
+
 # Motion constraints
 
 1. Allow only two mouth states: open and closed; no phoneme-level shapes.

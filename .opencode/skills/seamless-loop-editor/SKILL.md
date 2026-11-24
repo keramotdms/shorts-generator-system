@@ -32,6 +32,8 @@ Reverse the final 0.4 seconds of a clip and append it so the last frame walks ba
 
 - `projects/<project>/07-edit/seamless-loop-editor.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/seamless-loop-editor.json`
+
 # Loop seam parameters
 
 1. Take a tail of at most 0.4 seconds, or half the clip if it is shorter.

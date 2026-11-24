@@ -29,6 +29,8 @@ Publish the exact expression and pose vocabulary that scripts/svg_scene_builder.
 
 - `projects/<project>/04-character/expression-pose-library.json`
 
+- Format `json_utf8`: `projects/<project>/04-character/expression-pose-library.json`
+
 # Library rules
 
 1. Exactly three expressions are supported: neutral, smile, surprised.

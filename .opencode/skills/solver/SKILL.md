@@ -29,6 +29,8 @@ Turn each confirmed bug into one small, ordered fix that can be applied and re-t
 
 - `projects/<project>/08-final-test/solver.json`
 
+- Format `json_utf8`: `projects/<project>/08-final-test/solver.json`
+
 # Fix ordering rules
 
 1. Create at most five fixes and order them by severity, highest first.

@@ -32,6 +32,8 @@ Turn one flat scene PNG into a short animated clip with a gentle zoompan so a st
 
 - `projects/<project>/07-edit/animator.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/animator.json`
+
 # Animation parameters
 
 1. Read width and height from config/defaults.json resolution; never type 1080x1920 by hand.

@@ -30,6 +30,8 @@ Turns research into a short story concept.
 
 - `projects/<project>/02-script/story.json`
 
+- Format `json_utf8`: `projects/<project>/02-script/story.json`
+
 # Steps
 
 1. Read `projects/<project>/01-research/niche-report.md` (winner and ranking) plus `config/channel.json` and `config/style-bible.json` through project-memory. Read `research/trend-cache/trend-report.json` if it exists and use its highest-scoring local trend as a timing hint.

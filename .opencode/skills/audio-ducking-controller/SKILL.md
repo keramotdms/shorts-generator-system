@@ -31,6 +31,8 @@ Ducks music under the voice.
 
 - `projects/<project>/07-edit/audio-ducking-controller.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/audio-ducking-controller.json`
+
 # Steps
 1. Load the voice track from `projects/<project>/03-voice/voiceover.mp3` and cues from `projects/<project>/03-voice/music-sfx-selector.json`.
 2. Measure voice loudness in LUFS and set the music bed 12 dB below it during speech windows.

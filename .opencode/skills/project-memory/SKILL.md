@@ -29,6 +29,8 @@ Stores tone, colors, fonts, character look and voice choices.
 
 - `config/style-bible.json`
 
+- Format `json_utf8`: `config/style-bible.json`
+
 # Steps
 
 1. Open `config/channel.json` directly (this skill is the source, so it must not call itself). Read `niche`, `language`, `audience_location`, `video.length_sec` and `platforms`. If any of the first three is null, empty or `TO BE DECIDED`, ask the user once, save the answers back into that file, then continue.

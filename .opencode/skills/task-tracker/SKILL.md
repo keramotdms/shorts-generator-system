@@ -28,6 +28,8 @@ Tracks tasks and progress across the pipeline.
 
 - `projects/<project>/task-tracker.json`
 
+- Format `json_utf8`: `projects/<project>/task-tracker.json`
+
 # Steps
 1. Open `projects/<project>/pipeline-state.json` and read the current stage name.
 2. Load the per-task ledger at `projects/<project>/task-tracker.json`; create it with an empty `tasks` array if absent.

@@ -32,6 +32,9 @@ Optimizes render settings and file size.
 - `projects/<project>/08-final-test/final-video.mp4`
 - `projects/<project>/07-edit/render-export-optimizer.json`
 
+- Format `mp4_final`: `projects/<project>/08-final-test/final-video.mp4`
+- Format `json_utf8`: `projects/<project>/07-edit/render-export-optimizer.json`
+
 # Steps
 1. Take `projects/<project>/07-edit/captioned.mp4` as the source and read target length from `config/channel.json` through project-memory.
 2. Encode H.264 with CRF 23, preset veryfast, yuv420p and AAC audio; keep 1080x1920.

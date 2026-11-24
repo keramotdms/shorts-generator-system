@@ -29,6 +29,8 @@ Convert a loose story concept into a timed beat sheet where every scene has a si
 
 - `projects/<project>/02-script/story-organizer.json`
 
+- Format `json_utf8`: `projects/<project>/02-script/story-organizer.json`
+
 # Beat timing criteria
 
 1. Use at most 4 beats for a 30-second video and at most 6 beats for a 60-second video.

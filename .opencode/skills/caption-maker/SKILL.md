@@ -32,6 +32,10 @@ Creates word-level caption timings and burns captions.
 - `projects/<project>/07-edit/caption-maker.json`
 - `projects/<project>/07-edit/captioned.mp4`
 
+- Format `json_utf8`: `projects/<project>/07-edit/captions.json`
+- Format `json_utf8`: `projects/<project>/07-edit/caption-maker.json`
+- Format `mp4_clip`: `projects/<project>/07-edit/captioned.mp4`
+
 # Steps
 1. Validate `projects/<project>/03-voice/captions.json` and take its caption blocks plus total duration.
 2. Read `projects/<project>/07-edit/rough-cut.mp4` duration and reject blocks whose start or end exceeds it.

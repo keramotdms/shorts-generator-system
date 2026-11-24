@@ -30,6 +30,8 @@ Produce a voice plan that fixes the narrator, speaking order and per-scene word 
 
 - `projects/<project>/03-voice/voiceover-organizer.json`
 
+- Format `json_utf8`: `projects/<project>/03-voice/voiceover-organizer.json`
+
 # Voice plan criteria
 
 1. Use exactly one narrator for the whole Short; a second voice requires a new project.

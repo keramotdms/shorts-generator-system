@@ -32,6 +32,8 @@ Convert a manually exported performance report into three research notes that th
 
 - `projects/<project>/10-publish/analytics-feedback-loop.json`
 
+- Format `json_utf8`: `projects/<project>/10-publish/analytics-feedback-loop.json`
+
 # Feedback rules
 
 1. Use at least 5 published videos from the export before drawing a conclusion.

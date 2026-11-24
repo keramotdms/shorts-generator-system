@@ -31,6 +31,8 @@ Summarise a manual YouTube analytics export into three scored dimensions that de
 
 - `projects/<project>/10-publish/youtube-analyst.json`
 
+- Format `json_utf8`: `projects/<project>/10-publish/youtube-analyst.json`
+
 # Analysis dimensions
 
 1. Require at least 5 exported videos before scoring a dimension.

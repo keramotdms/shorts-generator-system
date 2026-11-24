@@ -30,6 +30,8 @@ Rewrite an approved Bangla script for one target region while preserving every m
 
 - `projects/<project>/02-script/localization.json`
 
+- Format `json_utf8`: `projects/<project>/02-script/localization.json`
+
 # Localization rules
 
 1. Preserve all ৳ amounts and Arabic digits exactly; never convert currency.

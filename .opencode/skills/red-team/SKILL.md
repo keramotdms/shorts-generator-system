@@ -30,6 +30,8 @@ Challenge the final video from three hostile angles and return a scored weakness
 
 - `projects/<project>/08-final-test/red-team.json`
 
+- Format `json_utf8`: `projects/<project>/08-final-test/red-team.json`
+
 # Attack criteria
 
 1. Attack exactly three angles: hook, trust and pacing.

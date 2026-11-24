@@ -29,6 +29,8 @@ Checks rendered scene quality.
 
 - `projects/<project>/06-video/video-quality-checker.json`
 
+- Format `json_utf8`: `projects/<project>/06-video/video-quality-checker.json`
+
 # Steps
 1. Enumerate MP4 files under `projects/<project>/06-video/scenes/` and probe each one individually.
 2. Require 1080x1920 pixels, yuv420p format and a duration from 1 to 15 seconds.

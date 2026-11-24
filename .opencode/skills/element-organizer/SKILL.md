@@ -29,6 +29,8 @@ Assign versions to scene elements and keep one active index so scenario-designer
 
 - `projects/<project>/05-scene/element-organizer.json`
 
+- Format `json_utf8`: `projects/<project>/05-scene/element-organizer.json`
+
 # Versioning rules
 
 1. Only one entry per element name may have state `active`.

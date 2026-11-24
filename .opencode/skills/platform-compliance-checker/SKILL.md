@@ -28,6 +28,8 @@ Checks YouTube and Facebook rules.
 
 - `projects/<project>/08-final-test/platform-compliance-checker.json`
 
+- Format `json_utf8`: `projects/<project>/08-final-test/platform-compliance-checker.json`
+
 # Steps
 1. Probe `projects/<project>/08-final-test/final-video.mp4` and confirm 1080x1920 frames with a 30-60 second runtime.
 2. Check the cover frame for captions inside the safe inset and record any crop risk.

@@ -30,6 +30,8 @@ Converts to platform-ready formats.
 
 - `projects/<project>/07-edit/format-converter.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/format-converter.json`
+
 # Steps
 1. Read `projects/<project>/08-final-test/final-video.mp4` and note its current codec, pixel format and bitrate.
 2. Choose the delivery preset: vertical 1080x1920, H.264, yuv420p and AAC; do not upscale past the source frame.

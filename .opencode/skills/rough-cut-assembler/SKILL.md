@@ -32,6 +32,9 @@ Assembles the first cut of all scenes.
 - `projects/<project>/07-edit/rough-cut.mp4`
 - `projects/<project>/07-edit/rough-cut-assembler-report.json`
 
+- Format `mp4_clip`: `projects/<project>/07-edit/rough-cut.mp4`
+- Format `json_utf8`: `projects/<project>/07-edit/rough-cut-assembler-report.json`
+
 # Steps
 1. Read `projects/<project>/05-scene/collection.json` and take its `scenes[]` array in declared order.
 2. Verify each named MP4 exists under `projects/<project>/06-video/scenes/`; stop at the first missing name instead of globbing.

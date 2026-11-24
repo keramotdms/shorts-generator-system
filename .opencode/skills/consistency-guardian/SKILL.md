@@ -30,6 +30,8 @@ Compares every rendered scene against the locked parametric character and proves
 
 - `projects/<project>/04-character/consistency-guardian.json`
 
+- Format `json_utf8`: `projects/<project>/04-character/consistency-guardian.json`
+
 # Steps
 
 1. Build a reference fingerprint from `assets/characters/creator-01/character.json`: every `parts` key/value (part IDs and hex colours) plus `proportions` (head height, total height, head-to-body ratio, shoulder width).

@@ -30,6 +30,8 @@ Write a timed camera plan that tells the SVG renderer when to pan or zoom a flat
 
 - `projects/<project>/07-edit/virtual-camera-planner.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/virtual-camera-planner.json`
+
 # Camera move constraints
 
 1. Allow at most two camera moves per scene.

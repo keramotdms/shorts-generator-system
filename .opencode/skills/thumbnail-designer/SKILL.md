@@ -32,6 +32,8 @@ Grab one representative frame from the finished Short and stamp the uppercase pr
 
 - `projects/<project>/07-edit/thumbnail-designer.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/thumbnail-designer.json`
+
 # Thumbnail parameters
 
 1. Select frame 75 or the last available frame for shorter clips.

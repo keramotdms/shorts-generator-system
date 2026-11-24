@@ -58,7 +58,11 @@ def font_part(ctx: Context) -> str:
     font = ctx["fontfile"]
     if font is None:
         return ""
-    value = lib.relative(font) if font.is_relative_to(lib.ROOT) else font.as_posix()
+    value = (
+        Path(lib.relative(font)).as_posix()
+        if font.is_relative_to(lib.ROOT)
+        else font.as_posix()
+    )
     return f"fontfile={value.replace(':', '\\\\:')}:"
 
 

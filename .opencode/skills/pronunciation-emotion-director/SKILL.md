@@ -30,6 +30,8 @@ Attach pronunciation, emphasis and emotion notes to every spoken line so the voi
 
 - `projects/<project>/03-voice/pronunciation-emotion-director.json`
 
+- Format `json_utf8`: `projects/<project>/03-voice/pronunciation-emotion-director.json`
+
 # Delivery criteria
 
 1. Write every pronunciation note in Bangla script for Bangla lines; use Latin only for brand names.

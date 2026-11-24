@@ -32,6 +32,8 @@ Mix one local sound effect 1.2 seconds into a video at 0.35 volume so a payoff a
 
 - `projects/<project>/07-edit/sfx-timing-placer.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/sfx-timing-placer.json`
+
 # SFX placement parameters
 
 1. Delay the effect by exactly 1200 milliseconds using adelay on both channels.

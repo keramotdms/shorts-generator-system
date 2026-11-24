@@ -30,6 +30,9 @@ Generates natural speech audio and word timings.
 - `projects/<project>/03-voice/voiceover.mp3`
 - `projects/<project>/03-voice/captions.json`
 
+- Format `mp3_voice`: `projects/<project>/03-voice/voiceover.mp3`
+- Format `json_utf8`: `projects/<project>/03-voice/captions.json`
+
 # Steps
 
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.

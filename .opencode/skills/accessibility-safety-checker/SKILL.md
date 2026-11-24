@@ -30,6 +30,8 @@ Checks captions, audio and viewer safety.
 
 - `projects/<project>/08-final-test/accessibility-safety-checker.json`
 
+- Format `json_utf8`: `projects/<project>/08-final-test/accessibility-safety-checker.json`
+
 # Steps
 1. Validate `projects/<project>/07-edit/captions.json` and confirm every cue has start, end and Bangla text.
 2. Probe `projects/<project>/03-voice/voiceover.mp3` and `projects/<project>/08-final-test/final-video.mp4`; require durations above 0.

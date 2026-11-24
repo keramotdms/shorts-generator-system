@@ -29,6 +29,8 @@ Checks tools, skills, handoffs and final output.
 
 - `projects/<project>/pipeline-health-checker.json`
 
+- Format `json_utf8`: `projects/<project>/pipeline-health-checker.json`
+
 # Steps
 1. Count the 93 skill folders and confirm every entry in `config/skill-contracts.json` has both an input and output path.
 2. Verify `projects/<project>/08-final-test/final-video.mp4` exists and ffprobe reports 1080x1920 with a positive duration.

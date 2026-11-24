@@ -32,6 +32,8 @@ Slide the project label across the upper third of a clip using a time-based draw
 
 - `projects/<project>/07-edit/motion-graphic-editor.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/motion-graphic-editor.json`
+
 # Moving text parameters
 
 1. Use drawtext with x driven by (main_w-text_w)*t/3 so the label crosses in 3 seconds.

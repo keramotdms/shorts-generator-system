@@ -31,6 +31,8 @@ Collects script, voice and character inputs.
 
 - `projects/<project>/05-scene/collection.json`
 
+- Format `json_utf8`: `projects/<project>/05-scene/collection.json`
+
 # Steps
 
 1. Read context through project-memory (`config/channel.json` + `config/style-bible.json`). Validate `projects/<project>/02-script/latest_script.json` with `python scripts/schema_validator.py latest_script projects/<project>/02-script/latest_script.json`; stop on failure.

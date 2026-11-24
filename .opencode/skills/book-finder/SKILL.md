@@ -28,6 +28,8 @@ Finds niche and topic ideas for the channel.
 
 - `projects/<project>/01-research/niche-report.md`
 
+- Format `markdown`: `projects/<project>/01-research/niche-report.md`
+
 # Steps
 
 1. Read `config/channel.json` and `config/style-bible.json` through project-memory; take `niche`, `language` and `audience_location` from there, never from memory. If either file is missing or a value is null, stop and ask once.

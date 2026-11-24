@@ -32,6 +32,8 @@ Place one local flat-shape image over a short window of the rough cut so a talki
 
 - `projects/<project>/07-edit/broll-variety-planner.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/broll-variety-planner.json`
+
 # B-roll rules
 
 1. Use only images already present under assets/scenes/; never fetch stock footage.

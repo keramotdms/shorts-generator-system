@@ -29,6 +29,8 @@ Deliver an unkind but evidence-based critique of the final Short so weak hooks a
 
 - `projects/<project>/08-final-test/ruthless-team.json`
 
+- Format `json_utf8`: `projects/<project>/08-final-test/ruthless-team.json`
+
 # Harsh critique criteria
 
 1. Score exactly four dimensions: hook, trust, originality and call to action.

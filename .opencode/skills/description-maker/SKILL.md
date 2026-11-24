@@ -30,6 +30,8 @@ Writes the title, description and hashtags.
 
 - `projects/<project>/09-description/description.md`
 
+- Format `markdown`: `projects/<project>/09-description/description.md`
+
 # Steps
 
 1. Read `projects/<project>/02-script/latest_script.json`, `projects/<project>/08-final-test/bug-finder.json`, `config/channel.json` and `config/style-bible.json` through project-memory. Treat any bug-finder FAIL as a required fix before writing the description. Use `language` for the copy and `niche` for the keyword.

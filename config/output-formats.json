@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "source": "config/output-formats.json",
+  "notes": [
+    "One named profile per output format. A skill output declares exactly one profile in config/skill-contracts.json.",
+    "The same output path must always resolve to the same profile, no matter which skill writes it.",
+    "Checks are performed by scripts/format_validator.py using ffprobe for media and the Python standard library for text/SVG/PNG."
+  ],
+  "profiles": {
+    "json_utf8": {
+      "extension": ".json",
+      "encoding": "utf-8",
+      "bom": "forbidden",
+      "checks": {
+        "valid_json": true,
+        "no_bom": true,
+        "utf8": true
+      }
+    },
+    "markdown": {
+      "extension": ".md",
+      "encoding": "utf-8",
+      "bom": "forbidden",
+      "checks": {
+        "no_bom": true,
+        "utf8": true,
+        "non_empty": true
+      }
+    },
+    "jsonl": {
+      "extension": ".jsonl",
+      "encoding": "utf-8",
+      "bom": "forbidden",
+      "checks": {
+        "valid_jsonl": true,
+        "no_bom": true,
+        "utf8": true
+      }
+    },
+    "csv": {
+      "extension": ".csv",
+      "encoding": "utf-8",
+      "bom": "forbidden",
+      "checks": {
+        "valid_csv": true,
+        "no_bom": true,
+        "utf8": true
+      }
+    },
+    "mp3_voice": {
+      "extension": ".mp3",
+      "encoding": "binary",
+      "checks": {
+        "ffprobe": true,
+        "container_in": ["mp3"],
+        "audio_codec": "mp3",
+        "sample_rate_in": [44100, 48000],
+        "channels_max": 2,
+        "max_duration_sec": 120
+      }
+    },
+    "wav_mix": {
+      "extension": ".wav",
+      "encoding": "binary",
+      "checks": {
+        "ffprobe": true,
+        "container_in": ["wav"],
+        "audio_codec_in": ["pcm_s16le", "pcm_s24le", "pcm_f32le"],
+        "sample_rate": 48000,
+        "channels_max": 2,
+        "max_duration_sec": 120
+      }
+    },
+    "srt": {
+      "extension": ".srt",
+      "encoding": "utf-8",
+      "bom": "forbidden",
+      "checks": {
+        "valid_srt": true,
+        "no_bom": true,
+        "utf8": true
+      }
+    },
+    "svg_layered": {
+      "extension": ".svg",
+      "encoding": "utf-8",
+      "bom": "forbidden",
+      "checks": {
+        "valid_xml": true,
+        "root_svg": true,
+        "layer_groups_min": 1,
+        "no_bom": true
+      }
+    },
+    "png_transparent": {
+      "extension": ".png",
+      "encoding": "binary",
+      "checks": {
+        "png_signature": true,
+        "width_min": 1,
+        "height_min": 1,
+        "alpha_allowed": true
+      }
+    },
+    "png_frame_1080x1920": {
+      "extension": ".png",
+      "encoding": "binary",
+      "checks": {
+        "png_signature": true,
+        "width": 1080,
+        "height": 1920,
+        "color_type_in": [2, 6]
+      }
+    },
+    "ttf_font": {
+      "extension": ".ttf",
+      "encoding": "binary",
+      "checks": {
+        "font_signature": true
+      }
+    },
+    "mp4_clip": {
+      "extension": ".mp4",
+      "encoding": "binary",
+      "checks": {
+        "ffprobe": true,
+        "container": "mp4",
+        "video_codec": "h264",
+        "pixel_format": "yuv420p",
+        "width": 1080,
+        "height": 1920,
+        "fps": 30,
+        "audio_codec_in": ["aac", "none"],
+        "max_duration_sec": 60
+      }
+    },
+    "mp4_final": {
+      "extension": ".mp4",
+      "encoding": "binary",
+      "checks": {
+        "ffprobe": true,
+        "container": "mp4",
+        "video_codec": "h264",
+        "video_profile": "High",
+        "pixel_format": "yuv420p",
+        "width": 1080,
+        "height": 1920,
+        "fps": 30,
+        "audio_codec": "aac",
+        "audio_sample_rate": 48000,
+        "faststart": true,
+        "max_duration_sec": 60,
+        "max_duration_exclusive": true
+      }
+    }
+  }
+}

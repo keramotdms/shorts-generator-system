@@ -31,6 +31,10 @@ Builds scene layouts and visual plans.
 - `assets/scenes/warm-desk-background.svg`
 - `assets/scenes/scene-warm-desk-smile.png`
 
+- Format `json_utf8`: `projects/<project>/05-scene/scenario-designer.json`
+- Format `svg_layered`: `assets/scenes/warm-desk-background.svg`
+- Format `png_transparent`: `assets/scenes/scene-warm-desk-smile.png`
+
 # Steps
 
 1. Read niche, language, location and style through project-memory (or `scripts/skill_lib.py::style_context()` from `config/channel.json`); never hardcode them.

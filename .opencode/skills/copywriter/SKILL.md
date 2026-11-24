@@ -30,6 +30,8 @@ Choose one Bangla copy angle for the Short and produce the one-line pitch, descr
 
 - `projects/<project>/09-description/copywriter.md`
 
+- Format `markdown`: `projects/<project>/09-description/copywriter.md`
+
 # Copy angle scoring
 
 1. Draft exactly three angles and pick one.

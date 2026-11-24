@@ -32,6 +32,8 @@ Flip the middle third of a clip horizontally so the viewer gets a visual jolt at
 
 - `projects/<project>/07-edit/pattern-interrupt-inserter.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/pattern-interrupt-inserter.json`
+
 # Interrupt timing
 
 1. Split the source into three contiguous segments with no frame gaps.

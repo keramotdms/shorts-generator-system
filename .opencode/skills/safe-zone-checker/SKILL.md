@@ -30,6 +30,8 @@ Checks captions stay inside platform safe zones.
 
 - `projects/<project>/07-edit/safe-zone-checker.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/safe-zone-checker.json`
+
 # Steps
 1. Load `projects/<project>/07-edit/captions.json` and validate it against the captions schema; reject any block whose `end` precedes its `start`.
 2. Probe `projects/<project>/07-edit/captioned.mp4` and record the real 1080x1920 frame size.

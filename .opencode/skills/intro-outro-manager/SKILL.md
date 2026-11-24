@@ -32,6 +32,8 @@ Prepend a one-second palette-coloured title card to a locked clip without touchi
 
 - `projects/<project>/07-edit/intro-outro-manager.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/intro-outro-manager.json`
+
 # Card parameters
 
 1. Generate a solid colour card at 30 fps for exactly 1 second.

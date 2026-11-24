@@ -29,6 +29,8 @@ Design a last-3-seconds handoff where the ending frame flows back into the openi
 
 - `projects/<project>/02-script/loop-cta-designer.json`
 
+- Format `json_utf8`: `projects/<project>/02-script/loop-cta-designer.json`
+
 # Loop design criteria
 
 1. Use the final 3 seconds only; never extend the video beyond its locked duration.

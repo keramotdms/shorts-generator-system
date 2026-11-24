@@ -32,6 +32,8 @@ Produce a validated publishing schedule from a manual request file; this skill n
 
 - `projects/<project>/10-publish/scheduler-publisher.json`
 
+- Format `json_utf8`: `projects/<project>/10-publish/scheduler-publisher.json`
+
 # Schedule checks
 
 1. Require the handover file to exist before accepting any request row.

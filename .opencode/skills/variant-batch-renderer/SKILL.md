@@ -32,6 +32,8 @@ Render three hue-shifted copies of one clip in a single FFmpeg run so title and 
 
 - `projects/<project>/07-edit/variant-batch-renderer.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/variant-batch-renderer.json`
+
 # Variant parameters
 
 1. Produce exactly three outputs named with -v1, -v2 and -v3 suffixes.

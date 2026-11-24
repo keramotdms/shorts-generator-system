@@ -29,6 +29,8 @@ Checks voice clarity, speed and duration.
 
 - `projects/<project>/03-voice/voiceover-tester.json`
 
+- Format `json_utf8`: `projects/<project>/03-voice/voiceover-tester.json`
+
 # Steps
 1. Validate `projects/<project>/02-script/latest_script.json` and read its total_duration_sec.
 2. Probe `projects/<project>/03-voice/voiceover.mp3`; reject audio shorter than 30 seconds or longer than 60 seconds.

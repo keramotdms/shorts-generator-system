@@ -30,6 +30,8 @@ Plan local crops and caption adjustments for reposting one finished Short to two
 
 - `projects/<project>/10-publish/cross-platform-repurposer.json`
 
+- Format `json_utf8`: `projects/<project>/10-publish/cross-platform-repurposer.json`
+
 # Repurposing constraints
 
 1. Plan at most two additional platforms beyond the primary one.

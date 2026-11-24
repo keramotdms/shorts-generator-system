@@ -31,6 +31,8 @@ Build one 2x3 contact sheet from a finished clip so a reviewer can judge six eve
 
 - `projects/<project>/07-edit/preview-frame-extractor.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/preview-frame-extractor.json`
+
 # Contact sheet parameters
 
 1. Sample one frame every 2 seconds with fps=1/2.

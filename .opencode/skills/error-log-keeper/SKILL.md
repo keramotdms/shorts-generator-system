@@ -28,6 +28,8 @@ Records errors and fixes for every stage.
 
 - `projects/<project>/08-final-test/error-log.jsonl`
 
+- Format `jsonl`: `projects/<project>/08-final-test/error-log.jsonl`
+
 # Steps
 1. Create `projects/<project>/08-final-test/error-log.jsonl` if absent; never truncate an existing log.
 2. Accept only entries with skill, stage, status and reason keys; reject an empty reason.

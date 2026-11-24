@@ -55,6 +55,8 @@ Writes the full script with scenes and timings.
 
 - `projects/<project>/02-script/latest_script.json`
 
+- Format `json_utf8`: `projects/<project>/02-script/latest_script.json`
+
 # Steps
 
 1. Read `config/channel.json` and `config/style-bible.json` through project-memory for language, video length and tone. Read `projects/<project>/02-script/story.json` and `projects/<project>/02-script/hook.json`; stop if either is missing or malformed.

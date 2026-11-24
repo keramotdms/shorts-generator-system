@@ -32,6 +32,8 @@ Add a two-second opening push-in on the hook frame so the promise lands before t
 
 - `projects/<project>/07-edit/hook-visual-editor.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/hook-visual-editor.json`
+
 # Opening push-in parameters
 
 1. Hold a 1.10 zoom for the first 60 frames, then return to 1.0.

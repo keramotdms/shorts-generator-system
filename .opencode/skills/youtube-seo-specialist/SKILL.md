@@ -32,6 +32,8 @@ Rank manually exported keywords for a Bangla Short and choose the one phrase tha
 
 - `projects/<project>/10-publish/youtube-seo-specialist.json`
 
+- Format `json_utf8`: `projects/<project>/10-publish/youtube-seo-specialist.json`
+
 # Keyword ranking rules
 
 1. Require at least 5 exported keywords before choosing a leader.

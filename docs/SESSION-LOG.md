@@ -4,6 +4,24 @@ One entry per work session. Newest entry goes at the top.
 
 Backfilled from `git log` on 2026-11-24 using these known facts: **Home = toolchain setup (`fb84b29`)**, **Office = everything else**. No commit needed `PC: Unknown`.
 
+## 2026-11-24 | PC: Office | commit: 51e2ca8ef004b8007ee244cae2b6eee71d02e0d1
+
+### What was done
+
+- Pulled `origin/main` (fast-forward to `51e2ca8`) before editing; no tools or packages were installed.
+- Added `config/output-formats.json` with 13 checkable profiles (`json_utf8`, `markdown`, `jsonl`, `csv`, `mp3_voice`, `wav_mix`, `srt`, `svg_layered`, `png_transparent`, `png_frame_1080x1920`, `ttf_font`, `mp4_clip`, `mp4_final`).
+- Declared one format for each of the 113 outputs across all 93 skills in `config/skill-contracts.json`, mirrored every declaration in SKILL.md Output sections, and added AGENTS.md rule 11.
+- Built `scripts/format_validator.py` (JSON/BOM, JSONL, CSV, SRT, XML/SVG, PNG dimensions, TTF signature and ffprobe media checks), wired it into every self-test and `health_check.py`, and documented all paths in `docs/OUTPUT-FORMATS.md`.
+- Added `tests/test_formats.py` and fixed a fontconfig regression from the pulled font paths by converting filtergraph font paths to POSIX form.
+
+### What is pending
+
+- Nothing from this format task; all six required checks pass before commit.
+
+### Next step
+
+- Commit, push, confirm `main == origin/main`, then wait for OK before starting the next skill.
+
 ## 2026-11-24 | PC: Home | commit: f6d219e3451a53d66393ea6b565e35cce58f47cd
 
 ### What was done

@@ -29,6 +29,8 @@ Validates folder structure, naming and backups.
 
 - `projects/<project>/asset-manager.json`
 
+- Format `json_utf8`: `projects/<project>/asset-manager.json`
+
 # Steps
 1. Inventory the starter folders `assets/`, `config/` and the current `projects/<project>/` tree; list every missing required folder by exact path.
 2. Compare declared character and scene seeds against `config/style-bible.json` values loaded through project-memory; never invent a new style value.

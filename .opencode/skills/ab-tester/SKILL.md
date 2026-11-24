@@ -31,6 +31,8 @@ Compare two manually exported title or thumbnail variants and declare a winner o
 
 - `projects/<project>/10-publish/ab-tester.json`
 
+- Format `json_utf8`: `projects/<project>/10-publish/ab-tester.json`
+
 # Test validity rules
 
 1. Require at least 100 impressions in each arm before declaring a winner.

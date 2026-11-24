@@ -30,6 +30,8 @@ Compare three locally noted competitor Shorts against our own format and return 
 
 - `projects/<project>/01-research/competitor-analyzer.json`
 
+- Format `json_utf8`: `projects/<project>/01-research/competitor-analyzer.json`
+
 # Comparison criteria
 
 1. Score each competitor 0–10 for hook clarity, number specificity and Bangla naturalness.

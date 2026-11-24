@@ -31,6 +31,8 @@ Designs scene transitions.
 
 - `projects/<project>/07-edit/transition-designer.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/transition-designer.json`
+
 # Steps
 1. Inspect adjacent shot boundaries in `projects/<project>/07-edit/rough-cut.mp4` using scene-change detection.
 2. Read the palette and tone from `config/style-bible.json`; use only those colours for an overlay wipe.

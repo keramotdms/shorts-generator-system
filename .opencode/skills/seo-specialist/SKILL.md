@@ -30,6 +30,8 @@ Score the description's keyword choices against local search notes and return th
 
 - `projects/<project>/09-description/seo-specialist.md`
 
+- Format `markdown`: `projects/<project>/09-description/seo-specialist.md`
+
 # Keyword criteria
 
 1. Score exactly three dimensions: title match, first-line match and Bangla spelling.

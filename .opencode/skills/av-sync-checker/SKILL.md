@@ -30,6 +30,8 @@ Checks audio and video synchronization.
 
 - `projects/<project>/07-edit/av-sync-checker.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/av-sync-checker.json`
+
 # Steps
 1. Probe the audio and video streams of `projects/<project>/08-final-test/final-video.mp4` with ffprobe.
 2. Compare stream durations; allow at most 0.20 seconds of drift between the first audio sample and the first video frame.

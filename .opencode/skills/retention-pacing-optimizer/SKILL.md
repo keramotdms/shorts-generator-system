@@ -29,6 +29,8 @@ Score a draft script for attention decay and return a timed re-cut plan that rem
 
 - `projects/<project>/02-script/retention-pacing-optimizer.json`
 
+- Format `json_utf8`: `projects/<project>/02-script/retention-pacing-optimizer.json`
+
 # Pacing score criteria
 
 1. The hook must land by 2.5 seconds; if it starts later, score that criterion 0/10.

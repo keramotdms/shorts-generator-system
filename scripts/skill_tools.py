@@ -999,7 +999,22 @@ def main(argv: list[str] | None = None, skill_override: str | None = None) -> in
     args = build_parser().parse_args(argv)
     skill = skill_override or args.skill
     if args.self_test:
-        return self_test(skill)
+        code = self_test(skill)
+        if code == 0:
+            import format_validator
+
+            summary = format_validator.validate_skill_outputs(skill)
+            for note in summary["infos"]:
+                print("INFO " + note)
+            if summary["errors"]:
+                for error in summary["errors"]:
+                    print(f"FAIL {skill}: {error}")
+                return 1
+            if summary["checked"]:
+                print(
+                    f"PASS {skill}: {summary['checked']} declared output file(s) match their formats"
+                )
+        return code
 
     try:
         if skill == "project-memory":

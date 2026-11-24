@@ -30,6 +30,8 @@ Tests the locked parametric character, its layer structure and its rendered prev
 
 - `projects/<project>/04-character/character-qa-tester.json`
 
+- Format `json_utf8`: `projects/<project>/04-character/character-qa-tester.json`
+
 # Steps
 
 1. Validate `assets/characters/creator-01/character.json` against `config/schemas/character.json`.

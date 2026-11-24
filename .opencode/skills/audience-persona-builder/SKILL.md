@@ -30,6 +30,8 @@ Pick one primary Bangla-speaking viewer from three researched candidates so hook
 
 - `projects/<project>/01-research/audience-persona-builder.json`
 
+- Format `json_utf8`: `projects/<project>/01-research/audience-persona-builder.json`
+
 # Persona shortlist criteria
 
 1. Draft exactly three candidate viewers and choose exactly one primary persona.

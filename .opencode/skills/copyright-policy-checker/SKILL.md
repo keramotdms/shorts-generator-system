@@ -30,6 +30,8 @@ Checks copyright and policy risks.
 
 - `projects/<project>/08-final-test/copyright-policy-checker.json`
 
+- Format `json_utf8`: `projects/<project>/08-final-test/copyright-policy-checker.json`
+
 # Steps
 1. Read `projects/<project>/02-script/latest_script.json` and extract narration, visual_prompt and highlight_words for source tracing.
 2. Compare `assets/characters/creator-01/character.json` with the drawing in `projects/<project>/08-final-test/final-video.mp4`; flag an unlicensed look-alike as WARN.

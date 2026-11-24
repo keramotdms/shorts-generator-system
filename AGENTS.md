@@ -34,6 +34,7 @@ Applies to every session. Do not repeat them and do not override them.
 8. Every skill must have: purpose, input, output, steps, and a way to test it.
 9. Skill naming rule: lowercase-kebab-case, no `shorts-` prefix.
 10. Generated project data lives under `projects/<project>/<stage>/`, never inside skill folders.
+11. A skill may only write the format declared for each output in `config/skill-contracts.json` (profile names come from `config/output-formats.json`). Any other format requires changing the contract and that skill's Output section first.
 ## LOGIN RULE
 
 - Trigger: I write "Login into Home PC" / "Log in to Home PC" (also accept "Office", and small spelling variations).

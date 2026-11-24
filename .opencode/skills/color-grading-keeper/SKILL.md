@@ -32,6 +32,8 @@ Apply one repeatable eq curve derived from the palette length so every scene kee
 
 - `projects/<project>/07-edit/color-grading-keeper.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/color-grading-keeper.json`
+
 # Grade parameters
 
 1. Set contrast to 1 plus 0.01 times the number of palette colours.

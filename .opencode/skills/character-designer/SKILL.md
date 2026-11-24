@@ -37,6 +37,18 @@ Build a reusable, parametric 2D presenter from a short brief. The skill picks pa
 - `assets/characters/creator-01-surprised.svg` / `assets/characters/creator-01-surprised.png` — legacy expression view.
 - `projects/<project>/04-character/character-design-set.json` — candidates, chosen design, criteria.
 
+- Format `json_utf8`: `assets/characters/creator-01/character.json`
+- Format `svg_layered`: `assets/characters/creator-01/layered.svg`
+- Format `png_transparent`: `assets/characters/creator-01/preview.png`
+- Format `png_transparent`: `assets/characters/creator-01/preview-sheet.png`
+- Format `svg_layered`: `assets/characters/creator-01-neutral.svg`
+- Format `png_transparent`: `assets/characters/creator-01-neutral.png`
+- Format `svg_layered`: `assets/characters/creator-01-smile.svg`
+- Format `png_transparent`: `assets/characters/creator-01-smile.png`
+- Format `svg_layered`: `assets/characters/creator-01-surprised.svg`
+- Format `png_transparent`: `assets/characters/creator-01-surprised.png`
+- Format `json_utf8`: `projects/<project>/04-character/character-design-set.json`
+
 # Steps
 
 1. Read `config/style-bible.json`, `projects/<project>/04-character/character-brief.json` and `assets/character-parts/parts.json` through project-memory. Stop if any is missing.

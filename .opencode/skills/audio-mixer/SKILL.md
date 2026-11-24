@@ -30,6 +30,8 @@ Mixes voice, music and sound effect levels.
 
 - `projects/<project>/03-voice/audio-mixer.json`
 
+- Format `json_utf8`: `projects/<project>/03-voice/audio-mixer.json`
+
 # Steps
 1. Load `projects/<project>/03-voice/voiceover.mp3` and the cue list at `projects/<project>/03-voice/music-sfx-selector.json`.
 2. Set narration bus to 0 dB, music bed to -18 dB and SFX peaks to -6 dB relative to narration.

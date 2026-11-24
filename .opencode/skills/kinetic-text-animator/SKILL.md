@@ -31,6 +31,8 @@ Animates on-screen text.
 
 - `projects/<project>/07-edit/kinetic-text-animator.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/kinetic-text-animator.json`
+
 # Steps
 1. Pair each caption block from `projects/<project>/07-edit/captions.json` with its exact start and end time.
 2. Assign one motion style per emphasis word — pop, slide or fade — and never cut inside a Bengali consonant cluster.

@@ -30,6 +30,8 @@ Finds bugs in the final video.
 
 - `projects/<project>/08-final-test/bug-finder.json`
 
+- Format `json_utf8`: `projects/<project>/08-final-test/bug-finder.json`
+
 # Steps
 1. Probe `projects/<project>/08-final-test/final-video.mp4` and reject a file with no moov atom, no video stream or zero duration.
 2. Read the attack notes in `projects/<project>/08-final-test/red-team.json` and `ruthless-team.json`; carry unresolved items forward.

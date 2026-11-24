@@ -30,6 +30,9 @@ Renders vertical scene videos.
 - `projects/<project>/06-video/scenes/`
 - `projects/<project>/06-video/video-maker-report.json`
 
+- Format `mp4_clip`: `projects/<project>/06-video/scenes/`
+- Format `json_utf8`: `projects/<project>/06-video/video-maker-report.json`
+
 # Steps
 1. Open `projects/<project>/05-scene/collection.json` and require matching `scene_images[]` and `scenes[]` arrays.
 2. For each image path, confirm the PNG exists at 1080x1920; stop on the first missing file.

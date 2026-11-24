@@ -32,6 +32,8 @@ Remove a small lead-in and tail from a rough cut using matched video and audio t
 
 - `projects/<project>/07-edit/video-editor.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/video-editor.json`
+
 # Trim parameters
 
 1. Trim the same number of seconds from the head and tail of both video and audio.

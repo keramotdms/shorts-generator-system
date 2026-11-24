@@ -32,6 +32,8 @@ Stamp a palette-coloured channel bar and the project label onto every edited cli
 
 - `projects/<project>/07-edit/branding-manager.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/branding-manager.json`
+
 # Brand placement parameters
 
 1. Draw the brand bar at 7% of the configured height and span the full input width.

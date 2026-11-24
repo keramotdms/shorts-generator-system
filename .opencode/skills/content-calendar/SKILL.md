@@ -30,6 +30,8 @@ Turn research topics into a two-week posting calendar with fixed weekdays, local
 
 - `projects/<project>/01-research/content-calendar.json`
 
+- Format `json_utf8`: `projects/<project>/01-research/content-calendar.json`
+
 # Calendar constraints
 
 1. Plan exactly 14 days starting on the next Monday after the current date.

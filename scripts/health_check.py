@@ -314,6 +314,25 @@ def check_skills() -> None:
         report("WARN", f"Unrecognized skill statuses: {', '.join(unknown)}")
 
 
+def check_output_formats() -> None:
+    """Validate every declared output file that exists on this PC."""
+    try:
+        import format_validator
+
+        profiles = format_validator.load_profiles()
+        summary = format_validator.validate_all_existing()
+    except Exception as exc:
+        report("FAIL", f"output format validation error: {exc}")
+        return
+    report("PASS", f"output format registry has {len(profiles)} profiles")
+    for note in sorted(set(summary["infos"])):
+        report("INFO", note)
+    for error in summary["errors"]:
+        report("FAIL", error)
+    if not summary["errors"]:
+        report("PASS", f"{summary['checked']} declared output file(s) match their formats")
+
+
 def check_gitignore() -> None:
     path = ROOT / ".gitignore"
     if not path.is_file():
@@ -339,6 +358,7 @@ def main() -> None:
     check_skills()
     check_blocked_skills()
     check_optional_tools()
+    check_output_formats()
     check_gitignore()
 
     passes = sum(1 for status, _ in results if status == "PASS")

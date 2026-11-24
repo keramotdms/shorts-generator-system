@@ -32,6 +32,9 @@ Packages final files for publishing.
 - `projects/<project>/10-publish/handover.md`
 - `projects/<project>/10-publish/handover-check.json`
 
+- Format `markdown`: `projects/<project>/10-publish/handover.md`
+- Format `json_utf8`: `projects/<project>/10-publish/handover-check.json`
+
 # Steps
 
 1. Read `config/channel.json` and `config/style-bible.json` through project-memory so the handover lists the real niche, language and location.

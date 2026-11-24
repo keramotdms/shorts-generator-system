@@ -32,6 +32,8 @@ Quantise scene changes to two beats per second so the visual rhythm matches a co
 
 - `projects/<project>/07-edit/beat-sync-editor.json`
 
+- Format `json_utf8`: `projects/<project>/07-edit/beat-sync-editor.json`
+
 # Beat grid parameters
 
 1. Sample the video at 2 frames per second to create a half-second beat grid.

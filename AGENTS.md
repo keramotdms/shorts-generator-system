@@ -41,6 +41,15 @@ Beginner-friendly, step-by-step build of an automated system for 2D animated You
 - When I say "end session" (or the session finishes), add an entry to docs/SESSION-LOG.md with: date, PC (Home or Office, from my login message; if unknown, ask me once), last commit hash, what was done (3-5 lines), what is pending, next step.
 - Then run health_check.py, commit, push, confirm main == origin/main.
 
+## PC ROLES
+
+- `PC_ROLE=home|office` lives in `.env` (see `.env.example`).
+- **Home PC = production.** Voice generation, rendering, FFmpeg work and package installs happen here.
+- **Office PC = text/skills/docs only.** Scripts, skill content, docs and reviews; no installs.
+- On the Office PC, a missing `edge-tts`, `pytrends` or Bangla font is `INFO`, not `FAIL`.
+- On the Home PC, those same gaps are `WARN` so they get fixed before production.
+- Never change Windows security settings to make a blocked tool run; find a working path instead.
+
 ## Pipeline order
 
 Research -> Script -> Voice -> Character -> Scene -> Video -> Edit -> Final Test -> Description/SEO -> Publish

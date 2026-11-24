@@ -1,8 +1,10 @@
 {
   "ffmpeg_path": ".venv/Lib/site-packages/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v9.0.2.exe",
   "ffmpeg_env_var": "FFMPEG_PATH",
+  "ffprobe_path": "%LOCALAPPDATA%/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.1-full_build/bin/ffprobe.exe",
+  "ffprobe_env_var": "FFPROBE_PATH",
   "default_project": "_template",
   "resolution": "1080x1920",
   "aspect_ratio": "9:16",
-  "notes": "Repo-relative path to the working imageio-ffmpeg binary. The winget ffmpeg.exe is blocked by Application Control; do not change Windows security settings."
+  "notes": "Repo-relative path to the working imageio-ffmpeg binary and the winget ffprobe. The winget ffmpeg.exe is blocked by Application Control; do not change Windows security settings."
 }

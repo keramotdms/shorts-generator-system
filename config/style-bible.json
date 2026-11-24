@@ -18,7 +18,13 @@
       "#A9683A",
       "#96603A"
     ],
-    "font": "Noto Sans Bengali"
+    "font": "Noto Sans Bengali",
+    "font_path": "assets/fonts/noto-sans-bengali/NotoSansBengali-Variable.ttf",
+    "font_license": "assets/fonts/noto-sans-bengali/OFL.txt",
+    "fallback_font": "Hind Siliguri",
+    "fallback_font_path": "assets/fonts/hind-siliguri/HindSiliguri-Regular.ttf",
+    "fallback_font_bold_path": "assets/fonts/hind-siliguri/HindSiliguri-Bold.ttf",
+    "fallback_font_license": "assets/fonts/hind-siliguri/OFL.txt"
   },
   "characters": {
     "default": "friendly young Bangla-speaking creator"

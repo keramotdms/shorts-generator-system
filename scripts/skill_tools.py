@@ -50,10 +50,10 @@ def ffmpeg_executable() -> Path:
 
 
 def ffprobe_executable() -> Path:
-    executable = ffmpeg_executable()
-    return executable.with_name(
-        "ffprobe.exe" if executable.suffix.lower() == ".exe" else "ffprobe"
-    )
+    executable = lib.ffprobe_executable()
+    if executable is None:
+        raise lib.SkillError("ffprobe not found (set FFPROBE_PATH)")
+    return executable
 
 
 def ffmpeg_run(arguments: list[str]) -> None:
@@ -138,9 +138,14 @@ def first_existing(pattern: Path) -> Path | None:
 
 
 def font_file() -> Path | None:
-    custom = first_existing(lib.ROOT / "assets" / "fonts" / "*.ttf")
-    if custom:
-        return custom
+    """Prefer the bundled Bangla fonts, then any bundled TTF, then a Windows fallback."""
+    fonts_root = lib.ROOT / "assets" / "fonts"
+    bundled = sorted(fonts_root.rglob("*.ttf")) if fonts_root.is_dir() else []
+    preferred = [path for path in bundled if "NotoSansBengali" in path.name]
+    preferred += [path for path in bundled if "HindSiliguri-Regular" in path.name]
+    chosen = preferred or bundled
+    if chosen:
+        return chosen[0]
     system_candidates = [
         Path("C:/Windows/Fonts/Nirmala.ttc"),
         Path("C:/Windows/Fonts/segoeui.ttf"),
@@ -174,6 +179,20 @@ def cmd_project_memory(args: argparse.Namespace) -> None:
     if args.command == "show":
         print(lib.json_dumps(bible))
         return
+    # Keep font/license paths recorded in the existing style bible.
+    existing = lib.read_json(lib.STYLE_BIBLE_PATH, required=False) or {}
+    existing_style = existing.get("style", {}) if isinstance(existing, dict) else {}
+    if isinstance(existing_style, dict):
+        for key in (
+            "font_path",
+            "font_license",
+            "fallback_font",
+            "fallback_font_path",
+            "fallback_font_bold_path",
+            "fallback_font_license",
+        ):
+            if key in existing_style:
+                bible["style"][key] = existing_style[key]
     path = lib.write_json(lib.STYLE_BIBLE_PATH, bible)
     lib.ok("project-memory", "style bible written from channel config", path)
 
@@ -354,12 +373,11 @@ def cmd_safe_zone(args: argparse.Namespace) -> None:
 
 
 def cmd_ffprobe_check(skill: str, args: argparse.Namespace) -> None:
-    status, detail = lib.ffmpeg_status()
+    status, detail = lib.ffprobe_status()
     if status != "OK":
-        print(f"BLOCKED {skill}: ffmpeg/ffprobe {status} - {detail}")
+        print(f"BLOCKED {skill}: ffprobe {status} - {detail}")
         return
-    executable = lib.ffmpeg_executable()
-    probe = Path(str(executable)).with_name("ffprobe.exe" if executable.suffix == ".exe" else "ffprobe")
+    probe = ffprobe_executable()
     video = lib.stage(6, "scenes", "scene_001.mp4")
     if not video.is_file():
         raise lib.SkillError(f"Missing input video: {lib.relative(video)}")
@@ -491,9 +509,13 @@ def cmd_caption_burn_in(skill: str, args: argparse.Namespace) -> None:
     srt.write_text("\n".join(blocks), encoding="utf-8")
     srt_arg = Path(lib.relative(srt)).as_posix()
     output = lib.stage(7, "captioned.mp4")
+    fontsdir = ""
+    chosen_font = font_file()
+    if chosen_font is not None and chosen_font.is_relative_to(lib.ROOT / "assets" / "fonts"):
+        fontsdir = f":fontsdir={chosen_font.parent.relative_to(lib.ROOT).as_posix()}"
     ffmpeg_run([
         "-i", str(video),
-        "-vf", f"subtitles=filename={srt_arg}:force_style='FontName=Noto Sans Bengali,FontSize=44,Alignment=2,MarginV=220'",
+        "-vf", f"subtitles=filename={srt_arg}:force_style='FontName=Noto Sans Bengali,FontSize=44,Alignment=2,MarginV=220'{fontsdir}",
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-c:a", "copy", str(output),
     ])
     summary = probe_summary(output)

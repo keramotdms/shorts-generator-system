@@ -180,7 +180,7 @@ def ffmpeg_executable() -> Path | None:
     if found:
         candidates.append(found)
     for value in candidates:
-        path = Path(value)
+        path = Path(os.path.expandvars(value))
         if not path.is_absolute():
             path = ROOT / path
         if path.is_file():
@@ -215,6 +215,47 @@ def require_ffmpeg() -> Path:
             "after the Windows application-control policy is resolved."
         )
     return ffmpeg_executable()
+
+
+def ffprobe_executable() -> Path | None:
+    """FFPROBE_PATH setting first, then defaults.json, then PATH."""
+    candidates: list[str] = []
+    env_value = os.environ.get("FFPROBE_PATH", "").strip()
+    if env_value:
+        candidates.append(env_value)
+    defaults = read_json(DEFAULTS_PATH, required=False) or {}
+    config_value = defaults.get("ffprobe_path")
+    if config_value:
+        candidates.append(str(config_value))
+    found = shutil.which("ffprobe")
+    if found:
+        candidates.append(found)
+    for value in candidates:
+        path = Path(os.path.expandvars(value))
+        if not path.is_absolute():
+            path = ROOT / path
+        if path.is_file():
+            return path
+    return None
+
+
+def ffprobe_status() -> tuple[str, str]:
+    """Return ('OK'|'BLOCKED'|'MISSING', detail)."""
+    executable = ffprobe_executable()
+    if executable is None:
+        return "MISSING", "ffprobe not found (set FFPROBE_PATH)"
+    try:
+        result = subprocess.run(
+            [str(executable), "-version"],
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return "BLOCKED", str(exc)
+    if result.returncode == 0:
+        return "OK", result.stdout.splitlines()[0] if result.stdout else "ffprobe -version OK"
+    return "BLOCKED", f"exit code {result.returncode}: {result.stderr.strip()[:200]}"
 
 
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:

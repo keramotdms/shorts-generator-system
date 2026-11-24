@@ -3,9 +3,9 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
-import shutil
-import subprocess
+import os
 import sys
 from collections import Counter
 from pathlib import Path
@@ -86,10 +86,78 @@ REQUIRED_FILES = [
 
 results: list[tuple[str, str]] = []
 
+BANGLA_FONTS = [
+    "assets/fonts/noto-sans-bengali/NotoSansBengali-Variable.ttf",
+    "assets/fonts/noto-sans-bengali/OFL.txt",
+    "assets/fonts/hind-siliguri/HindSiliguri-Regular.ttf",
+    "assets/fonts/hind-siliguri/OFL.txt",
+]
+
 
 def report(status: str, message: str) -> None:
     results.append((status, message))
     print(f"[{status}] {message}")
+
+
+def read_dotenv() -> dict[str, str]:
+    """Read simple KEY=VALUE pairs from .env without exposing values."""
+    path = ROOT / ".env"
+    values: dict[str, str] = {}
+    if not path.is_file():
+        return values
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        text = line.strip()
+        if not text or text.startswith("#") or "=" not in text:
+            continue
+        key, value = text.split("=", 1)
+        values[key.strip()] = value.strip().strip('"').strip("'")
+    return values
+
+
+def pc_role() -> str:
+    """PC_ROLE from the environment, then .env, then 'unknown'."""
+    role = os.environ.get("PC_ROLE", "").strip().lower()
+    if not role:
+        role = read_dotenv().get("PC_ROLE", "").strip().lower()
+    return role if role in {"home", "office"} else "unknown"
+
+
+def check_pc_role() -> None:
+    """Show this PC's role and whether production tools are optional here."""
+    role = pc_role()
+    if role == "home":
+        report("PASS", "PC role: home (production: voice, render, installs)")
+    elif role == "office":
+        report("PASS", "PC role: office (text/skills/docs only; production tools optional)")
+    else:
+        report("INFO", "PC role not set (add PC_ROLE=home or PC_ROLE=office to .env)")
+
+
+def check_optional_tools() -> None:
+    """Production tooling: required on home, informational on office."""
+    role = pc_role()
+    optional = role == "office"
+    absent = "INFO" if optional else "WARN"
+
+    if importlib.util.find_spec("edge_tts") is not None:
+        report("PASS", "edge-tts Python package is installed")
+    else:
+        report(absent, "edge-tts is not installed" + (" (optional on office PC)" if optional else ""))
+
+    if importlib.util.find_spec("pytrends") is not None:
+        report("PASS", "pytrends Python package is installed")
+    else:
+        report(absent, "pytrends is not installed" + (" (optional on office PC)" if optional else ""))
+
+    missing_fonts = [item for item in BANGLA_FONTS if not (ROOT / item).is_file()]
+    if not missing_fonts:
+        report("PASS", "Bangla fonts and OFL licenses present (Noto Sans Bengali, Hind Siliguri)")
+    else:
+        report(
+            absent,
+            "Missing Bangla font files: " + ", ".join(missing_fonts)
+            + (" (optional on office PC)" if optional else ""),
+        )
 
 
 def check_python() -> None:
@@ -107,21 +175,11 @@ def check_ffmpeg() -> None:
     else:
         report("WARN", f"ffmpeg {status}: {detail}")
 
-    ffprobe = shutil.which("ffprobe")
-    if not ffprobe:
-        report("WARN", "ffprobe not on PATH (the venv imageio-ffmpeg binary provides ffmpeg only)")
-        return
-    try:
-        result = subprocess.run(
-            [ffprobe, "-version"], capture_output=True, text=True, timeout=10
-        )
-        if result.returncode == 0:
-            first_line = result.stdout.splitlines()[0] if result.stdout else "no output"
-            report("PASS", f"ffprobe runs: {first_line}")
-        else:
-            report("WARN", f"ffprobe exited with code {result.returncode}")
-    except (OSError, subprocess.SubprocessError) as exc:
-        report("WARN", f"ffprobe found but cannot run: {exc}")
+    status, detail = lib.ffprobe_status()
+    if status == "OK":
+        report("PASS", f"ffprobe runs: {detail}")
+    else:
+        report("WARN", f"ffprobe {status}: {detail}")
 
 
 def ffmpeg_usable() -> tuple[bool, str]:
@@ -272,6 +330,7 @@ def check_gitignore() -> None:
 
 def main() -> None:
     print("=== Shorts project health check ===")
+    check_pc_role()
     check_python()
     check_ffmpeg()
     check_dirs()
@@ -279,14 +338,19 @@ def main() -> None:
     check_json()
     check_skills()
     check_blocked_skills()
+    check_optional_tools()
     check_gitignore()
 
     passes = sum(1 for status, _ in results if status == "PASS")
     warns = sum(1 for status, _ in results if status == "WARN")
     blocked = sum(1 for status, _ in results if status == "BLOCKED")
+    infos = sum(1 for status, _ in results if status == "INFO")
     fails = sum(1 for status, _ in results if status == "FAIL")
     print()
-    print(f"Summary: {passes} PASS | {warns} WARN | {blocked} BLOCKED | {fails} FAIL")
+    print(
+        f"Summary: {passes} PASS | {warns} WARN | {blocked} BLOCKED "
+        f"| {infos} INFO | {fails} FAIL"
+    )
 
     if fails:
         sys.exit(1)

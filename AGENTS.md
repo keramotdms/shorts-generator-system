@@ -24,6 +24,8 @@ Beginner-friendly, step-by-step build of an automated system for 2D animated You
 8. Every skill must have: purpose, input, output, steps, and a way to test it.
 9. Skill naming rule: lowercase-kebab-case, no `shorts-` prefix.
 10. Generated project data lives under `projects/<project>/<stage>/`, never inside skill folders.
+11. When I write "Login into Home PC" or "Login into Office PC", first run `git pull origin main`, then read `docs/SESSION-LOG.md`, and reply with: which PC I am on, the last 3 tasks, what is pending, and the suggested next step. Then wait.
+12. At the end of every session, or when I say "end session", add a new entry to `docs/SESSION-LOG.md`, run `health_check.py`, commit and push, confirm `main == origin/main`.
 
 ## Pipeline order
 

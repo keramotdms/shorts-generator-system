@@ -12,6 +12,16 @@ Beginner-friendly, step-by-step build of an automated system for 2D animated You
 - Video length: 30–60 seconds, 9:16
 - Editing/rendering: FFmpeg + Python
 
+## SAFETY RULES
+
+Applies to every session. Do not repeat them and do not override them.
+
+1. Always run `git pull origin main` before any work.
+2. Never install or upgrade anything without asking me first, one item at a time.
+3. Never read out, edit or commit `.env`. Never print secrets.
+4. Never change Windows settings (Smart App Control, security policy, PATH changes need my approval).
+5. Never force push.
+
 ## Rules
 
 1. Do NOT build everything at once. Build only MVP skills first.

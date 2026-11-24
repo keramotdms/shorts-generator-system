@@ -4,6 +4,25 @@ One entry per work session. Newest entry goes at the top.
 
 Backfilled from `git log` on 2026-11-24 using these known facts: **Home = toolchain setup (`fb84b29`)**, **Office = everything else**. No commit needed `PC: Unknown`.
 
+## 2026-11-24 | PC: Home | commit: f6d219e3451a53d66393ea6b565e35cce58f47cd
+
+### What was done
+
+- Verified Python 3.12.10, `.venv`, `edge-tts` 7.3.1, Git, FFmpeg via `FFMPEG_PATH` and Edge; found a working winget `ffprobe` 9.1 and wired it as `FFPROBE_PATH` in `.env` and `config/defaults.json`.
+- Installed `pytrends` 4.9.2 in `.venv` only and added it to `requirements.txt`; `YOUTUBE_API_KEY` confirmed NOT SET.
+- Downloaded Noto Sans Bengali and Hind Siliguri (OFL) into `assets/fonts/` with licenses and referenced them from `style-bible.json`.
+- Bangla caption test rendered correctly with libass (conjuncts/vowel signs intact); Edge headless SVG->PNG PASS; Bangla TTS sample PASS with `bn-BD-PradeepNeural` (3.408 s).
+- Made `health_check.py` PC-aware with `PC_ROLE=home|office`, added the PC ROLES section to `AGENTS.md`, and logged the findings in `docs/lessons.md`.
+
+### What is pending
+
+- `YOUTUBE_API_KEY` still needs a real value in `.env` (user will add it).
+- No real video project yet; `projects/_template` only.
+
+### Next step
+
+- Start a real project and run research, script and voice stages on the Home PC.
+
 ## 2026-11-24 | PC: Office | commit: 4caf24317c78d1d054e8243cbd88cc7802f45302
 
 ### What was done

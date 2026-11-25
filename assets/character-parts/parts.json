@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "source": "parametric parts used by scripts/character_designer.py",
+  "version": 2,
+  "source": "parametric parts used by scripts/character_designer.py; detail holds the rich layer set",
   "viewbox": [
     1080,
     1920
@@ -12,7 +12,12 @@
     "outfit",
     "accent",
     "light",
-    "eye"
+    "eye",
+    "iris",
+    "skin_shadow",
+    "blush",
+    "hair_highlight",
+    "cloth_shadow"
   ],
   "palettes": {
     "skin": [
@@ -153,5 +158,86 @@
     "idle",
     "wave",
     "point"
-  ]
+  ],
+  "detail": {
+    "face": {
+      "eyes_base": "<ellipse cx=\"480\" cy=\"575\" rx=\"29\" ry=\"25\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"4\"/><ellipse cx=\"600\" cy=\"575\" rx=\"29\" ry=\"25\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"4\"/>",
+      "iris": "<circle cx=\"480\" cy=\"577\" r=\"13\" fill=\"{iris}\"/><circle cx=\"600\" cy=\"577\" r=\"13\" fill=\"{iris}\"/>",
+      "pupils": "<circle cx=\"480\" cy=\"577\" r=\"6\" fill=\"{outline}\"/><circle cx=\"600\" cy=\"577\" r=\"6\" fill=\"{outline}\"/>",
+      "eye_highlights": "<circle cx=\"475\" cy=\"571\" r=\"4.5\" fill=\"{light}\"/><circle cx=\"486\" cy=\"583\" r=\"2\" fill=\"{light}\"/><circle cx=\"595\" cy=\"571\" r=\"4.5\" fill=\"{light}\"/><circle cx=\"606\" cy=\"583\" r=\"2\" fill=\"{light}\"/>",
+      "eyelids": {
+        "neutral": "<path d=\"M451 574 Q480 558 509 574 L509 549 Q480 536 451 549 Z\" fill=\"{skin}\"/><path d=\"M571 574 Q600 558 629 574 L629 549 Q600 536 571 549 Z\" fill=\"{skin}\"/><path d=\"M451 574 Q480 558 509 574\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M571 574 Q600 558 629 574\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
+        "happy": "<path d=\"M451 584 Q480 566 509 584 L509 549 Q480 536 451 549 Z\" fill=\"{skin}\"/><path d=\"M571 584 Q600 566 629 584 L629 549 Q600 536 571 549 Z\" fill=\"{skin}\"/><path d=\"M451 584 Q480 566 509 584\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M571 584 Q600 566 629 584\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
+        "worried": "<path d=\"M451 580 Q480 568 509 570 L509 549 Q480 536 451 549 Z\" fill=\"{skin}\"/><path d=\"M571 570 Q600 568 629 580 L629 549 Q600 536 571 549 Z\" fill=\"{skin}\"/><path d=\"M451 580 Q480 568 509 570\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M571 570 Q600 568 629 580\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
+        "surprised": "<path d=\"M451 558 Q480 550 509 558 L509 549 Q480 536 451 549 Z\" fill=\"{skin}\"/><path d=\"M571 558 Q600 550 629 558 L629 549 Q600 536 571 549 Z\" fill=\"{skin}\"/><path d=\"M451 558 Q480 550 509 558\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M571 558 Q600 550 629 558\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
+        "thinking": "<path d=\"M451 582 Q480 574 509 582 L509 549 Q480 536 451 549 Z\" fill=\"{skin}\"/><path d=\"M571 572 Q600 556 629 572 L629 549 Q600 536 571 549 Z\" fill=\"{skin}\"/><path d=\"M451 582 Q480 574 509 582\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M571 572 Q600 556 629 572\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/>"
+      },
+      "lashes": {
+        "neutral": "<path d=\"M456 541 Q480 532 504 541\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.55\" stroke-linecap=\"round\"/><path d=\"M576 541 Q600 532 624 541\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.55\" stroke-linecap=\"round\"/><path d=\"M451 566 L444 560\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.55\" stroke-linecap=\"round\"/><path d=\"M629 566 L636 560\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.55\" stroke-linecap=\"round\"/>",
+        "happy": "<path d=\"M451 580 L443 574\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.6\" stroke-linecap=\"round\"/><path d=\"M629 580 L637 574\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.6\" stroke-linecap=\"round\"/><path d=\"M456 543 Q480 534 504 543\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.5\" stroke-linecap=\"round\"/><path d=\"M576 543 Q600 534 624 543\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.5\" stroke-linecap=\"round\"/>",
+        "worried": "<path d=\"M456 542 L504 548\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.6\" stroke-linecap=\"round\"/><path d=\"M576 548 L624 542\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.6\" stroke-linecap=\"round\"/>",
+        "surprised": "<path d=\"M456 534 Q480 524 504 534\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.6\" stroke-linecap=\"round\"/><path d=\"M576 534 Q600 524 624 534\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.6\" stroke-linecap=\"round\"/><path d=\"M451 560 L444 553\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.6\" stroke-linecap=\"round\"/><path d=\"M629 560 L636 553\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.6\" stroke-linecap=\"round\"/>",
+        "thinking": "<path d=\"M456 546 Q480 540 504 546\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.55\" stroke-linecap=\"round\"/><path d=\"M576 538 Q600 528 624 538\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.55\" stroke-linecap=\"round\"/>"
+      },
+      "brows": {
+        "neutral": "<path d=\"M444 516 Q480 492 516 512 Q480 502 444 508 Z\" fill=\"{hair}\"/><path d=\"M564 512 Q600 492 636 516 Q636 508 600 502 Z\" fill=\"{hair}\"/>",
+        "happy": "<path d=\"M444 512 Q480 490 516 508 Q480 498 444 504 Z\" fill=\"{hair}\"/><path d=\"M564 508 Q600 490 636 512 Q636 504 600 498 Z\" fill=\"{hair}\"/>",
+        "worried": "<path d=\"M444 520 Q480 500 516 504 Q480 508 444 512 Z\" fill=\"{hair}\"/><path d=\"M564 504 Q600 500 636 520 Q636 512 600 508 Z\" fill=\"{hair}\"/>",
+        "surprised": "<path d=\"M444 506 Q480 484 516 502 Q480 494 444 498 Z\" fill=\"{hair}\"/><path d=\"M564 502 Q600 484 636 506 Q636 498 600 494 Z\" fill=\"{hair}\"/>",
+        "thinking": "<path d=\"M444 520 Q480 498 516 514 Q480 506 444 512 Z\" fill=\"{hair}\"/><path d=\"M564 508 Q600 490 636 510 Q636 502 600 498 Z\" fill=\"{hair}\"/>"
+      },
+      "brow_detail": "<path d=\"M454 510 Q480 500 506 508\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"4\" opacity=\"0.5\" stroke-linecap=\"round\"/><path d=\"M574 508 Q600 500 626 510\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"4\" opacity=\"0.5\" stroke-linecap=\"round\"/>",
+      "nose": "<path d=\"M540 586 L540 618 Q540 628 528 628\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M552 624 Q558 628 552 632\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
+      "ears": "<path d=\"M378 550 Q390 562 380 582\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M702 550 Q690 562 700 582\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
+      "blush": {
+        "neutral": "<ellipse cx=\"455\" cy=\"636\" rx=\"26\" ry=\"13\" fill=\"{blush}\" opacity=\"0.35\"/><ellipse cx=\"625\" cy=\"636\" rx=\"26\" ry=\"13\" fill=\"{blush}\" opacity=\"0.35\"/>",
+        "happy": "<ellipse cx=\"455\" cy=\"634\" rx=\"30\" ry=\"16\" fill=\"{blush}\" opacity=\"0.55\"/><ellipse cx=\"625\" cy=\"634\" rx=\"30\" ry=\"16\" fill=\"{blush}\" opacity=\"0.55\"/>",
+        "worried": "<ellipse cx=\"455\" cy=\"638\" rx=\"22\" ry=\"11\" fill=\"{blush}\" opacity=\"0.25\"/><ellipse cx=\"625\" cy=\"638\" rx=\"22\" ry=\"11\" fill=\"{blush}\" opacity=\"0.25\"/>",
+        "surprised": "<ellipse cx=\"455\" cy=\"632\" rx=\"24\" ry=\"12\" fill=\"{blush}\" opacity=\"0.45\"/><ellipse cx=\"625\" cy=\"632\" rx=\"24\" ry=\"12\" fill=\"{blush}\" opacity=\"0.45\"/>",
+        "thinking": "<ellipse cx=\"455\" cy=\"638\" rx=\"24\" ry=\"12\" fill=\"{blush}\" opacity=\"0.30\"/><ellipse cx=\"625\" cy=\"634\" rx=\"26\" ry=\"13\" fill=\"{blush}\" opacity=\"0.42\"/>"
+      },
+      "jaw_shadow": "<path d=\"M468 700 Q540 746 612 700 Q594 732 540 740 Q486 732 468 700 Z\" fill=\"{skin_shadow}\" opacity=\"0.32\"/>",
+      "neck": "<rect x=\"505\" y=\"712\" width=\"70\" height=\"118\" rx=\"26\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M505 724 Q540 770 575 724 L575 760 Q540 792 505 760 Z\" fill=\"{skin_shadow}\" opacity=\"0.35\"/>",
+      "mouths": {
+        "neutral": "<path d=\"M508 668 Q540 674 572 668\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linecap=\"round\"/>",
+        "happy": "<path d=\"M480 650 Q540 732 600 650 Z\" fill=\"{outline}\"/><path d=\"M500 656 Q540 692 580 656 Z\" fill=\"{light}\"/>",
+        "worried": "<path d=\"M495 686 Q540 650 585 686\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linecap=\"round\"/>",
+        "surprised": "<ellipse cx=\"540\" cy=\"670\" rx=\"30\" ry=\"38\" fill=\"{outline}\"/><ellipse cx=\"540\" cy=\"670\" rx=\"20\" ry=\"26\" fill=\"{light}\" opacity=\"0.25\"/>",
+        "thinking": "<path d=\"M505 670 Q524 658 540 670 Q556 682 575 670\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linecap=\"round\"/>"
+      }
+    },
+    "hair": {
+      "strands": "<path d=\"M414 480 Q456 430 508 420\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"4\" opacity=\"0.45\" stroke-linecap=\"round\"/><path d=\"M566 416 Q622 432 664 486\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"4\" opacity=\"0.40\" stroke-linecap=\"round\"/><path d=\"M470 392 Q540 372 610 396\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"4\" opacity=\"0.35\" stroke-linecap=\"round\"/>",
+      "highlight": "<path d=\"M430 448 Q500 404 574 410 Q512 424 456 466 Z\" fill=\"{hair_highlight}\" opacity=\"0.35\"/>",
+      "hairline_shadow": "<path d=\"M402 505 Q470 470 540 468 Q610 470 678 505 Q610 490 540 490 Q470 490 402 505 Z\" fill=\"{skin_shadow}\" opacity=\"0.45\"/>"
+    },
+    "outfit": {
+      "collar": "<path d=\"M500 812 L540 870 L580 812 L560 800 Q540 818 520 800 Z\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/>",
+      "placket": "<path d=\"M540 880 L540 1210\" fill=\"none\" stroke=\"{cloth_shadow}\" stroke-width=\"4\" stroke-dasharray=\"10 8\" opacity=\"0.60\"/><circle cx=\"540\" cy=\"930\" r=\"6\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"4\"/><circle cx=\"540\" cy=\"990\" r=\"6\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"4\"/><circle cx=\"540\" cy=\"1050\" r=\"6\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"4\"/>",
+      "folds": "<path d=\"M472 902 Q540 932 608 902\" fill=\"none\" stroke=\"{cloth_shadow}\" stroke-width=\"4\" opacity=\"0.45\" stroke-linecap=\"round\"/><path d=\"M464 1010 Q540 1044 616 1010\" fill=\"none\" stroke=\"{cloth_shadow}\" stroke-width=\"4\" opacity=\"0.45\" stroke-linecap=\"round\"/><path d=\"M458 1120 Q540 1156 622 1120\" fill=\"none\" stroke=\"{cloth_shadow}\" stroke-width=\"4\" opacity=\"0.45\" stroke-linecap=\"round\"/><path d=\"M470 1200 Q540 1228 610 1200\" fill=\"none\" stroke=\"{cloth_shadow}\" stroke-width=\"4\" opacity=\"0.45\" stroke-linecap=\"round\"/>",
+      "belt": "<rect x=\"445\" y=\"1188\" width=\"190\" height=\"28\" rx=\"10\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"10\"/><rect x=\"524\" y=\"1192\" width=\"32\" height=\"20\" rx=\"6\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"4\"/>",
+      "cuff": "<rect x=\"-28\" y=\"-9\" width=\"56\" height=\"18\" rx=\"8\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/>"
+    },
+    "body": {
+      "shoes": {
+        "body-slim": "<path d=\"M470 1598 Q466 1652 500 1656 L530 1656 Q540 1628 534 1598 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M546 1598 Q540 1628 550 1656 L580 1656 Q614 1652 610 1598 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M468 1650 L534 1650\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/><path d=\"M546 1650 L612 1650\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/>",
+        "body-average": "<path d=\"M450 1604 Q446 1658 482 1662 L532 1662 Q542 1634 536 1604 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M544 1604 Q538 1634 548 1662 L598 1662 Q634 1658 630 1604 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M448 1656 L536 1656\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/><path d=\"M544 1656 L632 1656\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/>",
+        "body-sturdy": "<path d=\"M438 1610 Q434 1664 472 1670 L532 1670 Q544 1640 536 1610 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M544 1610 Q536 1640 548 1670 L608 1670 Q646 1664 642 1610 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M436 1664 L536 1664\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/><path d=\"M544 1664 L644 1664\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/>",
+        "body-tall": "<path d=\"M455 1658 Q451 1712 488 1718 L532 1718 Q542 1690 536 1658 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M544 1658 Q538 1690 548 1718 L592 1718 Q629 1712 625 1658 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M453 1712 L536 1712\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/><path d=\"M544 1712 L627 1712\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/>",
+        "body-petite": "<path d=\"M468 1562 Q464 1616 498 1622 L530 1622 Q538 1594 532 1562 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M548 1562 Q542 1594 550 1622 L582 1622 Q616 1616 612 1562 Z\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M466 1616 L532 1616\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/><path d=\"M548 1616 L614 1616\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.45\"/>"
+      },
+      "ground_shadow": {
+        "body-slim": "<ellipse cx=\"540\" cy=\"1670\" rx=\"170\" ry=\"26\" fill=\"{outline}\" opacity=\"0.12\"/>",
+        "body-average": "<ellipse cx=\"540\" cy=\"1676\" rx=\"190\" ry=\"27\" fill=\"{outline}\" opacity=\"0.12\"/>",
+        "body-sturdy": "<ellipse cx=\"540\" cy=\"1684\" rx=\"210\" ry=\"28\" fill=\"{outline}\" opacity=\"0.12\"/>",
+        "body-tall": "<ellipse cx=\"540\" cy=\"1734\" rx=\"175\" ry=\"26\" fill=\"{outline}\" opacity=\"0.12\"/>",
+        "body-petite": "<ellipse cx=\"540\" cy=\"1636\" rx=\"150\" ry=\"24\" fill=\"{outline}\" opacity=\"0.12\"/>"
+      }
+    },
+    "hands": {
+      "open": "<path d=\"M-22 -4 Q-30 -2 -30 8 L-30 20 Q-30 30 -20 30 L20 30 Q30 30 30 20 L30 8 Q30 -2 22 -4 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><rect x=\"-19\" y=\"26\" width=\"9\" height=\"26\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"-6\" y=\"28\" width=\"9\" height=\"30\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"7\" y=\"27\" width=\"9\" height=\"27\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"18\" y=\"24\" width=\"8\" height=\"22\" rx=\"4\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><path d=\"M-28 4 Q-40 10 -36 24 Q-32 30 -26 24\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
+      "point": "<path d=\"M-22 -4 Q-30 -2 -30 8 L-30 20 Q-30 30 -20 30 L20 30 Q30 30 30 20 L30 8 Q30 -2 22 -4 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><rect x=\"10\" y=\"22\" width=\"10\" height=\"38\" rx=\"5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"-18\" y=\"24\" width=\"9\" height=\"14\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"-6\" y=\"26\" width=\"9\" height=\"16\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"4\" y=\"24\" width=\"8\" height=\"13\" rx=\"4\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><path d=\"M-28 4 Q-40 10 -36 24 Q-32 30 -26 24\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
+      "hold": "<path d=\"M-22 -4 Q-30 -2 -30 8 L-30 20 Q-30 30 -20 30 L20 30 Q30 30 30 20 L30 8 Q30 -2 22 -4 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><rect x=\"-18\" y=\"22\" width=\"36\" height=\"14\" rx=\"6\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><path d=\"M-28 4 Q-40 10 -36 24 Q-32 30 -26 24\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/><rect x=\"-16\" y=\"30\" width=\"32\" height=\"46\" rx=\"6\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"-11\" y=\"35\" width=\"22\" height=\"34\" rx=\"3\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"4\"/><circle cx=\"0\" cy=\"73\" r=\"3\" fill=\"{light}\"/>"
+    }
+  }
 }

@@ -56,10 +56,13 @@
     "character": "assets\\characters\\creator-01\\character.json",
     "layered_svg": "assets\\characters\\creator-01\\layered.svg",
     "preview_png": "assets\\characters\\creator-01\\preview.png",
-    "preview_sheet_png": "assets\\characters\\creator-01\\preview-sheet.png"
+    "preview_sheet_png": "assets\\characters\\creator-01\\preview-sheet.png",
+    "compare_png": "assets\\characters\\creator-01\\compare.png",
+    "detail_level": "rich"
   },
   "locked": true,
   "criteria": {
+    "detail_level": "rich",
     "head_to_body": 0.276,
     "min_contrast": 3.0,
     "contrast": 12.78,
@@ -75,7 +78,35 @@
       "brows",
       "eyes",
       "mouth",
-      "accessory"
+      "accessory",
+      "ears",
+      "jaw_shadow",
+      "hairline_shadow",
+      "hair_strands",
+      "hair_highlight",
+      "brow_detail",
+      "iris",
+      "pupils",
+      "eye_highlights",
+      "eyelids",
+      "lashes",
+      "nose",
+      "blush",
+      "ground_shadow",
+      "shoes",
+      "folds",
+      "belt",
+      "collar",
+      "placket",
+      "cuffs",
+      "hands"
+    ],
+    "svg_bytes": 11614,
+    "max_svg_bytes": 204800,
+    "stroke_widths": [
+      4.0,
+      10.0,
+      44.0
     ]
   }
 }

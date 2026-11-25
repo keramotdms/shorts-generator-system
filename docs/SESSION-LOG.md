@@ -4,6 +4,24 @@ One entry per work session. Newest entry goes at the top.
 
 Backfilled from `git log` on 2026-11-24 using these known facts: **Home = toolchain setup (`fb84b29`)**, **Office = everything else**. No commit needed `PC: Unknown`.
 
+## 2026-11-25 | PC: Office | commit: 93d571061d5707d05c0ff4449421636d8d540958
+
+### What was done
+
+- Pulled `origin/main` (already at `93d5710`) before editing; no tools or packages were installed.
+- Added `detail_level` (`basic`/`standard`/`rich`) to the character schema, contract, fixture and `creator-01`; rich is the default and the locked design keeps its role, palette and proportions.
+- Extended `assets/character-parts/parts.json` with a version-2 `detail` library (face, hair, outfit, body, hands) and rewrote `scripts/character_designer.py` for 31 rich layers, 4 deterministic linear gradients, hand poses, a fixed 10/4/44 stroke scale and a 200 KB SVG / 5 s render guard.
+- Made all five expressions change brows, eyelids, mouth and cheeks together, kept the closed/open/wide/smile mouth set, and added `assets/characters/creator-01/compare.png` (basic vs rich, 5 expressions).
+- Updated SKILL.md, `docs/OUTPUT-FORMATS.md`, `health_check.py` required files and the self-test; health check is `76 PASS | 0 WARN | 0 BLOCKED | 2 INFO | 0 FAIL` and all format, chain, no-template and smoke checks pass.
+
+### What is pending
+
+- Nothing from this character-detail task; the user still needs to review `compare.png` and approve the look.
+
+### Next step
+
+- Commit, push, confirm `main == origin/main`, then wait for OK before the next skill.
+
 ## 2026-11-24 | PC: Office | commit: 51e2ca8ef004b8007ee244cae2b6eee71d02e0d1
 
 ### What was done

@@ -47,5 +47,6 @@
   "expressions": ["neutral", "happy", "worried", "surprised", "thinking"],
   "poses": ["idle", "wave", "point"],
   "mouth_shapes": ["closed", "open", "wide", "smile"],
+  "detail_level": "rich",
   "locked": true
 }

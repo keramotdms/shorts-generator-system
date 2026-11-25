@@ -16,8 +16,10 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import shutil
 import sys
+import time
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -30,10 +32,28 @@ PARTS_PATH = ROOT / "assets" / "character-parts" / "parts.json"
 CHARACTERS_DIR = ROOT / "assets" / "characters"
 EXPRESSIONS = ["neutral", "happy", "worried", "surprised", "thinking"]
 POSES = ["idle", "wave", "point"]
-LAYER_IDS = [
+DETAIL_LEVELS = ("basic", "standard", "rich")
+DEFAULT_DETAIL_LEVEL = "rich"
+BASE_LAYER_IDS = [
     "body", "outfit", "arms", "neck", "head", "hair",
     "brows", "eyes", "mouth", "accessory",
 ]
+STANDARD_LAYER_IDS = [
+    "ears", "jaw_shadow", "hairline_shadow", "hair_strands", "hair_highlight",
+    "brow_detail", "iris", "pupils", "eye_highlights", "eyelids", "lashes",
+    "nose", "blush",
+]
+RICH_LAYER_IDS = [
+    "ground_shadow", "shoes", "folds", "belt", "collar", "placket", "cuffs",
+    "hands",
+]
+OUTLINE_WIDTH = 10
+DETAIL_WIDTH = 4
+ARM_WIDTH = 44
+ALLOWED_STROKE_WIDTHS = {float(OUTLINE_WIDTH), float(DETAIL_WIDTH), float(ARM_WIDTH)}
+MAX_SVG_BYTES = 200 * 1024
+MAX_RENDER_SECONDS = 5.0
+BASE_NECK = '<rect x="505" y="712" width="70" height="118" rx="26" fill="{skin}" stroke="{outline}" stroke-width="10"/>'
 MIN_CONTRAST = 3.0
 MIN_PALETTE_COLORS = 3
 MIN_RATIO = 0.18
@@ -197,6 +217,80 @@ def _pick(values: list[str], index: int) -> str:
     return values[(index - 1) % len(values)]
 
 
+def _hex_rgb(color: str) -> tuple[int, int, int]:
+    value = color.lstrip("#")
+    if len(value) != 6:
+        return (0, 0, 0)
+    return tuple(int(value[index:index + 2], 16) for index in (0, 2, 4))  # type: ignore[return-value]
+
+
+def mix_color(first: str, second: str, amount: float) -> str:
+    """Deterministic linear mix; amount 0 keeps first, 1 returns second."""
+    ratio = max(0.0, min(1.0, float(amount)))
+    a = _hex_rgb(first)
+    b = _hex_rgb(second)
+    return "#" + "".join(f"{round(a[index] + (b[index] - a[index]) * ratio):02X}" for index in range(3))
+
+
+def gradient_ids(design: dict[str, Any]) -> dict[str, str]:
+    slug = re.sub(r"[^a-z0-9-]+", "-", str(design.get("id") or "character").lower()).strip("-")
+    slug = slug or "character"
+    return {kind: f"grad-{kind}-{slug}" for kind in ("skin", "hair", "outfit", "iris")}
+
+
+def gradient_defs(design: dict[str, Any]) -> str:
+    """Linear gradients with a fixed top-left light direction; no random values."""
+    ids = gradient_ids(design)
+    parts = design["parts"]
+    eye = str(parts.get("eye_color") or parts["outline"])
+
+    def gradient(identifier: str, base: str, light: float, dark: float) -> str:
+        return (
+            f'<linearGradient id="{identifier}" x1="0" y1="0" x2="0.65" y2="1">'
+            f'<stop offset="0%" stop-color="{mix_color(base, "#FFFFFF", light)}"/>'
+            f'<stop offset="55%" stop-color="{base}"/>'
+            f'<stop offset="100%" stop-color="{mix_color(base, "#000000", dark)}"/>'
+            "</linearGradient>"
+        )
+
+    return (
+        "<defs>"
+        + gradient(ids["skin"], str(parts["skin"]), 0.18, 0.12)
+        + gradient(ids["hair"], str(parts["hair_color"]), 0.22, 0.10)
+        + gradient(ids["outfit"], str(parts["outfit_color"]), 0.16, 0.14)
+        + gradient(ids["iris"], eye, 0.35, 0.0)
+        + "</defs>"
+    )
+
+
+def detail_level_of(design: dict[str, Any], override: str | None = None) -> str:
+    value = str(override if override is not None else design.get("detail_level") or "basic").strip().lower()
+    return value if value in DETAIL_LEVELS else "basic"
+
+
+def normalize_strokes(markup: str) -> str:
+    """Map every stroke width to the documented scale: 10 outline, 4 detail.
+
+    Exactly two widths survive, so a detail render is visually consistent and
+    the self-test can assert the whole document uses only the documented scale.
+    """
+    def replace(match: re.Match[str]) -> str:
+        value = float(match.group(1))
+        width = OUTLINE_WIDTH if value >= 8 else DETAIL_WIDTH
+        return f'stroke-width="{width}"'
+
+    return re.sub(r'stroke-width="([0-9.]+)"', replace, markup)
+
+
+def required_layer_ids(level: str) -> list[str]:
+    ids = list(BASE_LAYER_IDS)
+    if level in {"standard", "rich"}:
+        ids += STANDARD_LAYER_IDS
+    if level == "rich":
+        ids += RICH_LAYER_IDS
+    return ids
+
+
 def _head_for(age: int, variant: int) -> str:
     if age < 25:
         choices = ["head-round", "head-oval", "head-heart"]
@@ -259,7 +353,13 @@ def _unique(values: list[str]) -> list[str]:
     return result
 
 
-def build_design(brief: dict[str, Any], style: dict[str, Any], parts: dict[str, Any], variant: int) -> dict[str, Any]:
+def build_design(
+    brief: dict[str, Any],
+    style: dict[str, Any],
+    parts: dict[str, Any],
+    variant: int,
+    detail_level: str = DEFAULT_DETAIL_LEVEL,
+) -> dict[str, Any]:
     colors = style_colors(style, parts)
     skins = skin_palette(style, parts, colors["outline"])
     skin = _pick(skins, variant)
@@ -340,6 +440,7 @@ def build_design(brief: dict[str, Any], style: dict[str, Any], parts: dict[str, 
         "expressions": list(EXPRESSIONS),
         "poses": list(POSES),
         "mouth_shapes": ["closed", "open", "wide", "smile"],
+        "detail_level": detail_level if detail_level in DETAIL_LEVELS else DEFAULT_DETAIL_LEVEL,
         "locked": False,
     }
     design["fit_score"] = _fit_score(design)
@@ -369,15 +470,20 @@ def signature(design: dict[str, Any]) -> str:
     return "|".join(str(design["parts"][key]) for key in keys)
 
 
-def build_designs(brief: dict[str, Any], style: dict[str, Any], parts: dict[str, Any]) -> list[dict[str, Any]]:
+def build_designs(
+    brief: dict[str, Any],
+    style: dict[str, Any],
+    parts: dict[str, Any],
+    detail_level: str = DEFAULT_DETAIL_LEVEL,
+) -> list[dict[str, Any]]:
     designs: list[dict[str, Any]] = []
     seen: set[str] = set()
     for variant in (1, 2, 3):
-        design = build_design(brief, style, parts, variant)
+        design = build_design(brief, style, parts, variant, detail_level)
         attempts = 0
         while signature(design) in seen and attempts < 8:
             variant = variant + 3
-            design = build_design(brief, style, parts, variant)
+            design = build_design(brief, style, parts, variant, detail_level)
             attempts += 1
         seen.add(signature(design))
         designs.append(design)
@@ -390,17 +496,50 @@ def choose_design(designs: Iterable[dict[str, Any]]) -> dict[str, Any]:
     return sorted(designs, key=lambda item: (-int(item.get("fit_score", 0)), item["id"]))[0]
 
 
-def resolve(markup: str, design: dict[str, Any]) -> str:
+def resolve(markup: str, design: dict[str, Any], detail_level: str = "basic") -> str:
     parts = design["parts"]
-    replacements = {
-        "{skin}": str(parts["skin"]),
-        "{outline}": str(parts["outline"]),
-        "{hair}": str(parts["hair_color"]),
-        "{outfit}": str(parts["outfit_color"]),
-        "{accent}": str(parts["accent"]),
-        "{light}": str(parts["light"]),
-        "{eye}": str(parts.get("eye_color") or parts["outline"]),
+    level = detail_level_of(design, detail_level)
+    skin = str(parts["skin"])
+    outline = str(parts["outline"])
+    hair = str(parts["hair_color"])
+    outfit = str(parts["outfit_color"])
+    accent = str(parts["accent"])
+    light = str(parts["light"])
+    eye = str(parts.get("eye_color") or outline)
+    extras = {
+        "{iris}": eye,
+        "{skin_shadow}": mix_color(skin, outline, 0.22),
+        "{blush}": mix_color(skin, accent, 0.35),
+        "{hair_highlight}": mix_color(hair, light, 0.30),
+        "{cloth_shadow}": mix_color(outfit, outline, 0.22),
     }
+    if level == "basic":
+        replacements = {
+            "{skin}": skin,
+            "{outline}": outline,
+            "{hair}": hair,
+            "{outfit}": outfit,
+            "{accent}": accent,
+            "{light}": light,
+            "{eye}": eye,
+            **extras,
+        }
+    else:
+        ids = gradient_ids(design)
+        replacements = {
+            "{skin}": f"url(#{ids['skin']})",
+            "{outline}": outline,
+            "{hair}": f"url(#{ids['hair']})",
+            "{outfit}": f"url(#{ids['outfit']})",
+            "{accent}": accent,
+            "{light}": light,
+            "{eye}": eye,
+            "{iris}": f"url(#{ids['iris']})",
+            "{skin_shadow}": extras["{skin_shadow}"],
+            "{blush}": extras["{blush}"],
+            "{hair_highlight}": extras["{hair_highlight}"],
+            "{cloth_shadow}": extras["{cloth_shadow}"],
+        }
     for key, value in replacements.items():
         markup = markup.replace(key, value)
     return markup
@@ -413,34 +552,96 @@ def part_markup(parts: dict[str, Any], category: str, part_id: str) -> str:
         raise lib.SkillError(f"Unknown {category} part: {part_id}") from exc
 
 
-def arms_markup(design: dict[str, Any], pose: str) -> str:
+def wrist_positions(design: dict[str, Any], pose: str) -> tuple[tuple[int, int], tuple[int, int]]:
+    width = int(design["proportions"]["shoulder_width"])
+    left = 540 - width // 2
+    right = 540 + width // 2
+    left_pos = (left - 20, 1200)
+    if pose == "wave":
+        right_pos = (right + 92, 668)
+    elif pose == "point":
+        right_pos = (right + 260, 810)
+    elif pose == "think":
+        right_pos = (right + 62, 720)
+    else:
+        right_pos = (right + 20, 1200)
+    return left_pos, right_pos
+
+
+def arms_markup(design: dict[str, Any], pose: str, *, with_hands: bool = True) -> str:
     parts = design["parts"]
     skin = parts["skin"]
     outline = parts["outline"]
     width = int(design["proportions"]["shoulder_width"])
     left = 540 - width // 2
     right = 540 + width // 2
-    common = f'fill="none" stroke="{skin}" stroke-width="44" stroke-linecap="round"'
-    edge = f'fill="none" stroke="{outline}" stroke-width="8" stroke-linecap="round"'
-    idle_left = f'<path d="M{left} 870 Q{left - 50} 1040 {left - 20} 1190" {common}/><path d="M{left} 870 Q{left - 50} 1040 {left - 20} 1190" {edge}/><circle cx="{left - 20}" cy="1200" r="25" fill="{skin}" stroke="{outline}" stroke-width="8"/>'
-    idle_right = f'<path d="M{right} 870 Q{right + 50} 1040 {right + 20} 1190" {common}/><path d="M{right} 870 Q{right + 50} 1040 {right + 20} 1190" {edge}/><circle cx="{right + 20}" cy="1200" r="25" fill="{skin}" stroke="{outline}" stroke-width="8"/>'
+    common = f'fill="none" stroke="{skin}" stroke-width="{ARM_WIDTH}" stroke-linecap="round"'
+    edge = f'fill="none" stroke="{outline}" stroke-width="{OUTLINE_WIDTH}" stroke-linecap="round"'
+    left_path = f'<path d="M{left} 870 Q{left - 50} 1040 {left - 20} 1190" {common}/><path d="M{left} 870 Q{left - 50} 1040 {left - 20} 1190" {edge}/>'
+    idle_right_path = f'<path d="M{right} 870 Q{right + 50} 1040 {right + 20} 1190" {common}/><path d="M{right} 870 Q{right + 50} 1040 {right + 20} 1190" {edge}/>'
+    if with_hands:
+        left_hand = f'<circle cx="{left - 20}" cy="1200" r="25" fill="{skin}" stroke="{outline}" stroke-width="{DETAIL_WIDTH}"/>'
+        idle_right_hand = f'<circle cx="{right + 20}" cy="1200" r="25" fill="{skin}" stroke="{outline}" stroke-width="{DETAIL_WIDTH}"/>'
+    else:
+        left_hand = ""
+        idle_right_hand = ""
     if pose == "wave":
         arm = f'<path d="M{right} 870 Q{right + 120} 800 {right + 90} 680" {common}/><path d="M{right} 870 Q{right + 120} 800 {right + 90} 680" {edge}/>'
-        hand = f'<circle cx="{right + 92}" cy="668" r="29" fill="{skin}" stroke="{outline}" stroke-width="8"/>'
-        return idle_left + arm + hand
+        hand = f'<circle cx="{right + 92}" cy="668" r="29" fill="{skin}" stroke="{outline}" stroke-width="{DETAIL_WIDTH}"/>' if with_hands else ""
+        return left_path + left_hand + arm + hand
     if pose == "point":
         arm = f'<path d="M{right} 870 Q{right + 150} 880 {right + 250} 820" {common}/><path d="M{right} 870 Q{right + 150} 880 {right + 250} 820" {edge}/>'
-        hand = f'<circle cx="{right + 260}" cy="810" r="28" fill="{skin}" stroke="{outline}" stroke-width="8"/>'
-        return idle_left + arm + hand
+        hand = f'<circle cx="{right + 260}" cy="810" r="28" fill="{skin}" stroke="{outline}" stroke-width="{DETAIL_WIDTH}"/>' if with_hands else ""
+        return left_path + left_hand + arm + hand
     if pose == "think":
         arm = f'<path d="M{right} 870 Q{right + 95} 800 {right + 65} 730" {common}/><path d="M{right} 870 Q{right + 95} 800 {right + 65} 730" {edge}/>'
-        hand = f'<circle cx="{right + 62}" cy="720" r="27" fill="{skin}" stroke="{outline}" stroke-width="8"/>'
-        return idle_left + arm + hand
-    return idle_left + idle_right
+        hand = f'<circle cx="{right + 62}" cy="720" r="27" fill="{skin}" stroke="{outline}" stroke-width="{DETAIL_WIDTH}"/>' if with_hands else ""
+        return left_path + left_hand + arm + hand
+    return left_path + left_hand + idle_right_path + idle_right_hand
 
 
-def layers(design: dict[str, Any], expression: str, pose: str, *, prefix: str = "") -> list[tuple[str, str]]:
+def hands_markup(design: dict[str, Any], pose: str) -> str:
+    hands = load_parts()["detail"]["hands"]
+    left_pos, right_pos = wrist_positions(design, pose)
+    left = f'<g transform="translate({left_pos[0]},{left_pos[1]})">{hands["open"]}</g>'
+    if pose == "point":
+        template, rotation = hands["point"], -90
+    elif pose == "think":
+        template, rotation = hands["hold"], 0
+    elif pose == "wave":
+        template, rotation = hands["open"], -15
+    else:
+        template, rotation = hands["open"], 0
+    right = (
+        f'<g transform="translate({right_pos[0]},{right_pos[1]}) rotate({rotation}) scale(-1,1)">'
+        f"{template}</g>"
+    )
+    return left + right
+
+
+def cuffs_markup(design: dict[str, Any], pose: str) -> str:
+    cuff = load_parts()["detail"]["outfit"]["cuff"]
+    left_pos, right_pos = wrist_positions(design, pose)
+    rotation = {"wave": -15, "point": -90}.get(pose, 0)
+    return (
+        f'<g transform="translate({left_pos[0]},{left_pos[1] - 4})">{cuff}</g>'
+        f'<g transform="translate({right_pos[0]},{right_pos[1] - 4}) rotate({rotation})">{cuff}</g>'
+    )
+
+
+def layers(
+    design: dict[str, Any],
+    expression: str,
+    pose: str,
+    *,
+    prefix: str = "",
+    detail_level: str | None = None,
+) -> list[tuple[str, str]]:
     parts = load_parts()
+    detail = parts.get("detail", {})
+    level = detail_level_of(design, detail_level)
+    detailed = level in {"standard", "rich"}
+    full = level == "rich"
     parts_data = design["parts"]
     expression = {
         "smile": "happy", "smiling": "happy", "shock": "surprised",
@@ -450,58 +651,143 @@ def layers(design: dict[str, Any], expression: str, pose: str, *, prefix: str = 
     pose = pose if pose in POSES or pose == "think" else "idle"
     expression_map = parts.get("expressions", {}).get(expression, {})
 
-    eyes = expression_map.get("eyes") or parts_data["eyes"]
-    brows = expression_map.get("brows") or parts_data["brows"]
-    mouth = expression_map.get("mouth") or parts_data["mouth"]
+    def group(name: str) -> dict[str, Any]:
+        value = detail.get(name, {})
+        return value if isinstance(value, dict) else {}
 
-    raw: list[tuple[str, str]] = [
-        ("body", part_markup(parts, "bodies", parts_data["body"])),
-        ("outfit", part_markup(parts, "outfits", parts_data["outfit"])),
-        ("arms", arms_markup(design, pose)),
-        ("neck", '<rect x="505" y="712" width="70" height="118" rx="26" fill="{skin}" stroke="{outline}" stroke-width="10"/>'),
-        ("head", part_markup(parts, "heads", parts_data["head"])),
-        ("hair", part_markup(parts, "hairs", parts_data["hair"])),
-        ("brows", part_markup(parts, "brows", brows)),
-        ("eyes", part_markup(parts, "eyes", eyes)),
-        ("mouth", part_markup(parts, "mouths", mouth)),
-        ("accessory", part_markup(parts, "accessories", parts_data["accessory"])),
-    ]
+    def detail_part(category: str, key: str) -> str:
+        return str(group(category).get(key, ""))
+
+    def detail_map(category: str, key: str, name: str) -> str:
+        value = group(category).get(key, {})
+        if isinstance(value, dict):
+            return str(value.get(name, ""))
+        return str(value or "")
+
+    raw: list[tuple[str, str]] = []
+    if full:
+        raw.append(("ground_shadow", detail_map("body", "ground_shadow", parts_data["body"])))
+    raw.append(("body", part_markup(parts, "bodies", parts_data["body"])))
+    if full:
+        raw.append(("shoes", detail_map("body", "shoes", parts_data["body"])))
+    raw.append(("outfit", part_markup(parts, "outfits", parts_data["outfit"])))
+    if full:
+        raw.extend([
+            ("folds", detail_part("outfit", "folds")),
+            ("belt", detail_part("outfit", "belt")),
+            ("collar", detail_part("outfit", "collar")),
+            ("placket", detail_part("outfit", "placket")),
+        ])
+    raw.append(("arms", arms_markup(design, pose, with_hands=not full)))
+    if full:
+        raw.append(("cuffs", cuffs_markup(design, pose)))
+        raw.append(("hands", hands_markup(design, pose)))
+    raw.append(("neck", detail_part("face", "neck") if detailed else BASE_NECK))
+    raw.append(("head", part_markup(parts, "heads", parts_data["head"])))
+    if detailed:
+        raw.extend([
+            ("ears", detail_part("face", "ears")),
+            ("jaw_shadow", detail_part("face", "jaw_shadow")),
+            ("hairline_shadow", detail_part("hair", "hairline_shadow")),
+        ])
+    raw.append(("hair", part_markup(parts, "hairs", parts_data["hair"])))
+    if detailed:
+        raw.extend([
+            ("hair_strands", detail_part("hair", "strands")),
+            ("hair_highlight", detail_part("hair", "highlight")),
+        ])
+    if detailed:
+        raw.append(("brows", detail_map("face", "brows", expression)))
+        raw.append(("brow_detail", detail_part("face", "brow_detail")))
+    else:
+        brows = expression_map.get("brows") or parts_data["brows"]
+        raw.append(("brows", part_markup(parts, "brows", brows)))
+    if detailed:
+        raw.extend([
+            ("eyes", detail_part("face", "eyes_base")),
+            ("iris", detail_part("face", "iris")),
+            ("pupils", detail_part("face", "pupils")),
+            ("eye_highlights", detail_part("face", "eye_highlights")),
+            ("eyelids", detail_map("face", "eyelids", expression)),
+            ("lashes", detail_map("face", "lashes", expression)),
+        ])
+    else:
+        eyes = expression_map.get("eyes") or parts_data["eyes"]
+        raw.append(("eyes", part_markup(parts, "eyes", eyes)))
+    if detailed:
+        raw.append(("nose", detail_part("face", "nose")))
+        raw.append(("blush", detail_map("face", "blush", expression)))
+        raw.append(("mouth", detail_map("face", "mouths", expression)))
+    else:
+        mouth = expression_map.get("mouth") or parts_data["mouth"]
+        raw.append(("mouth", part_markup(parts, "mouths", mouth)))
+    raw.append(("accessory", part_markup(parts, "accessories", parts_data["accessory"])))
     return [
-        (f"{prefix}{layer_id}", resolve(markup, design))
+        (
+            f"{prefix}{layer_id}",
+            resolve(normalize_strokes(markup) if detailed else markup, design, level),
+        )
         for layer_id, markup in raw
     ]
 
 
-def character_markup(design: dict[str, Any], expression: str, pose: str) -> str:
+def character_markup(
+    design: dict[str, Any],
+    expression: str,
+    pose: str,
+    *,
+    detail_level: str | None = None,
+) -> str:
+    level = detail_level_of(design, detail_level)
+    defs = ""
+    if level in {"standard", "rich"}:
+        defs = "  " + gradient_defs(design) + "\n"
     body = "\n".join(
         f'  <g id="{layer_id}">{markup}</g>'
-        for layer_id, markup in layers(design, expression, pose)
+        for layer_id, markup in layers(design, expression, pose, detail_level=level)
     )
-    return f'  <g id="character">\n{body}\n  </g>'
+    return f'  <g id="character">\n{defs}{body}\n  </g>'
 
 
-def layered_svg(design: dict[str, Any], expression: str = "neutral", pose: str = "idle") -> str:
+def layered_svg(
+    design: dict[str, Any],
+    expression: str = "neutral",
+    pose: str = "idle",
+    *,
+    detail_level: str | None = None,
+) -> str:
     import svg_scene_builder
 
-    return svg_scene_builder.wrap_svg(character_markup(design, expression, pose))
+    return svg_scene_builder.wrap_svg(
+        character_markup(design, expression, pose, detail_level=detail_level)
+    )
 
 
-def preview_svg(design: dict[str, Any], expression: str = "neutral", pose: str = "idle") -> str:
+def preview_svg(
+    design: dict[str, Any],
+    expression: str = "neutral",
+    pose: str = "idle",
+    *,
+    detail_level: str | None = None,
+) -> str:
     import svg_scene_builder
 
     light = design["parts"]["light"]
     return svg_scene_builder.wrap_svg(
         f'  <g id="preview-background"><rect width="1080" height="1920" fill="{light}"/></g>\n'
-        + character_markup(design, expression, pose)
+        + character_markup(design, expression, pose, detail_level=detail_level)
     )
 
 
-def preview_sheet_svg(design: dict[str, Any]) -> str:
+def preview_sheet_svg(design: dict[str, Any], *, detail_level: str | None = None) -> str:
     import svg_scene_builder
 
+    level = detail_level_of(design, detail_level)
     light = design["parts"]["light"]
     outline = design["parts"]["outline"]
     tiles: list[str] = [f'  <g id="sheet-background"><rect width="1080" height="1920" fill="{light}"/></g>']
+    if level in {"standard", "rich"}:
+        tiles.append("  " + gradient_defs(design))
     index = 0
     for expression in EXPRESSIONS:
         for pose in POSES:
@@ -511,12 +797,47 @@ def preview_sheet_svg(design: dict[str, Any]) -> str:
             tiles.append(f'  <g id="tile-{index:02d}">')
             tiles.append(f'    <rect x="{x}" y="{y}" width="360" height="384" fill="{light}" stroke="{outline}" stroke-width="4"/>')
             tiles.append(f'    <g transform="translate({x + 77},{y + 2}) scale(0.19)">')
-            for layer_id, markup in layers(design, expression, pose, prefix=f"t{index:02d}-"):
+            for layer_id, markup in layers(
+                design, expression, pose, prefix=f"t{index:02d}-", detail_level=level
+            ):
                 tiles.append(f'      <g id="{layer_id}">{markup}</g>')
             tiles.append("    </g>")
             tiles.append(
                 f'    <text x="{x + 10}" y="{y + 374}" font-family="sans-serif" font-size="14" '
                 f'fill="{outline}">{expression}/{pose}</text>'
+            )
+            tiles.append("  </g>")
+    return svg_scene_builder.wrap_svg("\n".join(tiles))
+
+
+def compare_svg(design: dict[str, Any]) -> str:
+    """Basic vs rich, five expressions, in one deterministic 1080x1920 sheet."""
+    import svg_scene_builder
+
+    light = design["parts"]["light"]
+    outline = design["parts"]["outline"]
+    tiles: list[str] = [f'  <g id="compare-background"><rect width="1080" height="1920" fill="{light}"/></g>']
+    tiles.append("  " + gradient_defs(design))
+    for row, expression in enumerate(EXPRESSIONS):
+        for column, level in enumerate(("basic", "rich")):
+            x, y = column * 540, row * 384
+            tiles.append(f'  <g id="compare-{level}-{expression}">')
+            tiles.append(
+                f'    <rect x="{x}" y="{y}" width="540" height="384" fill="{light}" '
+                f'stroke="{outline}" stroke-width="4"/>'
+            )
+            tiles.append(f'    <g transform="translate({x + 167},{y + 2}) scale(0.19)">')
+            for layer_id, markup in layers(
+                design, expression, "idle", prefix=f"{level[0]}{row:02d}-", detail_level=level
+            ):
+                tiles.append(f'      <g id="{layer_id}">{markup}</g>')
+            tiles.append("    </g>")
+            tiles.append(
+                f'    <rect x="{x}" y="{y + 350}" width="540" height="34" fill="{outline}" opacity="0.78"/>'
+            )
+            tiles.append(
+                f'    <text x="{x + 12}" y="{y + 374}" font-family="sans-serif" font-size="20" '
+                f'fill="{light}">{level} / {expression}</text>'
             )
             tiles.append("  </g>")
     return svg_scene_builder.wrap_svg("\n".join(tiles))
@@ -531,6 +852,7 @@ def write_design(
     directory: Path,
     *,
     include_sheet: bool = False,
+    include_compare: bool = False,
     render: bool = True,
 ) -> dict[str, Path]:
     import svg_scene_builder
@@ -553,6 +875,13 @@ def write_design(
         if render:
             svg_scene_builder.svg_to_png(sheet_svg, sheet_png)
             paths["sheet"] = sheet_png
+    if include_compare:
+        compare_source = directory / "compare.svg"
+        svg_scene_builder.write_svg(compare_source, compare_svg(design))
+        compare_png = directory / "compare.png"
+        if render:
+            svg_scene_builder.svg_to_png(compare_source, compare_png)
+            paths["compare"] = compare_png
     return paths
 
 
@@ -607,15 +936,44 @@ def check_character(path: Path, *, require_png: bool = True) -> dict[str, Any]:
     if not MIN_RATIO <= ratio <= MAX_RATIO:
         raise lib.SkillError(f"head-to-body ratio {ratio} outside {MIN_RATIO}-{MAX_RATIO}")
 
-    tree = ElementTree.fromstring(layered_svg(design))
+    level = detail_level_of(design)
+    required = required_layer_ids(level)
+    svg_text = layered_svg(design)
+    tree = ElementTree.fromstring(svg_text)
     ids = {element.get("id") for element in tree.iter() if element.get("id")}
-    missing = [layer_id for layer_id in LAYER_IDS if layer_id not in ids]
+    missing = [layer_id for layer_id in required if layer_id not in ids]
     if missing:
         raise lib.SkillError("missing layer id(s): " + ", ".join(missing))
 
+    if len(svg_text.encode("utf-8")) > MAX_SVG_BYTES:
+        raise lib.SkillError(
+            f"layered SVG is {len(svg_text.encode('utf-8'))} bytes, over the {MAX_SVG_BYTES} byte limit"
+        )
+
+    if level in {"standard", "rich"}:
+        expected_gradients = set(gradient_ids(design).values())
+        found_gradients = {
+            str(element.get("id")) for element in tree.iter()
+            if element.tag.lower().endswith("lineargradient")
+        }
+        missing_gradients = sorted(expected_gradients - found_gradients)
+        if missing_gradients:
+            raise lib.SkillError("missing gradient def(s): " + ", ".join(missing_gradients))
+        widths = {
+            float(element.get("stroke-width"))
+            for element in tree.iter() if element.get("stroke-width")
+        }
+        unexpected = sorted(widths - ALLOWED_STROKE_WIDTHS)
+        if unexpected:
+            raise lib.SkillError(
+                "unexpected stroke width(s): "
+                + ", ".join(f"{value:g}" for value in unexpected)
+                + f"; expected only {sorted(ALLOWED_STROKE_WIDTHS)}"
+            )
+
     if require_png:
         directory = path.parent
-        for name in ("preview.png", "preview-sheet.png"):
+        for name in ("preview.png", "preview-sheet.png", "compare.png"):
             image = directory / name
             if image.is_file():
                 size = svg_scene_builder.png_size(image)
@@ -623,11 +981,26 @@ def check_character(path: Path, *, require_png: bool = True) -> dict[str, Any]:
                     raise lib.SkillError(f"{lib.relative(image)} is {size}, expected 1080x1920")
     return {
         "id": design["id"],
-        "layers": len(LAYER_IDS),
+        "detail_level": level,
+        "layers": len(required),
+        "svg_bytes": len(svg_text.encode("utf-8")),
         "palette_colors": len(palette),
         "contrast": round(contrast, 2),
         "head_to_body": ratio,
     }
+
+
+def write_legacy_views(design: dict[str, Any]) -> list[Path]:
+    """Regenerate the three legacy expression views from the locked design."""
+    import svg_scene_builder
+
+    outputs: list[Path] = []
+    for expression in ("neutral", "smile", "surprised"):
+        svg_path = CHARACTERS_DIR / f"{design['id']}-{expression}.svg"
+        svg_scene_builder.write_svg(svg_path, layered_svg(design, expression, "idle"))
+        png_path = svg_scene_builder.svg_to_png(svg_path, svg_path.with_suffix(".png"))
+        outputs.append(png_path)
+    return outputs
 
 
 def run(
@@ -636,11 +1009,12 @@ def run(
     report_path: Path | None = None,
     *,
     render: bool = True,
+    detail_level: str = DEFAULT_DETAIL_LEVEL,
 ) -> dict[str, Any]:
     brief = load_brief(brief_path)
     style = lib.load_style_bible()
     parts = load_parts()
-    designs = build_designs(brief, style, parts)
+    designs = build_designs(brief, style, parts, detail_level)
     out_root = out_root or CHARACTERS_DIR
     report_path = report_path or lib.stage(4, "character-design-set.json")
 
@@ -666,8 +1040,12 @@ def run(
     locked["name"] = brief["name"]
     locked["locked"] = True
     locked_dir = out_root / locked["id"]
-    locked_paths = write_design(locked, locked_dir, include_sheet=True, render=render)
+    locked_paths = write_design(
+        locked, locked_dir, include_sheet=True, include_compare=True, render=render
+    )
     checked = check_character(locked_paths["character"], require_png=render)
+    if render:
+        write_legacy_views(locked)
 
     report = {
         "project": lib.project_name(),
@@ -683,22 +1061,28 @@ def run(
             "layered_svg": lib.relative(locked_paths["layered"]),
             "preview_png": lib.relative(locked_paths.get("preview", locked_dir / "preview.png")),
             "preview_sheet_png": lib.relative(locked_paths.get("sheet", locked_dir / "preview-sheet.png")),
+            "compare_png": lib.relative(locked_paths.get("compare", locked_dir / "compare.png")),
+            "detail_level": checked["detail_level"],
         },
         "locked": True,
         "criteria": {
+            "detail_level": checked["detail_level"],
             "head_to_body": checked["head_to_body"],
             "min_contrast": MIN_CONTRAST,
             "contrast": checked["contrast"],
             "min_palette_colors": MIN_PALETTE_COLORS,
             "palette_colors": checked["palette_colors"],
-            "layers": LAYER_IDS,
+            "layers": required_layer_ids(checked["detail_level"]),
+            "svg_bytes": checked["svg_bytes"],
+            "max_svg_bytes": MAX_SVG_BYTES,
+            "stroke_widths": sorted(ALLOWED_STROKE_WIDTHS),
         },
     }
     lib.write_json(report_path, report)
     lib.ok(
         "character-designer",
-        f"3 candidates, locked {locked['id']} with {checked['layers']} layers "
-        f"(ratio {checked['head_to_body']}, contrast {checked['contrast']})",
+        f"3 candidates, locked {locked['id']} at {checked['detail_level']} detail with "
+        f"{checked['layers']} layers (ratio {checked['head_to_body']}, contrast {checked['contrast']})",
         locked_paths["character"],
     )
     print(f"OUTPUT {lib.relative(report_path)}")
@@ -759,23 +1143,58 @@ def self_test() -> int:
     designs = build_designs(load_brief(brief_path), style, parts)
     assert len(designs) == 3
     assert len({signature(design) for design in designs}) == 3
+    assert all(design["detail_level"] == "rich" for design in designs)
 
     for design in designs:
         paths = write_design(design, target / design["id"], render=True)
         checked = check_character(paths["character"])
-        assert checked["layers"] == len(LAYER_IDS), checked
+        assert checked["detail_level"] == "rich", checked
+        assert checked["layers"] == len(required_layer_ids("rich")), checked
+        assert checked["svg_bytes"] <= MAX_SVG_BYTES, checked
         assert checked["palette_colors"] >= MIN_PALETTE_COLORS, checked
         assert checked["contrast"] >= MIN_CONTRAST, checked
         assert MIN_RATIO <= checked["head_to_body"] <= MAX_RATIO, checked
 
     winner = choose_design(designs)
-    print(f"PASS character-designer: 3 distinct candidates, {len(LAYER_IDS)} layers each, schema valid")
+    print(
+        f"PASS character-designer: 3 distinct candidates, "
+        f"{len(required_layer_ids('rich'))} layers each, schema valid"
+    )
+
+    rich_svg = layered_svg(winner)
+    assert all(f'id="{identifier}"' in rich_svg for identifier in gradient_ids(winner).values())
+    assert rich_svg.count("<linearGradient") >= 4
+    print("PASS character-designer: 4 linear gradients and the 10/4/44 stroke scale are present")
 
     first, second = _render_twice(winner, target / "determinism")
     size = svg_scene_builder.png_size(first)
     assert size == (svg_scene_builder.WIDTH, svg_scene_builder.HEIGHT), size
     assert _sha256(first) == _sha256(second)
     print("PASS character-designer: two renders are byte-identical at 1080x1920")
+
+    start = time.perf_counter()
+    timing_svg = target / "timing.svg"
+    svg_scene_builder.write_svg(timing_svg, preview_svg(winner))
+    svg_scene_builder.svg_to_png(timing_svg, target / "timing.png")
+    elapsed = time.perf_counter() - start
+    assert elapsed < MAX_RENDER_SECONDS, elapsed
+    print(f"PASS character-designer: rich PNG render took {elapsed:.2f}s (limit {MAX_RENDER_SECONDS:.0f}s)")
+
+    layer_sets = {expression: dict(layers(winner, expression, "idle")) for expression in EXPRESSIONS}
+    for layer_id in ("brows", "eyelids", "mouth", "blush"):
+        values = {layer_sets[expression][layer_id] for expression in EXPRESSIONS}
+        assert len(values) == len(EXPRESSIONS), (layer_id, len(values))
+    print("PASS character-designer: 5 expressions change brows, eyelids, mouth and cheeks together")
+
+    basic = json.loads(json.dumps(winner))
+    basic["detail_level"] = "basic"
+    basic_paths = write_design(basic, target / "basic" / basic["id"], render=False)
+    basic_checked = check_character(basic_paths["character"], require_png=False)
+    assert basic_checked["detail_level"] == "basic", basic_checked
+    assert basic_checked["layers"] == len(BASE_LAYER_IDS), basic_checked
+    assert "<linearGradient" not in layered_svg(basic)
+    assert "iris" not in {layer_id for layer_id, _ in layers(basic, "neutral", "idle")}
+    print("PASS character-designer: basic detail level still renders with 10 base layers")
 
     sheet = target / "creatorsheet"
     sheet.mkdir(parents=True, exist_ok=True)
@@ -785,6 +1204,16 @@ def self_test() -> int:
     assert svg_scene_builder.png_size(sheet_png) == (svg_scene_builder.WIDTH, svg_scene_builder.HEIGHT)
     assert len(EXPRESSIONS) == 5 and len(POSES) == 3
     print("PASS character-designer: 5 expressions x 3 poses preview sheet rendered")
+
+    compare = target / "compare"
+    compare.mkdir(parents=True, exist_ok=True)
+    compare_source = compare / "compare.svg"
+    svg_scene_builder.write_svg(compare_source, compare_svg(winner))
+    compare_text = compare_source.read_text(encoding="utf-8")
+    assert "compare-basic-neutral" in compare_text and "compare-rich-neutral" in compare_text
+    compare_png = svg_scene_builder.svg_to_png(compare_source, compare / "compare.png")
+    assert svg_scene_builder.png_size(compare_png) == (svg_scene_builder.WIDTH, svg_scene_builder.HEIGHT)
+    print("PASS character-designer: basic vs rich compare sheet rendered")
     return 0
 
 
@@ -801,11 +1230,11 @@ def qa_self_test() -> int:
     design = _sample_design(load_parts(), lib.load_style_bible(), target, sheet=True)
     path = target / design["id"] / "character.json"
     checked = check_character(path)
-    assert checked["layers"] == len(LAYER_IDS), checked
+    assert checked["layers"] == len(required_layer_ids(checked["detail_level"])), checked
     assert checked["palette_colors"] >= MIN_PALETTE_COLORS, checked
     print(
-        f"PASS character-qa-tester: schema, {checked['layers']} layer ids, palette "
-        f"({checked['palette_colors']}) and 1080x1920 PNGs verified"
+        f"PASS character-qa-tester: schema, {checked['layers']} {checked['detail_level']} layer ids, "
+        f"palette ({checked['palette_colors']}) and 1080x1920 PNGs verified"
     )
     return 0
 
@@ -838,6 +1267,12 @@ def main() -> int:
     parser.add_argument("--brief", help="character brief JSON")
     parser.add_argument("--out-root", help="assets/characters directory")
     parser.add_argument("--report", help="character-design-set.json path")
+    parser.add_argument(
+        "--detail-level",
+        choices=DETAIL_LEVELS,
+        default=DEFAULT_DETAIL_LEVEL,
+        help="basic, standard or rich detail (default: rich)",
+    )
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     if args.self_test:
@@ -846,6 +1281,7 @@ def main() -> int:
         Path(args.brief) if args.brief else None,
         Path(args.out_root) if args.out_root else None,
         Path(args.report) if args.report else None,
+        detail_level=args.detail_level,
     )
     return 0
 

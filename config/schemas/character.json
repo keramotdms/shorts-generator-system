@@ -15,6 +15,7 @@
     "expressions",
     "poses",
     "mouth_shapes",
+    "detail_level",
     "locked"
   ],
   "properties": {
@@ -120,6 +121,7 @@
       "minItems": 4,
       "items": {"type": "string", "enum": ["closed", "open", "wide", "smile"]}
     },
+    "detail_level": {"type": "string", "enum": ["basic", "standard", "rich"]},
     "locked": {"type": "boolean"}
   }
 }

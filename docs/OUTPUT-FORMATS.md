@@ -34,6 +34,7 @@ format until its contract and SKILL.md Output section are changed first.
 | `assets/characters/creator-01-surprised.png` | `png_transparent` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01-surprised.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01/character.json` | `json_utf8` | character-designer | character-qa-tester, character-setup-manager, consistency-guardian, copyright-policy-checker, expression-pose-library, lipsync-motion-planner, script-voice-character-collector |
+| `assets/characters/creator-01/compare.png` | `png_transparent` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01/layered.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01/preview-sheet.png` | `png_transparent` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01/preview.png` | `png_transparent` | character-designer | _(none in contracts)_ |

@@ -482,7 +482,7 @@
     },
     "character-designer": {
       "input": "config/style-bible.json + projects/<project>/04-character/character-brief.json + assets/character-parts/parts.json",
-      "output": "assets/characters/creator-01/character.json + assets/characters/creator-01/layered.svg + assets/characters/creator-01/preview.png + assets/characters/creator-01/preview-sheet.png + assets/characters/creator-01-neutral.svg + assets/characters/creator-01-neutral.png + assets/characters/creator-01-smile.svg + assets/characters/creator-01-smile.png + assets/characters/creator-01-surprised.svg + assets/characters/creator-01-surprised.png + projects/<project>/04-character/character-design-set.json",
+      "output": "assets/characters/creator-01/character.json + assets/characters/creator-01/layered.svg + assets/characters/creator-01/preview.png + assets/characters/creator-01/preview-sheet.png + assets/characters/creator-01/compare.png + assets/characters/creator-01-neutral.svg + assets/characters/creator-01-neutral.png + assets/characters/creator-01-smile.svg + assets/characters/creator-01-smile.png + assets/characters/creator-01-surprised.svg + assets/characters/creator-01-surprised.png + projects/<project>/04-character/character-design-set.json",
       "upstream": "style bible",
       "downstream": "collector",
       "category": "character",
@@ -495,6 +495,7 @@
         "assets/characters/creator-01/layered.svg": "svg_layered",
         "assets/characters/creator-01/preview.png": "png_transparent",
         "assets/characters/creator-01/preview-sheet.png": "png_transparent",
+        "assets/characters/creator-01/compare.png": "png_transparent",
         "assets/characters/creator-01-neutral.svg": "svg_layered",
         "assets/characters/creator-01-neutral.png": "png_transparent",
         "assets/characters/creator-01-smile.svg": "svg_layered",

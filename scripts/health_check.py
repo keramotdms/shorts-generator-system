@@ -71,6 +71,7 @@ REQUIRED_FILES = [
     "assets/characters/creator-01/layered.svg",
     "assets/characters/creator-01/preview.png",
     "assets/characters/creator-01/preview-sheet.png",
+    "assets/characters/creator-01/compare.png",
     "assets/characters/creator-01-neutral.svg",
     "assets/characters/creator-01-neutral.png",
     "assets/characters/creator-01-smile.svg",

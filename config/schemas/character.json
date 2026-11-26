@@ -121,6 +121,23 @@
         "light_direction": {"type": "string", "enum": ["top-left", "top-right", "bottom-left", "bottom-right"]}
       }
     },
+    "style_profile": {"type": "string", "enum": ["bd-explainer", "flat-2d"]},
+    "outline_style": {"type": "string", "enum": ["none", "soft", "thick"]},
+    "framing": {"type": "string", "enum": ["closeup", "medium", "full"]},
+    "head_tilt": {"type": "number", "minimum": -8, "maximum": 8},
+    "yaw": {"type": "number", "enum": [-20, 0, 20]},
+    "age_features": {
+      "type": "object",
+      "properties": {
+        "wrinkles": {"type": "boolean"},
+        "beard": {"type": "boolean"},
+        "beard_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "mustache": {"type": "boolean"},
+        "bald_side": {"type": "boolean"},
+        "grey_hair": {"type": "boolean"},
+        "glasses_glare": {"type": "boolean"}
+      }
+    },
     "voice": {
       "type": "object",
       "required": ["gender", "tone"],
@@ -132,8 +149,8 @@
     "expressions": {
       "type": "array",
       "minItems": 5,
-      "maxItems": 5,
-      "items": {"type": "string", "enum": ["neutral", "happy", "worried", "surprised", "thinking"]}
+      "maxItems": 6,
+      "items": {"type": "string", "enum": ["neutral", "happy", "worried", "surprised", "thinking", "teary"]}
     },
     "poses": {
       "type": "array",

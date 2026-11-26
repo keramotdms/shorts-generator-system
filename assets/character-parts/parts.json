@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "source": "parametric parts used by scripts/character_designer.py; detail holds the standard/rich layer set and detail.pro holds the pro layer set",
+  "version": 4,
+  "source": "parametric parts used by scripts/character_designer.py and scripts/bd_style.py; detail holds rich/pro layers, bd holds the bd-explainer face ratios, hands and costumes",
   "viewbox": [
     1080,
     1920
@@ -17,7 +17,10 @@
     "skin_shadow",
     "blush",
     "hair_highlight",
-    "cloth_shadow"
+    "cloth_shadow",
+    "cream",
+    "bd_line",
+    "brown_dark"
   ],
   "palettes": {
     "skin": [
@@ -447,6 +450,56 @@
     "wallet": {
       "name": "Wallet",
       "name_bn": "মানিব্যাগ"
+    }
+  },
+  "bd": {
+    "profile": "bd-explainer",
+    "skin_palette": [
+      "#D9B08C",
+      "#C99A72",
+      "#B97F58",
+      "#A27350",
+      "#906542",
+      "#7A5236",
+      "#5E3D28",
+      "#B97A4E"
+    ],
+    "scene_palette": {
+      "maroon": "#742C2A",
+      "warm_tan": "#AC7D56",
+      "cream": "#E3DED4",
+      "brown_dark": "#47211B",
+      "night": "#141E24",
+      "teal_grey": "#6B7A71"
+    },
+    "face": {
+      "eye_width_ratio": 0.18,
+      "eye_height_ratio": 0.09,
+      "iris_ratio": 0.055,
+      "pupil_ratio": 0.028,
+      "brow_width_ratio": 0.04,
+      "brow_length_ratio": 0.2,
+      "ear_ratio": 0.1,
+      "cheek_ratio": 0.12,
+      "nose_x_ratio": 0.03,
+      "mouth_y_ratio": 0.3
+    },
+    "hands": {
+      "tissue": "<g data-hand=\"tissue\"><path d=\"M-26 -6 Q-38 -2 -36 14 L-30 34 Q-26 48 -10 48 L22 48 Q38 48 38 32 L38 10 Q38 -6 22 -8 Z\" fill=\"{skin}\"/><rect x=\"6\" y=\"-38\" width=\"62\" height=\"48\" rx=\"10\" fill=\"{cream}\" transform=\"rotate(12 37 -14)\"/><path d=\"M14 -26 Q38 -34 62 -24 M12 -12 Q38 -20 64 -10\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.35\"/><path d=\"M-18 38 Q0 44 20 38\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.35\"/></g>",
+      "chest": "<g data-hand=\"chest\"><path d=\"M-30 -8 Q-40 0 -38 16 L-34 40 Q-30 56 -12 56 L26 56 Q42 56 42 38 L42 10 Q42 -6 24 -8 Z\" fill=\"{skin}\"/><path d=\"M-18 46 L-22 74 Q-22 82 -14 82 Q-6 82 -6 74 L-4 48 Z\" fill=\"{skin}\"/><path d=\"M0 48 L0 82 Q0 90 8 90 Q16 90 16 82 L16 48 Z\" fill=\"{skin}\"/><path d=\"M20 46 L24 76 Q24 84 32 84 Q40 84 40 76 L40 44 Z\" fill=\"{skin}\"/><path d=\"M-26 12 Q0 4 28 12 M-26 26 Q0 18 28 26\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.3\"/></g>",
+      "paper": "<g data-hand=\"paper\"><path d=\"M-28 -8 Q-40 0 -38 16 L-34 38 Q-30 54 -12 54 L26 54 Q42 54 42 36 L42 10 Q42 -6 24 -8 Z\" fill=\"{skin}\"/><rect x=\"-46\" y=\"-70\" width=\"92\" height=\"70\" rx=\"6\" fill=\"{cream}\" transform=\"rotate(-6 0 -35)\"/><path d=\"M-32 -54 L30 -58 M-32 -40 L18 -43 M-32 -26 L26 -30\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.35\"/><path d=\"M-16 44 Q0 50 18 44\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.3\"/></g>",
+      "tea_cup": "<g data-hand=\"tea_cup\"><path d=\"M-30 -6 Q-40 2 -38 18 L-34 40 Q-30 54 -12 54 L24 54 Q40 54 40 36 L40 10 Q40 -6 24 -8 Z\" fill=\"{skin}\"/><ellipse cx=\"18\" cy=\"-26\" rx=\"40\" ry=\"12\" fill=\"{cream}\"/><path d=\"M-20 -26 L-14 18 Q-12 30 2 30 L34 30 Q48 30 50 18 L56 -26 Z\" fill=\"{cream}\"/><path d=\"M56 -18 Q78 -16 76 2 Q74 18 54 16\" fill=\"none\" stroke=\"{cream}\" stroke-width=\"8\"/><ellipse cx=\"18\" cy=\"-26\" rx=\"30\" ry=\"7\" fill=\"{brown_dark}\" opacity=\"0.55\"/><ellipse cx=\"18\" cy=\"36\" rx=\"52\" ry=\"10\" fill=\"{cream}\"/></g>",
+      "open_palms": "<g data-hand=\"open_palms\"><path d=\"M-34 -10 Q-46 -2 -44 16 L-40 38 Q-36 54 -18 54 L26 54 Q44 54 44 34 L44 10 Q44 -8 24 -10 Z\" fill=\"{skin}\"/><path d=\"M-24 46 L-28 82 Q-28 90 -20 90 Q-12 90 -12 82 L-10 48 Z\" fill=\"{skin}\"/><path d=\"M-6 48 L-6 88 Q-6 96 2 96 Q10 96 10 88 L10 48 Z\" fill=\"{skin}\"/><path d=\"M14 46 L18 82 Q18 90 26 90 Q34 90 34 82 L34 44 Z\" fill=\"{skin}\"/><path d=\"M32 40 L38 70 Q40 78 47 76 Q54 74 52 66 L46 36 Z\" fill=\"{skin}\"/><path d=\"M-30 10 Q0 2 30 10 M-30 24 Q0 16 30 24 M-30 38 Q0 30 30 38\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.28\"/></g>",
+      "money": "<g data-hand=\"money\"><path d=\"M-28 -8 Q-40 0 -38 16 L-34 38 Q-30 54 -12 54 L26 54 Q42 54 42 36 L42 10 Q42 -6 24 -8 Z\" fill=\"{skin}\"/><rect x=\"-52\" y=\"-64\" width=\"104\" height=\"58\" rx=\"6\" fill=\"{accent}\" transform=\"rotate(-8 0 -35)\"/><rect x=\"-44\" y=\"-56\" width=\"88\" height=\"42\" rx=\"4\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.45\"/><circle cx=\"0\" cy=\"-35\" r=\"12\" fill=\"{cream}\" opacity=\"0.9\"/><path d=\"M-16 42 Q0 48 18 42\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.3\"/></g>",
+      "point": "<g data-hand=\"point\"><path d=\"M-26 -6 Q-38 0 -36 16 L-32 36 Q-28 50 -10 50 L22 50 Q38 50 38 32 L38 10 Q38 -6 22 -8 Z\" fill=\"{skin}\"/><path d=\"M6 44 L8 88 Q8 96 16 96 Q24 96 24 88 L22 44 Z\" fill=\"{skin}\"/><path d=\"M-18 42 L-20 64 Q-20 72 -12 72 Q-4 72 -4 64 L-4 44 Z\" fill=\"{skin}\"/><path d=\"M-2 44 L-2 60 Q-2 68 6 68 Q14 68 14 60 L14 44 Z\" fill=\"{skin}\"/><path d=\"M-28 10 Q0 2 28 10\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.3\"/></g>"
+    },
+    "costumes": {
+      "shawl": "<path d=\"M448 850 Q420 1040 456 1300 L520 1280 Q500 1040 520 870 Z\" fill=\"{accent}\"/><path d=\"M460 880 Q444 1040 470 1270\" fill=\"none\" stroke=\"{bd_line}\" stroke-width=\"2\" opacity=\"0.3\"/>",
+      "saree_pallu": "<path d=\"M470 830 Q430 980 450 1240 L540 1210 Q520 1010 540 860 Z\" fill=\"{accent}\"/><path d=\"M454 1220 Q492 1200 534 1204\" fill=\"none\" stroke=\"{cream}\" stroke-width=\"6\" opacity=\"0.7\"/>",
+      "wedding_headpiece": "<path d=\"M430 430 Q540 380 650 430 L650 470 Q540 430 430 470 Z\" fill=\"{accent}\"/><circle cx=\"540\" cy=\"430\" r=\"14\" fill=\"{cream}\"/><circle cx=\"486\" cy=\"442\" r=\"7\" fill=\"{cream}\"/><circle cx=\"594\" cy=\"442\" r=\"7\" fill=\"{cream}\"/>",
+      "gold_chain": "<path d=\"M500 812 Q540 860 580 812\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"4\"/><circle cx=\"540\" cy=\"848\" r=\"8\" fill=\"{accent}\"/>",
+      "bangles": "<ellipse cx=\"455\" cy=\"1160\" rx=\"30\" ry=\"12\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"6\"/><ellipse cx=\"625\" cy=\"1160\" rx=\"30\" ry=\"12\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"6\"/>",
+      "earrings": "<circle cx=\"390\" cy=\"610\" r=\"8\" fill=\"{accent}\"/><circle cx=\"690\" cy=\"610\" r=\"8\" fill=\"{accent}\"/>"
     }
   }
 }

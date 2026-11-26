@@ -15,6 +15,9 @@ config/secrets.*
 auth.json
 token.json
 
+# ===== External reference videos (kept outside the repo at C:/Users/ecom_store3/Shorts-refs) =====
+Shorts-refs/
+
 # ===== Large video / media renders =====
 renders/
 render/

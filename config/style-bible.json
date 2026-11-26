@@ -1,6 +1,77 @@
 {
-  "version": 1,
+  "version": 2,
   "source": "config/channel.json (read through project-memory)",
+  "style_profile": "bd-explainer",
+  "style_profiles": {
+    "bd-explainer": {
+      "outline_style": "none",
+      "framing": "medium",
+      "light_direction": "top-left",
+      "skin_palette": [
+        "#D9B08C",
+        "#C99A72",
+        "#B97F58",
+        "#A27350",
+        "#906542",
+        "#7A5236",
+        "#5E3D28",
+        "#B97A4E"
+      ],
+      "skin_targets": {
+        "p20": "#906542",
+        "median": "#A27350",
+        "p80": "#B97F58"
+      },
+      "scene_palette": {
+        "maroon": "#742C2A",
+        "warm_tan": "#AC7D56",
+        "cream": "#E3DED4",
+        "brown_dark": "#47211B",
+        "night": "#141E24",
+        "teal_grey": "#6B7A71"
+      },
+      "character": {
+        "gradients_min": 6,
+        "face_width_pct": {
+          "closeup": [55, 70],
+          "medium": [38, 50],
+          "full": [20, 30]
+        },
+        "eye_width_pct": [16, 20],
+        "brow_width_pct": [3, 5]
+      },
+      "caption": {
+        "box_fill": "#141E24",
+        "box_opacity": 0.82,
+        "text_color": "#FFFFFF",
+        "highlight_color": "#F2C14E",
+        "font": "Noto Sans Bengali",
+        "fallback_font": "Hind Siliguri",
+        "min_contrast": 4.5,
+        "font_size": 64,
+        "radius": 28,
+        "safe_zone": {"top": 220, "bottom": 420, "side": 72}
+      },
+      "title": {
+        "plaque_fill": "#742C2A",
+        "text_color": "#E3DED4",
+        "border_color": "#AC7D56",
+        "border_width": 2,
+        "radius": 24
+      },
+      "background": {
+        "blur_std_dev": [10, 16],
+        "vignette_pct": [15, 30],
+        "warm_luminance": [0.35, 0.5],
+        "night_luminance": [0.1, 0.25]
+      }
+    },
+    "flat-2d": {
+      "outline_style": "thick",
+      "framing": "full",
+      "light_direction": "top-left"
+    }
+  },
   "style": {
     "tone": "natural, conversational",
     "visual_style": "flat 2D illustration, bold shapes, high contrast",

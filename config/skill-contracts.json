@@ -482,7 +482,7 @@
     },
     "character-designer": {
       "input": "config/style-bible.json + projects/<project>/04-character/character-brief.json + assets/character-parts/parts.json",
-      "output": "assets/characters/creator-01/character.json + assets/characters/creator-01/layered.svg + assets/characters/creator-01/preview.png + assets/characters/creator-01/preview-sheet.png + assets/characters/creator-01/compare.png + assets/characters/creator-01-neutral.svg + assets/characters/creator-01-neutral.png + assets/characters/creator-01-smile.svg + assets/characters/creator-01-smile.png + assets/characters/creator-01-surprised.svg + assets/characters/creator-01-surprised.png + projects/<project>/04-character/character-design-set.json",
+      "output": "assets/characters/creator-01/character.json + assets/characters/creator-01/layered.svg + assets/characters/creator-01/preview.png + assets/characters/creator-01/preview-sheet.png + assets/characters/creator-01/compare.png + assets/characters/creator-01-neutral.svg + assets/characters/creator-01-neutral.png + assets/characters/creator-01-smile.svg + assets/characters/creator-01-smile.png + assets/characters/creator-01-surprised.svg + assets/characters/creator-01-surprised.png + projects/<project>/04-character/character-design-set.json + assets/characters/creator-01/compare-rich-pro.svg + assets/characters/creator-01/compare-rich-pro.png + assets/characters/mentor-01/character.json + assets/characters/mentor-01/layered.svg + assets/characters/mentor-01/preview.png + assets/characters/learner-01/character.json + assets/characters/learner-01/layered.svg + assets/characters/learner-01/preview.png + assets/characters/cast/cast-sheet.svg + assets/characters/cast/cast-sheet.png + assets/characters/props/props-sheet.svg + assets/characters/props/props-sheet.png + projects/<project>/04-character/character-cast.json",
       "upstream": "style bible",
       "downstream": "collector",
       "category": "character",
@@ -502,7 +502,20 @@
         "assets/characters/creator-01-smile.png": "png_transparent",
         "assets/characters/creator-01-surprised.svg": "svg_layered",
         "assets/characters/creator-01-surprised.png": "png_transparent",
-        "projects/<project>/04-character/character-design-set.json": "json_utf8"
+        "projects/<project>/04-character/character-design-set.json": "json_utf8",
+        "assets/characters/creator-01/compare-rich-pro.svg": "svg_layered",
+        "assets/characters/creator-01/compare-rich-pro.png": "png_transparent",
+        "assets/characters/mentor-01/character.json": "json_utf8",
+        "assets/characters/mentor-01/layered.svg": "svg_layered",
+        "assets/characters/mentor-01/preview.png": "png_transparent",
+        "assets/characters/learner-01/character.json": "json_utf8",
+        "assets/characters/learner-01/layered.svg": "svg_layered",
+        "assets/characters/learner-01/preview.png": "png_transparent",
+        "assets/characters/cast/cast-sheet.svg": "svg_layered",
+        "assets/characters/cast/cast-sheet.png": "png_transparent",
+        "assets/characters/props/props-sheet.svg": "svg_layered",
+        "assets/characters/props/props-sheet.png": "png_transparent",
+        "projects/<project>/04-character/character-cast.json": "json_utf8"
       }
     },
     "character-setup-manager": {

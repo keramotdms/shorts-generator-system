@@ -1,0 +1,31 @@
+{
+  "creator": "creator-01",
+  "art_family": {
+    "outline_width": 10,
+    "contour_width": 14,
+    "inner_width": 6,
+    "detail_width": 4,
+    "light_direction": "top-left"
+  },
+  "characters": [
+    {
+      "id": "mentor-01",
+      "character": "assets\\characters\\mentor-01\\character.json",
+      "preview_png": "assets\\characters\\mentor-01\\preview.png"
+    },
+    {
+      "id": "learner-01",
+      "character": "assets\\characters\\learner-01\\character.json",
+      "preview_png": "assets\\characters\\learner-01\\preview.png"
+    }
+  ],
+  "cast_sheet_png": "assets\\characters\\cast\\cast-sheet.png",
+  "props_sheet_png": "assets\\characters\\props\\props-sheet.png",
+  "props": [
+    "coin",
+    "phone",
+    "notebook",
+    "bar-graph",
+    "wallet"
+  ]
+}

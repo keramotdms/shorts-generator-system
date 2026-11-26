@@ -224,27 +224,43 @@ def character_markup(character: dict[str, Any], expression: str, pose: str) -> s
     )
 
 
-def props_markup(description: str, accent: str, outline: str) -> str:
+def props_markup(description: str, accent: str, outline: str, light: str = "#F9FAFB") -> str:
+    """Render the reusable prop library when a scene description names a prop."""
+    parts_path = ROOT / "assets" / "character-parts" / "parts.json"
+    data = lib.read_json(parts_path, required=False)
+    library = data.get("props", {}) if isinstance(data, dict) else {}
     lowered = description.lower()
+    words = {
+        "wallet": ("wallet", "পার্স", "মানিব্যাগ"),
+        "phone": ("phone", "মোবাইল"),
+        "notebook": ("notebook", "খাতা", "checklist", "তালিকা"),
+        "coin": ("coin", "taka", "টাকা", "মুদ্রা"),
+        "bar-graph": ("bar graph", "bar-graph", "chart", "growth", "লাভ", "বৃদ্ধি"),
+    }
+    positions = {
+        "wallet": (840, 1420),
+        "phone": (820, 1360),
+        "notebook": (820, 1400),
+        "coin": (860, 1460),
+        "bar-graph": (810, 1340),
+    }
     props = ""
-    if any(word in lowered for word in ("wallet", "পার্স")):
-        props += (
-            f'<rect x="790" y="1360" width="180" height="120" rx="20" fill="{accent}" '
-            f'stroke="{outline}" stroke-width="10"/>'
-            f'<rect x="850" y="1345" width="60" height="30" rx="10" fill="{outline}"/>'
-        )
-    if any(word in lowered for word in ("phone", "মোবাইল")):
-        props += (
-            f'<rect x="800" y="1320" width="130" height="220" rx="24" fill="{outline}"/>'
-            f'<rect x="815" y="1345" width="100" height="170" rx="12" fill="#F9FAFB"/>'
-        )
-    if any(word in lowered for word in ("notebook", "খাতা", "checklist", "তালিকা")):
-        props += (
-            f'<rect x="770" y="1350" width="210" height="180" rx="14" fill="#F9FAFB" '
-            f'stroke="{outline}" stroke-width="10"/>'
-            f'<path d="M800 1400 L930 1400 M800 1450 L930 1450" stroke="{outline}" '
-            f'stroke-width="8" stroke-linecap="round"/>'
-        )
+    for name, triggers in words.items():
+        if not any(trigger in lowered for trigger in triggers):
+            continue
+        template = library.get(name)
+        if not template:
+            continue
+        values = {
+            "{accent}": accent,
+            "{outline}": outline,
+            "{light}": light,
+            "{outfit}": accent,
+        }
+        for key, value in values.items():
+            template = str(template).replace(key, value)
+        x, y = positions[name]
+        props += f'<g transform="translate({x},{y})">{template}</g>'
     return f"  <g id=\"props\">{props}</g>" if props else ""
 
 

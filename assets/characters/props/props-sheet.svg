@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <g id="props-background"><rect width="1080" height="1920" fill="#F9FAFB"/></g>
+  <g id="prop-tile-coin">
+    <rect x="0" y="0" width="540" height="640" fill="#F9FAFB" stroke="#111827" stroke-width="4"/>
+    <g transform="translate(270,300) scale(1.5)"><circle cx="0" cy="0" r="58" fill="#F59E0B" stroke="#111827" stroke-width="10"/><circle cx="0" cy="0" r="40" fill="none" stroke="#F9FAFB" stroke-width="6" opacity="0.8"/><path d="M-10 -28 L-10 28 M-22 -16 L12 -16 M-22 16 L12 16" stroke="#111827" stroke-width="8" stroke-linecap="round"/></g>
+    <text x="20" y="610" font-family="sans-serif" font-size="24" fill="#111827">coin</text>
+  </g>
+  <g id="prop-tile-phone">
+    <rect x="540" y="0" width="540" height="640" fill="#F9FAFB" stroke="#111827" stroke-width="4"/>
+    <g transform="translate(810,300) scale(1.5)"><rect x="-65" y="-110" width="130" height="220" rx="24" fill="#111827"/><rect x="-50" y="-85" width="100" height="160" rx="12" fill="#F9FAFB"/><circle cx="0" cy="92" r="7" fill="#F9FAFB"/><path d="M-36 -50 L36 -50 M-36 -30 L20 -30 M-36 -10 L36 -10 M-36 10 L28 10 M-36 30 L36 30" stroke="#111827" stroke-width="4" opacity="0.25"/><rect x="-34" y="48" width="68" height="16" rx="8" fill="#F59E0B"/></g>
+    <text x="560" y="610" font-family="sans-serif" font-size="24" fill="#111827">phone</text>
+  </g>
+  <g id="prop-tile-notebook">
+    <rect x="0" y="640" width="540" height="640" fill="#F9FAFB" stroke="#111827" stroke-width="4"/>
+    <g transform="translate(270,940) scale(1.5)"><rect x="-105" y="-90" width="210" height="180" rx="14" fill="#F9FAFB" stroke="#111827" stroke-width="10"/><rect x="-105" y="-90" width="34" height="180" rx="14" fill="#F59E0B" stroke="#111827" stroke-width="10"/><path d="M-50 -40 L80 -40 M-50 -5 L80 -5 M-50 30 L60 30" stroke="#111827" stroke-width="4" opacity="0.5"/><path d="M-96 -64 L-110 -64 M-96 -34 L-110 -34 M-96 -4 L-110 -4 M-96 26 L-110 26 M-96 56 L-110 56" stroke="#111827" stroke-width="6" stroke-linecap="round"/></g>
+    <text x="20" y="1250" font-family="sans-serif" font-size="24" fill="#111827">notebook</text>
+  </g>
+  <g id="prop-tile-bar-graph">
+    <rect x="540" y="640" width="540" height="640" fill="#F9FAFB" stroke="#111827" stroke-width="4"/>
+    <g transform="translate(810,940) scale(1.5)"><rect x="-150" y="-105" width="300" height="210" rx="18" fill="#F9FAFB" stroke="#111827" stroke-width="10"/><path d="M-110 45 L110 45" stroke="#111827" stroke-width="6"/><rect x="-95" y="5" width="44" height="40" fill="#F59E0B" stroke="#111827" stroke-width="6"/><rect x="-33" y="-35" width="44" height="80" fill="#F59E0B" stroke="#111827" stroke-width="6"/><rect x="29" y="-70" width="44" height="115" fill="#10B981" stroke="#111827" stroke-width="6"/><path d="M-73 -5 L-11 -48 L51 -86" fill="none" stroke="#111827" stroke-width="6" stroke-dasharray="8 10"/></g>
+    <text x="560" y="1250" font-family="sans-serif" font-size="24" fill="#111827">bar-graph</text>
+  </g>
+  <g id="prop-tile-wallet">
+    <rect x="0" y="1280" width="540" height="640" fill="#F9FAFB" stroke="#111827" stroke-width="4"/>
+    <g transform="translate(270,1580) scale(1.5)"><rect x="-90" y="-60" width="180" height="120" rx="20" fill="#F59E0B" stroke="#111827" stroke-width="10"/><path d="M-90 -30 L90 -30" stroke="#111827" stroke-width="6"/><rect x="20" y="-10" width="58" height="40" rx="10" fill="#F9FAFB" stroke="#111827" stroke-width="6"/><circle cx="49" cy="10" r="5" fill="#111827"/><rect x="-60" y="-50" width="70" height="26" rx="6" fill="#F9FAFB" opacity="0.8"/></g>
+    <text x="20" y="1890" font-family="sans-serif" font-size="24" fill="#111827">wallet</text>
+  </g>
+</svg>

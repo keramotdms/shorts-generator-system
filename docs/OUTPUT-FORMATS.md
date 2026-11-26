@@ -27,6 +27,8 @@ format until its contract and SKILL.md Output section are changed first.
 
 | Output path | Format profile | Written by | Read by |
 | --- | --- | --- | --- |
+| `assets/characters/cast/cast-sheet.png` | `png_transparent` | character-designer | _(none in contracts)_ |
+| `assets/characters/cast/cast-sheet.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01-neutral.png` | `png_transparent` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01-neutral.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01-smile.png` | `png_transparent` | character-designer | _(none in contracts)_ |
@@ -34,10 +36,20 @@ format until its contract and SKILL.md Output section are changed first.
 | `assets/characters/creator-01-surprised.png` | `png_transparent` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01-surprised.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01/character.json` | `json_utf8` | character-designer | character-qa-tester, character-setup-manager, consistency-guardian, copyright-policy-checker, expression-pose-library, lipsync-motion-planner, script-voice-character-collector |
+| `assets/characters/creator-01/compare-rich-pro.png` | `png_transparent` | character-designer | _(none in contracts)_ |
+| `assets/characters/creator-01/compare-rich-pro.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01/compare.png` | `png_transparent` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01/layered.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01/preview-sheet.png` | `png_transparent` | character-designer | _(none in contracts)_ |
 | `assets/characters/creator-01/preview.png` | `png_transparent` | character-designer | _(none in contracts)_ |
+| `assets/characters/learner-01/character.json` | `json_utf8` | character-designer | _(none in contracts)_ |
+| `assets/characters/learner-01/layered.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
+| `assets/characters/learner-01/preview.png` | `png_transparent` | character-designer | _(none in contracts)_ |
+| `assets/characters/mentor-01/character.json` | `json_utf8` | character-designer | _(none in contracts)_ |
+| `assets/characters/mentor-01/layered.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
+| `assets/characters/mentor-01/preview.png` | `png_transparent` | character-designer | _(none in contracts)_ |
+| `assets/characters/props/props-sheet.png` | `png_transparent` | character-designer | _(none in contracts)_ |
+| `assets/characters/props/props-sheet.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
 | `assets/scenes/scene-warm-desk-smile.png` | `png_transparent` | scenario-designer | script-voice-character-collector |
 | `assets/scenes/warm-desk-background.svg` | `svg_layered` | scenario-designer | _(none in contracts)_ |
 | `config/style-bible.json` | `json_utf8` | project-memory | branding-manager, character-designer, character-thinker-counter, color-grading-keeper, element-designer, intro-outro-manager, motion-graphic-editor, music-sfx-selector, scenario-designer, stock-asset-finder, template-preset-manager, transition-designer, voiceover-organizer, watermark-logo-placer |
@@ -62,6 +74,7 @@ format until its contract and SKILL.md Output section are changed first.
 | `projects/<project>/03-voice/voiceover-organizer.json` | `json_utf8` | voiceover-organizer | pronunciation-emotion-director |
 | `projects/<project>/03-voice/voiceover-tester.json` | `json_utf8` | voiceover-tester | _(none in contracts)_ |
 | `projects/<project>/03-voice/voiceover.mp3` | `mp3_voice` | voiceover-captions, voiceover-generator | accessibility-safety-checker, audio-ducking-controller, audio-mixer, script-voice-character-collector, voiceover-tester |
+| `projects/<project>/04-character/character-cast.json` | `json_utf8` | character-designer | _(none in contracts)_ |
 | `projects/<project>/04-character/character-design-set.json` | `json_utf8` | character-designer | _(none in contracts)_ |
 | `projects/<project>/04-character/character-organizer.json` | `json_utf8` | character-organizer | _(none in contracts)_ |
 | `projects/<project>/04-character/character-qa-tester.json` | `json_utf8` | character-qa-tester | _(none in contracts)_ |

@@ -1,0 +1,91 @@
+{
+  "id": "learner-01",
+  "name": "তিশা (2)",
+  "style_source": "config/style-bible.json",
+  "brief": {
+    "role": "student",
+    "role_label": "শিক্ষার্থী",
+    "age": 21,
+    "gender": "female",
+    "personality": "energetic",
+    "niche": "Personal finance / side hustles",
+    "language": "bn"
+  },
+  "parts": {
+    "head": "head-round",
+    "hair": "hair-bob",
+    "eyes": "eyes-round",
+    "brows": "brows-soft",
+    "mouth": "mouth-grin",
+    "body": "body-petite",
+    "outfit": "outfit-salwar-kameez",
+    "accessory": "accessory-earrings",
+    "skin": "#A9683A",
+    "hair_color": "#111827",
+    "eye_color": "#111827",
+    "outfit_color": "#10B981",
+    "accent": "#F59E0B",
+    "outline": "#111827",
+    "light": "#F9FAFB"
+  },
+  "proportions": {
+    "head_height": 330,
+    "total_height": 1230,
+    "head_to_body": 0.268,
+    "shoulder_width": 150
+  },
+  "appearance": {
+    "body": "body-petite",
+    "hair": "hair-bob",
+    "clothing": "outfit-salwar-kameez",
+    "palette": [
+      "#111827",
+      "#F9FAFB",
+      "#F59E0B",
+      "#10B981",
+      "#A9683A"
+    ]
+  },
+  "voice": {
+    "gender": "female",
+    "tone": "upbeat and fast"
+  },
+  "expressions": [
+    "neutral",
+    "happy",
+    "worried",
+    "surprised",
+    "thinking"
+  ],
+  "poses": [
+    "idle",
+    "wave",
+    "point"
+  ],
+  "mouth_shapes": [
+    "closed",
+    "open",
+    "wide",
+    "smile"
+  ],
+  "detail_level": "pro",
+  "culture": {
+    "region": "Bangladesh",
+    "skin_tone": "deep brown",
+    "outfit_name": "Salwar kameez",
+    "outfit_name_bn": "সালোয়ার কামিজ",
+    "outfit_note": "Kameez tunic with loose salwar trousers and a dupatta.",
+    "accessory_name": "Earrings",
+    "accessory_name_bn": "কানের দুল",
+    "accessory_note": "Small gold earrings, common with saree or salwar kameez."
+  },
+  "art_family": {
+    "outline_width": 10,
+    "contour_width": 14,
+    "inner_width": 6,
+    "detail_width": 4,
+    "light_direction": "top-left"
+  },
+  "locked": true,
+  "fit_score": 55
+}

@@ -32,8 +32,8 @@ PARTS_PATH = ROOT / "assets" / "character-parts" / "parts.json"
 CHARACTERS_DIR = ROOT / "assets" / "characters"
 EXPRESSIONS = ["neutral", "happy", "worried", "surprised", "thinking"]
 POSES = ["idle", "wave", "point"]
-DETAIL_LEVELS = ("basic", "standard", "rich")
-DEFAULT_DETAIL_LEVEL = "rich"
+DETAIL_LEVELS = ("basic", "standard", "rich", "pro")
+DEFAULT_DETAIL_LEVEL = "pro"
 BASE_LAYER_IDS = [
     "body", "outfit", "arms", "neck", "head", "hair",
     "brows", "eyes", "mouth", "accessory",
@@ -47,10 +47,20 @@ RICH_LAYER_IDS = [
     "ground_shadow", "shoes", "folds", "belt", "collar", "placket", "cuffs",
     "hands",
 ]
+PRO_LAYER_IDS = [
+    "inner_shadow", "rim_light", "ear_shading", "neck_shading", "fabric_pattern",
+    "hair_strands_02", "hair_strands_03", "hair_strands_04", "outline_variation",
+]
 OUTLINE_WIDTH = 10
+CONTOUR_WIDTH = 14
+INNER_WIDTH = 6
 DETAIL_WIDTH = 4
 ARM_WIDTH = 44
-ALLOWED_STROKE_WIDTHS = {float(OUTLINE_WIDTH), float(DETAIL_WIDTH), float(ARM_WIDTH)}
+ALLOWED_STROKE_WIDTHS = {
+    float(CONTOUR_WIDTH), float(OUTLINE_WIDTH), float(INNER_WIDTH),
+    float(DETAIL_WIDTH), float(ARM_WIDTH),
+}
+RICH_STROKE_WIDTHS = {float(OUTLINE_WIDTH), float(DETAIL_WIDTH), float(ARM_WIDTH)}
 MAX_SVG_BYTES = 200 * 1024
 MAX_RENDER_SECONDS = 5.0
 BASE_NECK = '<rect x="505" y="712" width="70" height="118" rx="26" fill="{skin}" stroke="{outline}" stroke-width="10"/>'
@@ -58,6 +68,86 @@ MIN_CONTRAST = 3.0
 MIN_PALETTE_COLORS = 3
 MIN_RATIO = 0.18
 MAX_RATIO = 0.30
+
+# The locked creator identity is a promise to every scene already made.
+# These values must not change when the detail level moves from rich to pro.
+CREATOR_BASELINE = {
+    "role": "teacher",
+    "palette": ["#111827", "#F9FAFB", "#F59E0B", "#10B981", "#F6D5B8"],
+    "proportions": {
+        "head_height": 356,
+        "total_height": 1290,
+        "head_to_body": 0.276,
+        "shoulder_width": 170,
+    },
+    "skin": "#F6D5B8",
+    "outfit": "outfit-shirt-vest",
+    "outfit_color": "#10B981",
+    "accessory": "accessory-glasses",
+    "head": "head-oval",
+    "hair": "hair-short-crop",
+    "body": "body-slim",
+}
+
+SKIN_TONE_NAMES = {
+    "#F6D5B8": "light warm",
+    "#E8B98E": "wheat",
+    "#D9A066": "light brown",
+    "#C68642": "medium brown",
+    "#A9683A": "deep brown",
+    "#96603A": "dark brown",
+    "#FBE3CF": "fair",
+    "#B97A4E": "copper",
+}
+OUTFIT_NAMES = {
+    "outfit-shirt": {"name": "Shirt", "name_bn": "শার্ট"},
+    "outfit-shirt-vest": {"name": "Shirt with vest", "name_bn": "শার্ট ও ভেস্ট"},
+    "outfit-shirt-trousers": {"name": "Shirt and trousers", "name_bn": "শার্ট ও ট্রাউজার"},
+    "outfit-formal": {"name": "Formal suit", "name_bn": "ফরমাল স্যুট"},
+    "outfit-hoodie": {"name": "Hoodie", "name_bn": "হুডি"},
+    "outfit-t-shirt": {"name": "T-shirt", "name_bn": "টি-শার্ট"},
+    "outfit-apron": {"name": "Shop apron", "name_bn": "দোকানের এপ্রন"},
+    "outfit-panjabi": {"name": "Panjabi", "name_bn": "পাঞ্জাবি"},
+    "outfit-kurta": {"name": "Kurta", "name_bn": "কুর্তা"},
+    "outfit-salwar-kameez": {"name": "Salwar kameez", "name_bn": "সালোয়ার কামিজ"},
+    "outfit-saree": {"name": "Saree", "name_bn": "শাড়ি"},
+}
+ACCESSORY_NAMES = {
+    "accessory-glasses": {"name": "Glasses", "name_bn": "চশমা"},
+    "accessory-cap": {"name": "Cap", "name_bn": "ক্যাপ"},
+    "accessory-tie": {"name": "Tie", "name_bn": "টাই"},
+    "accessory-bag": {"name": "Shoulder bag", "name_bn": "কাঁধের ব্যাগ"},
+    "accessory-scarf": {"name": "Scarf", "name_bn": "স্কার্ফ"},
+    "accessory-watch": {"name": "Watch", "name_bn": "ঘড়ি"},
+    "accessory-earrings": {"name": "Earrings", "name_bn": "কানের দুল"},
+    "accessory-lanyard": {"name": "Lanyard", "name_bn": "ল্যানিয়ার্ড"},
+    "accessory-tupi": {"name": "Tupi cap", "name_bn": "টুপি"},
+}
+OUTFIT_NOTES = {
+    "outfit-panjabi": "Long buttoned tunic worn at Eid, weddings and family events.",
+    "outfit-kurta": "Simple long tunic, common for daily wear and interviews.",
+    "outfit-shirt": "Western shirt, normal office and campus wear.",
+    "outfit-shirt-trousers": "Office, bank and university presentation outfit.",
+    "outfit-salwar-kameez": "Kameez tunic with loose salwar trousers and a dupatta.",
+    "outfit-saree": "Draped saree with a pallu over the left shoulder.",
+    "outfit-shirt-vest": "Teacher-style shirt with a contrast vest.",
+    "outfit-formal": "Formal jacket and tie for an office or bank role.",
+    "outfit-hoodie": "Casual campus and freelancer clothing.",
+    "outfit-t-shirt": "Everyday casual clothing.",
+    "outfit-apron": "Apron for a shop owner or small-business role.",
+}
+ACCESSORY_NOTES = {
+    "accessory-tupi": "Traditional Bangladeshi cap; optional, never assumed for every character.",
+    "accessory-glasses": "Rectangular glasses for a teacher, mentor or office role.",
+    "accessory-cap": "Casual sports cap for a student or freelancer.",
+    "accessory-earrings": "Small gold earrings, common with saree or salwar kameez.",
+    "accessory-lanyard": "Office or school identity card lanyard.",
+    "accessory-watch": "Simple wrist watch for a professional role.",
+    "accessory-tie": "Formal office tie.",
+    "accessory-bag": "Student or commuter bag.",
+    "accessory-scarf": "Light scarf for a shop owner or cool-weather scene.",
+}
+PROP_NAMES = ("coin", "phone", "notebook", "bar-graph", "wallet")
 
 HEAD_HEIGHTS = {
     "head-round": 330, "head-oval": 356, "head-square": 310,
@@ -268,15 +358,28 @@ def detail_level_of(design: dict[str, Any], override: str | None = None) -> str:
     return value if value in DETAIL_LEVELS else "basic"
 
 
-def normalize_strokes(markup: str) -> str:
-    """Map every stroke width to the documented scale: 10 outline, 4 detail.
+def allowed_stroke_widths(level: str) -> set[float]:
+    return set(ALLOWED_STROKE_WIDTHS) if level == "pro" else set(RICH_STROKE_WIDTHS)
 
-    Exactly two widths survive, so a detail render is visually consistent and
-    the self-test can assert the whole document uses only the documented scale.
+
+def normalize_strokes(markup: str, level: str = "rich") -> str:
+    """Map every stroke width to the documented scale.
+
+    ``rich`` keeps the flat 10/4/44 scale. ``pro`` adds a heavier 14 contour
+    and a 6 inner line, so outline weight varies without becoming random.
     """
     def replace(match: re.Match[str]) -> str:
         value = float(match.group(1))
-        width = OUTLINE_WIDTH if value >= 8 else DETAIL_WIDTH
+        if value >= 40:
+            width = ARM_WIDTH
+        elif level == "pro" and value >= 13:
+            width = CONTOUR_WIDTH
+        elif value >= 8:
+            width = OUTLINE_WIDTH
+        elif level == "pro" and value >= 5:
+            width = INNER_WIDTH
+        else:
+            width = DETAIL_WIDTH
         return f'stroke-width="{width}"'
 
     return re.sub(r'stroke-width="([0-9.]+)"', replace, markup)
@@ -284,10 +387,12 @@ def normalize_strokes(markup: str) -> str:
 
 def required_layer_ids(level: str) -> list[str]:
     ids = list(BASE_LAYER_IDS)
-    if level in {"standard", "rich"}:
+    if level in {"standard", "rich", "pro"}:
         ids += STANDARD_LAYER_IDS
-    if level == "rich":
+    if level in {"rich", "pro"}:
         ids += RICH_LAYER_IDS
+    if level == "pro":
+        ids += PRO_LAYER_IDS
     return ids
 
 
@@ -441,6 +546,23 @@ def build_design(
         "poses": list(POSES),
         "mouth_shapes": ["closed", "open", "wide", "smile"],
         "detail_level": detail_level if detail_level in DETAIL_LEVELS else DEFAULT_DETAIL_LEVEL,
+        "culture": {
+            "region": "Bangladesh",
+            "skin_tone": SKIN_TONE_NAMES.get(skin, "custom"),
+            "outfit_name": OUTFIT_NAMES[outfit]["name"],
+            "outfit_name_bn": OUTFIT_NAMES[outfit]["name_bn"],
+            "outfit_note": OUTFIT_NOTES[outfit],
+            "accessory_name": ACCESSORY_NAMES[accessory]["name"],
+            "accessory_name_bn": ACCESSORY_NAMES[accessory]["name_bn"],
+            "accessory_note": ACCESSORY_NOTES[accessory],
+        },
+        "art_family": {
+            "outline_width": OUTLINE_WIDTH,
+            "contour_width": CONTOUR_WIDTH,
+            "inner_width": INNER_WIDTH,
+            "detail_width": DETAIL_WIDTH,
+            "light_direction": "top-left",
+        },
         "locked": False,
     }
     design["fit_score"] = _fit_score(design)
@@ -600,8 +722,9 @@ def arms_markup(design: dict[str, Any], pose: str, *, with_hands: bool = True) -
     return left_path + left_hand + idle_right_path + idle_right_hand
 
 
-def hands_markup(design: dict[str, Any], pose: str) -> str:
-    hands = load_parts()["detail"]["hands"]
+def hands_markup(design: dict[str, Any], pose: str, *, level: str = "rich") -> str:
+    library = load_parts()["detail"]
+    hands = (library.get("pro", {}) if level == "pro" else {}).get("hands") or library["hands"]
     left_pos, right_pos = wrist_positions(design, pose)
     left = f'<g transform="translate({left_pos[0]},{left_pos[1]})">{hands["open"]}</g>'
     if pose == "point":
@@ -640,8 +763,10 @@ def layers(
     parts = load_parts()
     detail = parts.get("detail", {})
     level = detail_level_of(design, detail_level)
-    detailed = level in {"standard", "rich"}
-    full = level == "rich"
+    detailed = level in {"standard", "rich", "pro"}
+    full = level in {"rich", "pro"}
+    pro = level == "pro"
+    pro_detail = detail.get("pro", {}) if pro else {}
     parts_data = design["parts"]
     expression = {
         "smile": "happy", "smiling": "happy", "shock": "surprised",
@@ -658,6 +783,10 @@ def layers(
     def detail_part(category: str, key: str) -> str:
         return str(group(category).get(key, ""))
 
+    def pro_part(category: str, key: str) -> str:
+        value = pro_detail.get(category, {}) if isinstance(pro_detail, dict) else {}
+        return str(value.get(key, "")) if isinstance(value, dict) else ""
+
     def detail_map(category: str, key: str, name: str) -> str:
         value = group(category).get(key, {})
         if isinstance(value, dict):
@@ -671,6 +800,8 @@ def layers(
     if full:
         raw.append(("shoes", detail_map("body", "shoes", parts_data["body"])))
     raw.append(("outfit", part_markup(parts, "outfits", parts_data["outfit"])))
+    if pro:
+        raw.append(("fabric_pattern", pro_part("outfit", "fabric_pattern")))
     if full:
         raw.extend([
             ("folds", detail_part("outfit", "folds")),
@@ -681,12 +812,21 @@ def layers(
     raw.append(("arms", arms_markup(design, pose, with_hands=not full)))
     if full:
         raw.append(("cuffs", cuffs_markup(design, pose)))
-        raw.append(("hands", hands_markup(design, pose)))
+        raw.append(("hands", hands_markup(design, pose, level=level)))
     raw.append(("neck", detail_part("face", "neck") if detailed else BASE_NECK))
+    if pro:
+        raw.append(("neck_shading", pro_part("face", "neck_shading")))
     raw.append(("head", part_markup(parts, "heads", parts_data["head"])))
+    if pro:
+        raw.append(("inner_shadow", pro_part("face", "inner_shadow")))
     if detailed:
         raw.extend([
             ("ears", detail_part("face", "ears")),
+        ])
+    if pro:
+        raw.append(("ear_shading", pro_part("face", "ear_shading")))
+    if detailed:
+        raw.extend([
             ("jaw_shadow", detail_part("face", "jaw_shadow")),
             ("hairline_shadow", detail_part("hair", "hairline_shadow")),
         ])
@@ -695,6 +835,13 @@ def layers(
         raw.extend([
             ("hair_strands", detail_part("hair", "strands")),
             ("hair_highlight", detail_part("hair", "highlight")),
+        ])
+    if pro:
+        raw.extend([
+            ("hair_strands_02", pro_part("hair", "strands_02")),
+            ("hair_strands_03", pro_part("hair", "strands_03")),
+            ("hair_strands_04", pro_part("hair", "strands_04")),
+            ("rim_light", pro_part("face", "rim_light")),
         ])
     if detailed:
         raw.append(("brows", detail_map("face", "brows", expression)))
@@ -722,10 +869,16 @@ def layers(
         mouth = expression_map.get("mouth") or parts_data["mouth"]
         raw.append(("mouth", part_markup(parts, "mouths", mouth)))
     raw.append(("accessory", part_markup(parts, "accessories", parts_data["accessory"])))
+    if pro:
+        raw.append(("outline_variation", pro_part("outline", "variation")))
     return [
         (
             f"{prefix}{layer_id}",
-            resolve(normalize_strokes(markup) if detailed else markup, design, level),
+            resolve(
+                normalize_strokes(markup, level) if detailed else markup,
+                design,
+                level,
+            ),
         )
         for layer_id, markup in raw
     ]
@@ -740,7 +893,7 @@ def character_markup(
 ) -> str:
     level = detail_level_of(design, detail_level)
     defs = ""
-    if level in {"standard", "rich"}:
+    if level in {"standard", "rich", "pro"}:
         defs = "  " + gradient_defs(design) + "\n"
     body = "\n".join(
         f'  <g id="{layer_id}">{markup}</g>'
@@ -786,7 +939,7 @@ def preview_sheet_svg(design: dict[str, Any], *, detail_level: str | None = None
     light = design["parts"]["light"]
     outline = design["parts"]["outline"]
     tiles: list[str] = [f'  <g id="sheet-background"><rect width="1080" height="1920" fill="{light}"/></g>']
-    if level in {"standard", "rich"}:
+    if level in {"standard", "rich", "pro"}:
         tiles.append("  " + gradient_defs(design))
     index = 0
     for expression in EXPRESSIONS:
@@ -810,16 +963,23 @@ def preview_sheet_svg(design: dict[str, Any], *, detail_level: str | None = None
     return svg_scene_builder.wrap_svg("\n".join(tiles))
 
 
-def compare_svg(design: dict[str, Any]) -> str:
-    """Basic vs rich, five expressions, in one deterministic 1080x1920 sheet."""
+def compare_svg(
+    design: dict[str, Any],
+    left: str = "basic",
+    right: str = "rich",
+    *,
+    note: str = "",
+) -> str:
+    """Two detail levels, five expressions, in one deterministic 1080x1920 sheet."""
     import svg_scene_builder
 
     light = design["parts"]["light"]
     outline = design["parts"]["outline"]
+    title = note or f"{left} vs {right}"
     tiles: list[str] = [f'  <g id="compare-background"><rect width="1080" height="1920" fill="{light}"/></g>']
     tiles.append("  " + gradient_defs(design))
     for row, expression in enumerate(EXPRESSIONS):
-        for column, level in enumerate(("basic", "rich")):
+        for column, level in enumerate((left, right)):
             x, y = column * 540, row * 384
             tiles.append(f'  <g id="compare-{level}-{expression}">')
             tiles.append(
@@ -840,11 +1000,281 @@ def compare_svg(design: dict[str, Any]) -> str:
                 f'fill="{light}">{level} / {expression}</text>'
             )
             tiles.append("  </g>")
+    tiles.append(
+        f'  <text x="540" y="28" text-anchor="middle" font-family="sans-serif" '
+        f'font-size="22" fill="{outline}">{title}</text>'
+    )
     return svg_scene_builder.wrap_svg("\n".join(tiles))
 
 
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def with_culture_metadata(design: dict[str, Any]) -> dict[str, Any]:
+    """Attach the schema-level culture and art-family notes to an older design."""
+    outfit = str(design["parts"]["outfit"])
+    accessory = str(design["parts"]["accessory"])
+    skin = str(design["parts"]["skin"])
+    design["culture"] = {
+        "region": "Bangladesh",
+        "skin_tone": SKIN_TONE_NAMES.get(skin, "custom"),
+        "outfit_name": OUTFIT_NAMES.get(outfit, {}).get("name", outfit),
+        "outfit_name_bn": OUTFIT_NAMES.get(outfit, {}).get("name_bn", outfit),
+        "outfit_note": OUTFIT_NOTES.get(outfit, ""),
+        "accessory_name": ACCESSORY_NAMES.get(accessory, {}).get("name", accessory),
+        "accessory_name_bn": ACCESSORY_NAMES.get(accessory, {}).get("name_bn", accessory),
+        "accessory_note": ACCESSORY_NOTES.get(accessory, ""),
+    }
+    design["art_family"] = {
+        "outline_width": OUTLINE_WIDTH,
+        "contour_width": CONTOUR_WIDTH,
+        "inner_width": INNER_WIDTH,
+        "detail_width": DETAIL_WIDTH,
+        "light_direction": "top-left",
+    }
+    return design
+
+
+def preserve_creator_identity(
+    design: dict[str, Any], existing: dict[str, Any] | None
+) -> dict[str, Any]:
+    """Keep the locked creator role, palette and proportions exactly as published."""
+    if not existing:
+        return design
+    design["brief"]["role"] = existing["brief"]["role"]
+    design["brief"]["role_label"] = existing["brief"].get("role_label", design["brief"]["role_label"])
+    design["appearance"]["palette"] = list(existing["appearance"]["palette"])
+    design["proportions"] = dict(existing["proportions"])
+    return design
+
+
+def _cast_brief(
+    role: str,
+    age: int,
+    gender: str,
+    personality: str,
+    name: str,
+    character_id: str,
+) -> dict[str, Any]:
+    return {
+        "project": "character-cast",
+        "role": role,
+        "role_label": ROLE_NAMES[role],
+        "age": age,
+        "gender": gender,
+        "personality": personality,
+        "niche": lib.load_channel()["niche"],
+        "language": lib.load_channel()["language"],
+        "name": name,
+        "character_id": character_id,
+    }
+
+
+def _apply_cast_parts(
+    design: dict[str, Any],
+    style: dict[str, Any],
+    *,
+    head: str,
+    hair: str,
+    body: str,
+    outfit: str,
+    accessory: str,
+    skin: str,
+    outfit_color: str,
+) -> dict[str, Any]:
+    colors = style_colors(style, load_parts())
+    parts = design["parts"]
+    parts.update({
+        "head": head,
+        "hair": hair,
+        "body": body,
+        "outfit": outfit,
+        "accessory": accessory,
+        "skin": skin,
+        "outfit_color": outfit_color,
+    })
+    design["appearance"] = {
+        "body": body,
+        "hair": hair,
+        "clothing": outfit,
+        "palette": _unique([
+            colors["outline"], colors["light"], colors["accent"],
+            outfit_color, skin,
+        ]),
+    }
+    head_height = HEAD_HEIGHTS[head]
+    total_height = BODY_HEIGHTS[body]
+    design["proportions"] = {
+        "head_height": head_height,
+        "total_height": total_height,
+        "head_to_body": round(head_height / total_height, 3),
+        "shoulder_width": SHOULDER_WIDTHS[body],
+    }
+    design["detail_level"] = "pro"
+    design["locked"] = True
+    design["fit_score"] = _fit_score(design)
+    return with_culture_metadata(design)
+
+
+def build_cast_designs(
+    style: dict[str, Any],
+    parts: dict[str, Any],
+    detail_level: str = "pro",
+) -> list[dict[str, Any]]:
+    """Mentor and learner, drawn from the same part library and light direction."""
+    mentor_brief = _cast_brief(
+        "teacher", 48, "male", "calm", "রফিক", "mentor-01"
+    )
+    mentor = build_design(mentor_brief, style, parts, 3, detail_level)
+    mentor["id"] = "mentor-01"
+    mentor = _apply_cast_parts(
+        mentor, style,
+        head="head-square",
+        hair="hair-side-part",
+        body="body-average",
+        outfit="outfit-panjabi",
+        accessory="accessory-tupi",
+        skin="#C68642",
+        outfit_color=style_colors(style, parts)["accent"],
+    )
+
+    learner_brief = _cast_brief(
+        "student", 21, "female", "energetic", "তিশা", "learner-01"
+    )
+    learner = build_design(learner_brief, style, parts, 2, detail_level)
+    learner["id"] = "learner-01"
+    learner = _apply_cast_parts(
+        learner, style,
+        head="head-round",
+        hair="hair-bob",
+        body="body-petite",
+        outfit="outfit-salwar-kameez",
+        accessory="accessory-earrings",
+        skin="#A9683A",
+        outfit_color=style_colors(style, parts)["outfit"],
+    )
+    return [mentor, learner]
+
+
+def prop_markup(
+    parts: dict[str, Any],
+    design: dict[str, Any],
+    name: str,
+    *,
+    x: float = 0,
+    y: float = 0,
+    scale: float = 1.0,
+) -> str:
+    try:
+        template = str(parts["props"][name])
+    except KeyError as exc:
+        raise lib.SkillError(f"Unknown prop: {name}") from exc
+    values = {
+        "{accent}": str(design["parts"]["accent"]),
+        "{outline}": str(design["parts"]["outline"]),
+        "{light}": str(design["parts"]["light"]),
+        "{outfit}": str(design["parts"].get("outfit_color") or design["parts"]["light"]),
+    }
+    for key, value in values.items():
+        template = template.replace(key, value)
+    return f'<g transform="translate({x},{y}) scale({scale})">{template}</g>'
+
+
+def props_sheet_svg(design: dict[str, Any]) -> str:
+    """All five reusable props, laid out deterministically on one 1080x1920 sheet."""
+    import svg_scene_builder
+
+    parts = load_parts()
+    light = design["parts"]["light"]
+    outline = design["parts"]["outline"]
+    tiles: list[str] = [
+        f'  <g id="props-background"><rect width="1080" height="1920" fill="{light}"/></g>'
+    ]
+    for index, name in enumerate(PROP_NAMES):
+        row, column = divmod(index, 2)
+        x, y = column * 540, row * 640
+        tiles.append(f'  <g id="prop-tile-{name}">')
+        tiles.append(
+            f'    <rect x="{x}" y="{y}" width="540" height="640" fill="{light}" '
+            f'stroke="{outline}" stroke-width="4"/>'
+        )
+        tiles.append("    " + prop_markup(parts, design, name, x=x + 270, y=y + 300, scale=1.5))
+        tiles.append(
+            f'    <text x="{x + 20}" y="{y + 610}" font-family="sans-serif" '
+            f'font-size="24" fill="{outline}">{name}</text>'
+        )
+        tiles.append("  </g>")
+    return svg_scene_builder.wrap_svg("\n".join(tiles))
+
+
+def cast_sheet_svg(creator: dict[str, Any], cast: list[dict[str, Any]]) -> str:
+    """All three characters in one art family on one 1080x1920 sheet."""
+    import svg_scene_builder
+
+    designs = [creator] + list(cast)
+    light = creator["parts"]["light"]
+    outline = creator["parts"]["outline"]
+    tiles: list[str] = [
+        f'  <g id="cast-background"><rect width="1080" height="1920" fill="{light}"/></g>'
+    ]
+    for design in designs:
+        tiles.append("  " + gradient_defs(design))
+    for index, design in enumerate(designs):
+        y = index * 640
+        tiles.append(f'  <g id="cast-{design["id"]}">')
+        tiles.append(
+            f'    <rect x="0" y="{y}" width="1080" height="640" fill="{light}" '
+            f'stroke="{outline}" stroke-width="4"/>'
+        )
+        tiles.append(f'    <g transform="translate(372,{y + 16}) scale(0.31)">')
+        for layer_id, markup in layers(
+            design, "neutral", "idle", prefix=f"c{index}-", detail_level="pro"
+        ):
+            tiles.append(f'      <g id="{layer_id}">{markup}</g>')
+        tiles.append("    </g>")
+        tiles.append(
+            f'    <rect x="0" y="{y + 600}" width="1080" height="40" fill="{outline}" opacity="0.8"/>'
+        )
+        tiles.append(
+            f'    <text x="16" y="{y + 628}" font-family="sans-serif" font-size="24" '
+            f'fill="{light}">{design["id"]} | {design["brief"]["role"]} | '
+            f'{design["culture"]["outfit_name"]} | {design["culture"]["skin_tone"]}</text>'
+        )
+        tiles.append("  </g>")
+    return svg_scene_builder.wrap_svg("\n".join(tiles))
+
+
+def write_cast_assets(
+    creator: dict[str, Any],
+    style: dict[str, Any],
+    parts: dict[str, Any],
+    root: Path = CHARACTERS_DIR,
+    *,
+    render: bool = True,
+) -> dict[str, Path]:
+    """Write mentor-01, learner-01, the cast sheet and the prop sheet."""
+    import svg_scene_builder
+
+    paths: dict[str, Path] = {}
+    cast = build_cast_designs(style, parts)
+    for member in cast:
+        member_paths = write_design(member, root / member["id"], render=render)
+        paths[member["id"]] = member_paths["character"]
+        paths[f"{member['id']}_preview"] = member_paths.get(
+            "preview", root / member["id"] / "preview.png"
+        )
+
+    cast_dir = root / "cast"
+    cast_source = cast_dir / "cast-sheet.svg"
+    svg_scene_builder.write_svg(cast_source, cast_sheet_svg(creator, cast))
+    if render:
+        cast_png = svg_scene_builder.svg_to_png(cast_source, cast_dir / "cast-sheet.png")
+        paths["cast_sheet"] = cast_png
+
+    props_dir = root / "props"
+    props_source = props_dir / "props-sheet.svg"
+    svg_scene_builder.write_svg(props_source, props_sheet_svg(creator))
+    if render:
+        props_png = svg_scene_builder.svg_to_png(props_source, props_dir / "props-sheet.png")
+        paths["props_sheet"] = props_png
+    return paths
 
 
 def write_design(
@@ -853,6 +1283,7 @@ def write_design(
     *,
     include_sheet: bool = False,
     include_compare: bool = False,
+    include_pro_compare: bool = False,
     render: bool = True,
 ) -> dict[str, Path]:
     import svg_scene_builder
@@ -882,7 +1313,20 @@ def write_design(
         if render:
             svg_scene_builder.svg_to_png(compare_source, compare_png)
             paths["compare"] = compare_png
+    if include_pro_compare:
+        pro_source = directory / "compare-rich-pro.svg"
+        svg_scene_builder.write_svg(
+            pro_source, compare_svg(design, "rich", "pro", note="rich vs pro")
+        )
+        pro_png = directory / "compare-rich-pro.png"
+        if render:
+            svg_scene_builder.svg_to_png(pro_source, pro_png)
+            paths["pro_compare"] = pro_png
     return paths
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _render_twice(design: dict[str, Any], target: Path) -> tuple[Path, Path]:
@@ -911,7 +1355,8 @@ def check_character(path: Path, *, require_png: bool = True) -> dict[str, Any]:
     parts = load_parts()
     expected_counts = {
         "heads": 6, "hairs": 8, "eyes": 6, "brows": 4,
-        "mouths": 8, "bodies": 5, "outfits": 8, "accessories": 8,
+        "mouths": 8, "bodies": 5, "outfits": 11, "accessories": 9,
+        "props": 5,
     }
     for category, minimum in expected_counts.items():
         if len(parts.get(category, {})) < minimum:
@@ -950,7 +1395,7 @@ def check_character(path: Path, *, require_png: bool = True) -> dict[str, Any]:
             f"layered SVG is {len(svg_text.encode('utf-8'))} bytes, over the {MAX_SVG_BYTES} byte limit"
         )
 
-    if level in {"standard", "rich"}:
+    if level in {"standard", "rich", "pro"}:
         expected_gradients = set(gradient_ids(design).values())
         found_gradients = {
             str(element.get("id")) for element in tree.iter()
@@ -963,13 +1408,26 @@ def check_character(path: Path, *, require_png: bool = True) -> dict[str, Any]:
             float(element.get("stroke-width"))
             for element in tree.iter() if element.get("stroke-width")
         }
-        unexpected = sorted(widths - ALLOWED_STROKE_WIDTHS)
+        unexpected = sorted(widths - allowed_stroke_widths(level))
         if unexpected:
             raise lib.SkillError(
                 "unexpected stroke width(s): "
                 + ", ".join(f"{value:g}" for value in unexpected)
-                + f"; expected only {sorted(ALLOWED_STROKE_WIDTHS)}"
+                + f"; expected only {sorted(allowed_stroke_widths(level))}"
             )
+
+    if level == "pro":
+        for marker in (
+            "inner_shadow", "rim_light", "ear_shading", "neck_shading",
+            "fabric_pattern", "hair_strands_02", "hair_strands_03",
+            "hair_strands_04", "outline_variation",
+        ):
+            if f'id="{marker}"' not in svg_text:
+                raise lib.SkillError(f"pro detail is missing layer id: {marker}")
+        if svg_text.count('data-fingers="5"') < 2:
+            raise lib.SkillError("pro hands must draw five fingers on both hands")
+        if "stroke-width=\"14\"" not in svg_text or "stroke-width=\"6\"" not in svg_text:
+            raise lib.SkillError("pro detail must vary outline weight with 14 and 6")
 
     if require_png:
         directory = path.parent
@@ -1039,13 +1497,48 @@ def run(
     locked["id"] = brief["character_id"]
     locked["name"] = brief["name"]
     locked["locked"] = True
+    existing_path = out_root / locked["id"] / "character.json"
+    existing = lib.read_json(existing_path, required=False) if existing_path.is_file() else None
+    locked = preserve_creator_identity(locked, existing if isinstance(existing, dict) else None)
+    locked = with_culture_metadata(locked)
     locked_dir = out_root / locked["id"]
     locked_paths = write_design(
-        locked, locked_dir, include_sheet=True, include_compare=True, render=render
+        locked,
+        locked_dir,
+        include_sheet=True,
+        include_compare=True,
+        include_pro_compare=True,
+        render=render,
     )
     checked = check_character(locked_paths["character"], require_png=render)
     if render:
         write_legacy_views(locked)
+    cast_paths = write_cast_assets(locked, style, parts, out_root, render=render)
+    if render:
+        report_sheet = lib.write_json(
+            lib.stage(4, "character-cast.json"),
+            {
+                "creator": locked["id"],
+                "art_family": locked["art_family"],
+                "characters": [
+                    {
+                        "id": member_id,
+                        "character": lib.relative(cast_paths[member_id]),
+                        "preview_png": lib.relative(cast_paths[f"{member_id}_preview"]),
+                    }
+                    for member_id in ("mentor-01", "learner-01")
+                ],
+                "cast_sheet_png": lib.relative(
+                    cast_paths.get("cast_sheet", out_root / "cast" / "cast-sheet.png")
+                ),
+                "props_sheet_png": lib.relative(
+                    cast_paths.get("props_sheet", out_root / "props" / "props-sheet.png")
+                ),
+                "props": list(PROP_NAMES),
+            },
+        )
+    else:
+        report_sheet = None
 
     report = {
         "project": lib.project_name(),
@@ -1062,7 +1555,23 @@ def run(
             "preview_png": lib.relative(locked_paths.get("preview", locked_dir / "preview.png")),
             "preview_sheet_png": lib.relative(locked_paths.get("sheet", locked_dir / "preview-sheet.png")),
             "compare_png": lib.relative(locked_paths.get("compare", locked_dir / "compare.png")),
+            "compare_rich_pro_png": lib.relative(
+                locked_paths.get("pro_compare", locked_dir / "compare-rich-pro.png")
+            ),
             "detail_level": checked["detail_level"],
+        },
+        "cast": {
+            "creator": locked["id"],
+            "art_family": locked["art_family"],
+            "characters": ["mentor-01", "learner-01"],
+            "cast_sheet_png": lib.relative(
+                cast_paths.get("cast_sheet", out_root / "cast" / "cast-sheet.png")
+            ),
+            "props_sheet_png": lib.relative(
+                cast_paths.get("props_sheet", out_root / "props" / "props-sheet.png")
+            ),
+            "props": list(PROP_NAMES),
+            "report": lib.relative(report_sheet) if report_sheet else "",
         },
         "locked": True,
         "criteria": {
@@ -1075,7 +1584,10 @@ def run(
             "layers": required_layer_ids(checked["detail_level"]),
             "svg_bytes": checked["svg_bytes"],
             "max_svg_bytes": MAX_SVG_BYTES,
-            "stroke_widths": sorted(ALLOWED_STROKE_WIDTHS),
+            "stroke_widths": sorted(allowed_stroke_widths(checked["detail_level"])),
+            "skin_tones": len(parts["palettes"]["skin"]),
+            "outfits": len(parts["outfits"]),
+            "props": list(PROP_NAMES),
         },
     }
     lib.write_json(report_path, report)
@@ -1136,20 +1648,28 @@ def self_test() -> int:
     parts = load_parts()
     for category, minimum in {
         "heads": 6, "hairs": 8, "eyes": 6, "brows": 4,
-        "mouths": 8, "bodies": 5, "outfits": 8, "accessories": 8,
+        "mouths": 8, "bodies": 5, "outfits": 11, "accessories": 9,
+        "props": 5,
     }.items():
         assert len(parts[category]) >= minimum, (category, len(parts[category]))
+    assert len(parts["palettes"]["skin"]) >= 6, len(parts["palettes"]["skin"])
+    for outfit in (
+        "outfit-panjabi", "outfit-shirt-trousers", "outfit-salwar-kameez", "outfit-saree",
+    ):
+        assert outfit in parts["outfits"], outfit
+    assert "accessory-tupi" in parts["accessories"]
+    assert "accessory-glasses" in parts["accessories"]
 
-    designs = build_designs(load_brief(brief_path), style, parts)
+    designs = build_designs(load_brief(brief_path), style, parts, "pro")
     assert len(designs) == 3
     assert len({signature(design) for design in designs}) == 3
-    assert all(design["detail_level"] == "rich" for design in designs)
+    assert all(design["detail_level"] == "pro" for design in designs)
 
     for design in designs:
         paths = write_design(design, target / design["id"], render=True)
         checked = check_character(paths["character"])
-        assert checked["detail_level"] == "rich", checked
-        assert checked["layers"] == len(required_layer_ids("rich")), checked
+        assert checked["detail_level"] == "pro", checked
+        assert checked["layers"] == len(required_layer_ids("pro")), checked
         assert checked["svg_bytes"] <= MAX_SVG_BYTES, checked
         assert checked["palette_colors"] >= MIN_PALETTE_COLORS, checked
         assert checked["contrast"] >= MIN_CONTRAST, checked
@@ -1157,14 +1677,18 @@ def self_test() -> int:
 
     winner = choose_design(designs)
     print(
-        f"PASS character-designer: 3 distinct candidates, "
-        f"{len(required_layer_ids('rich'))} layers each, schema valid"
+        f"PASS character-designer: 3 distinct pro candidates, "
+        f"{len(required_layer_ids('pro'))} layers each, schema valid"
     )
 
-    rich_svg = layered_svg(winner)
-    assert all(f'id="{identifier}"' in rich_svg for identifier in gradient_ids(winner).values())
-    assert rich_svg.count("<linearGradient") >= 4
-    print("PASS character-designer: 4 linear gradients and the 10/4/44 stroke scale are present")
+    pro_svg = layered_svg(winner)
+    assert all(f'id="{identifier}"' in pro_svg for identifier in gradient_ids(winner).values())
+    assert pro_svg.count("<linearGradient") >= 4
+    assert pro_svg.count('data-fingers="5"') >= 2
+    for marker in ("hair_strands_02", "hair_strands_03", "hair_strands_04"):
+        assert f'id="{marker}"' in pro_svg, marker
+    assert 'stroke-width="14"' in pro_svg and 'stroke-width="6"' in pro_svg
+    print("PASS character-designer: pro adds 4 hair strand layers, 5-finger hands and 14/10/6/4 outline weights")
 
     first, second = _render_twice(winner, target / "determinism")
     size = svg_scene_builder.png_size(first)
@@ -1178,13 +1702,15 @@ def self_test() -> int:
     svg_scene_builder.svg_to_png(timing_svg, target / "timing.png")
     elapsed = time.perf_counter() - start
     assert elapsed < MAX_RENDER_SECONDS, elapsed
-    print(f"PASS character-designer: rich PNG render took {elapsed:.2f}s (limit {MAX_RENDER_SECONDS:.0f}s)")
+    print(f"PASS character-designer: pro PNG render took {elapsed:.2f}s (limit {MAX_RENDER_SECONDS:.0f}s)")
 
     layer_sets = {expression: dict(layers(winner, expression, "idle")) for expression in EXPRESSIONS}
     for layer_id in ("brows", "eyelids", "mouth", "blush"):
         values = {layer_sets[expression][layer_id] for expression in EXPRESSIONS}
         assert len(values) == len(EXPRESSIONS), (layer_id, len(values))
-    print("PASS character-designer: 5 expressions change brows, eyelids, mouth and cheeks together")
+    for layer_id in ("rim_light", "inner_shadow", "neck_shading", "ear_shading"):
+        assert layer_sets["neutral"][layer_id], layer_id
+    print("PASS character-designer: 5 expressions change brows, eyelids, mouth and cheeks; pro shading is present")
 
     basic = json.loads(json.dumps(winner))
     basic["detail_level"] = "basic"
@@ -1193,8 +1719,57 @@ def self_test() -> int:
     assert basic_checked["detail_level"] == "basic", basic_checked
     assert basic_checked["layers"] == len(BASE_LAYER_IDS), basic_checked
     assert "<linearGradient" not in layered_svg(basic)
-    assert "iris" not in {layer_id for layer_id, _ in layers(basic, "neutral", "idle")}
-    print("PASS character-designer: basic detail level still renders with 10 base layers")
+
+    rich = json.loads(json.dumps(winner))
+    rich["detail_level"] = "rich"
+    rich_paths = write_design(rich, target / "rich" / rich["id"], render=False)
+    rich_checked = check_character(rich_paths["character"], require_png=False)
+    assert rich_checked["detail_level"] == "rich", rich_checked
+    assert rich_checked["layers"] == len(required_layer_ids("rich")), rich_checked
+    assert "inner_shadow" not in {layer_id for layer_id, _ in layers(rich, "neutral", "idle")}
+    print("PASS character-designer: basic (10 layers) and rich (31 layers) still render without pro-only layers")
+
+    existing_path = CHARACTERS_DIR / "creator-01" / "character.json"
+    if existing_path.is_file():
+        existing = lib.read_json(existing_path)
+        assert existing["brief"]["role"] == CREATOR_BASELINE["role"], existing["brief"]["role"]
+        assert existing["appearance"]["palette"] == CREATOR_BASELINE["palette"], existing["appearance"]["palette"]
+        assert existing["proportions"] == CREATOR_BASELINE["proportions"], existing["proportions"]
+        for key, value in (
+            ("skin", CREATOR_BASELINE["skin"]),
+            ("outfit", CREATOR_BASELINE["outfit"]),
+            ("outfit_color", CREATOR_BASELINE["outfit_color"]),
+            ("accessory", CREATOR_BASELINE["accessory"]),
+            ("head", CREATOR_BASELINE["head"]),
+            ("hair", CREATOR_BASELINE["hair"]),
+            ("body", CREATOR_BASELINE["body"]),
+        ):
+            assert existing["parts"][key] == value, (key, existing["parts"][key])
+        print("PASS character-designer: creator-01 role, palette, outfit and proportions are unchanged")
+
+    cast = build_cast_designs(style, parts)
+    assert len(cast) == 2
+    for member in cast:
+        member_paths = write_design(member, target / member["id"], render=False)
+        member_checked = check_character(member_paths["character"], require_png=False)
+        assert member_checked["detail_level"] == "pro", member_checked
+        assert member["parts"]["outline"] == winner["parts"]["outline"]
+        assert member["parts"]["light"] == winner["parts"]["light"]
+        assert member["art_family"] == winner["art_family"]
+    cast_source = target / "cast-sheet.svg"
+    svg_scene_builder.write_svg(cast_source, cast_sheet_svg(winner, cast))
+    cast_png = svg_scene_builder.svg_to_png(cast_source, target / "cast-sheet.png")
+    assert svg_scene_builder.png_size(cast_png) == (svg_scene_builder.WIDTH, svg_scene_builder.HEIGHT)
+    print("PASS character-designer: mentor-01 and learner-01 share the outline, light and art family; cast sheet rendered")
+
+    for name in PROP_NAMES:
+        assert name in parts["props"], name
+        assert prop_markup(parts, winner, name)
+    props_source = target / "props-sheet.svg"
+    svg_scene_builder.write_svg(props_source, props_sheet_svg(winner))
+    props_png = svg_scene_builder.svg_to_png(props_source, target / "props-sheet.png")
+    assert svg_scene_builder.png_size(props_png) == (svg_scene_builder.WIDTH, svg_scene_builder.HEIGHT)
+    print("PASS character-designer: coin, phone, notebook, bar-graph board and wallet render")
 
     sheet = target / "creatorsheet"
     sheet.mkdir(parents=True, exist_ok=True)
@@ -1207,13 +1782,15 @@ def self_test() -> int:
 
     compare = target / "compare"
     compare.mkdir(parents=True, exist_ok=True)
-    compare_source = compare / "compare.svg"
-    svg_scene_builder.write_svg(compare_source, compare_svg(winner))
+    compare_source = compare / "compare-rich-pro.svg"
+    svg_scene_builder.write_svg(
+        compare_source, compare_svg(winner, "rich", "pro", note="rich vs pro")
+    )
     compare_text = compare_source.read_text(encoding="utf-8")
-    assert "compare-basic-neutral" in compare_text and "compare-rich-neutral" in compare_text
-    compare_png = svg_scene_builder.svg_to_png(compare_source, compare / "compare.png")
+    assert "compare-rich-neutral" in compare_text and "compare-pro-neutral" in compare_text
+    compare_png = svg_scene_builder.svg_to_png(compare_source, compare / "compare-rich-pro.png")
     assert svg_scene_builder.png_size(compare_png) == (svg_scene_builder.WIDTH, svg_scene_builder.HEIGHT)
-    print("PASS character-designer: basic vs rich compare sheet rendered")
+    print("PASS character-designer: rich vs pro compare sheet rendered for all 5 expressions")
     return 0
 
 
@@ -1271,7 +1848,7 @@ def main() -> int:
         "--detail-level",
         choices=DETAIL_LEVELS,
         default=DEFAULT_DETAIL_LEVEL,
-        help="basic, standard or rich detail (default: rich)",
+        help="basic, standard, rich or pro detail (default: pro)",
     )
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()

@@ -96,6 +96,31 @@
         }
       }
     },
+    "culture": {
+      "type": "object",
+      "description": "Bangladeshi context for the chosen skin tone, outfit and optional accessory.",
+      "properties": {
+        "region": {"type": "string", "minLength": 3},
+        "skin_tone": {"type": "string", "minLength": 3},
+        "outfit_name": {"type": "string", "minLength": 3},
+        "outfit_name_bn": {"type": "string", "minLength": 2},
+        "outfit_note": {"type": "string", "minLength": 3},
+        "accessory_name": {"type": "string", "minLength": 3},
+        "accessory_name_bn": {"type": "string", "minLength": 2},
+        "accessory_note": {"type": "string", "minLength": 3}
+      }
+    },
+    "art_family": {
+      "type": "object",
+      "description": "Shared measurements that keep every cast member in one illustration family.",
+      "properties": {
+        "outline_width": {"type": "number", "minimum": 1},
+        "contour_width": {"type": "number", "minimum": 1},
+        "inner_width": {"type": "number", "minimum": 1},
+        "detail_width": {"type": "number", "minimum": 1},
+        "light_direction": {"type": "string", "enum": ["top-left", "top-right", "bottom-left", "bottom-right"]}
+      }
+    },
     "voice": {
       "type": "object",
       "required": ["gender", "tone"],
@@ -121,7 +146,7 @@
       "minItems": 4,
       "items": {"type": "string", "enum": ["closed", "open", "wide", "smile"]}
     },
-    "detail_level": {"type": "string", "enum": ["basic", "standard", "rich"]},
+    "detail_level": {"type": "string", "enum": ["basic", "standard", "rich", "pro"]},
     "locked": {"type": "boolean"}
   }
 }

@@ -67,7 +67,24 @@
     "wide",
     "smile"
   ],
-  "detail_level": "rich",
+  "detail_level": "pro",
+  "culture": {
+    "region": "Bangladesh",
+    "skin_tone": "wheat",
+    "outfit_name": "Formal suit",
+    "outfit_name_bn": "ফরমাল স্যুট",
+    "outfit_note": "Formal jacket and tie for an office or bank role.",
+    "accessory_name": "Lanyard",
+    "accessory_name_bn": "ল্যানিয়ার্ড",
+    "accessory_note": "Office or school identity card lanyard."
+  },
+  "art_family": {
+    "outline_width": 10,
+    "contour_width": 14,
+    "inner_width": 6,
+    "detail_width": 4,
+    "light_direction": "top-left"
+  },
   "locked": false,
   "fit_score": 60
 }

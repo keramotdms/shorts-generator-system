@@ -67,7 +67,24 @@
     "wide",
     "smile"
   ],
-  "detail_level": "rich",
+  "detail_level": "pro",
+  "culture": {
+    "region": "Bangladesh",
+    "skin_tone": "light brown",
+    "outfit_name": "Panjabi",
+    "outfit_name_bn": "পাঞ্জাবি",
+    "outfit_note": "Long buttoned tunic worn at Eid, weddings and family events.",
+    "accessory_name": "Watch",
+    "accessory_name_bn": "ঘড়ি",
+    "accessory_note": "Simple wrist watch for a professional role."
+  },
+  "art_family": {
+    "outline_width": 10,
+    "contour_width": 14,
+    "inner_width": 6,
+    "detail_width": 4,
+    "light_direction": "top-left"
+  },
   "locked": false,
   "fit_score": 65
 }

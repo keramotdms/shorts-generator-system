@@ -58,11 +58,36 @@
     "preview_png": "assets\\characters\\creator-01\\preview.png",
     "preview_sheet_png": "assets\\characters\\creator-01\\preview-sheet.png",
     "compare_png": "assets\\characters\\creator-01\\compare.png",
-    "detail_level": "rich"
+    "compare_rich_pro_png": "assets\\characters\\creator-01\\compare-rich-pro.png",
+    "detail_level": "pro"
+  },
+  "cast": {
+    "creator": "creator-01",
+    "art_family": {
+      "outline_width": 10,
+      "contour_width": 14,
+      "inner_width": 6,
+      "detail_width": 4,
+      "light_direction": "top-left"
+    },
+    "characters": [
+      "mentor-01",
+      "learner-01"
+    ],
+    "cast_sheet_png": "assets\\characters\\cast\\cast-sheet.png",
+    "props_sheet_png": "assets\\characters\\props\\props-sheet.png",
+    "props": [
+      "coin",
+      "phone",
+      "notebook",
+      "bar-graph",
+      "wallet"
+    ],
+    "report": "projects\\sample-finance-channel\\04-character\\character-cast.json"
   },
   "locked": true,
   "criteria": {
-    "detail_level": "rich",
+    "detail_level": "pro",
     "head_to_body": 0.276,
     "min_contrast": 3.0,
     "contrast": 12.78,
@@ -99,14 +124,34 @@
       "collar",
       "placket",
       "cuffs",
-      "hands"
+      "hands",
+      "inner_shadow",
+      "rim_light",
+      "ear_shading",
+      "neck_shading",
+      "fabric_pattern",
+      "hair_strands_02",
+      "hair_strands_03",
+      "hair_strands_04",
+      "outline_variation"
     ],
-    "svg_bytes": 11614,
+    "svg_bytes": 15264,
     "max_svg_bytes": 204800,
     "stroke_widths": [
       4.0,
+      6.0,
       10.0,
+      14.0,
       44.0
+    ],
+    "skin_tones": 8,
+    "outfits": 11,
+    "props": [
+      "coin",
+      "phone",
+      "notebook",
+      "bar-graph",
+      "wallet"
     ]
   }
 }

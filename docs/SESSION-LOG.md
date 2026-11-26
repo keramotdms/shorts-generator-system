@@ -4,6 +4,25 @@ One entry per work session. Newest entry goes at the top.
 
 Backfilled from `git log` on 2026-11-24 using these known facts: **Home = toolchain setup (`fb84b29`)**, **Office = everything else**. No commit needed `PC: Unknown`.
 
+## 2026-11-26 | PC: Office | commit: 534452af809a098e0ad99b38f6f400b0ad307cb2
+
+### What was done
+
+- Pulled `origin/main` (already at `534452a`) before editing; installed nothing and touched no `.env`, Windows setting or third-party skill.
+- Reviewed external vector-character references read-only in a temp clone outside the repo, then deleted it; wrote `docs/CHARACTER-REFERENCES.md` with the GEE-ME asset/format/count, LICENSE and README findings (commercial use **UNCLEAR**, no LICENSE file and no usage sentence) and measurable style metrics, plus 5-line notes on vectorcraft and artcraft-skills.
+- Upgraded `assets/character-parts/parts.json` to version 3 with 8 Bangladesh skin tones, 11 outfits (added shirt+trousers, salwar kameez, saree), 9 accessories (added tupi), 5 props (coin, phone, notebook, bar-graph board, wallet), culture notes and a `detail.pro` layer library with five-finger hands.
+- Added `detail_level` `pro` (default) above `rich` in `scripts/character_designer.py`, the character schema and the contract: outline weight variation (14/10/6/4/44), inner shadow, rim light, fabric weave, four hair-strand layers, ear/neck shading and 40 total layer ids, while keeping `creator-01` role, palette, outfit and proportions unchanged.
+- Built `mentor-01` (panjabi, tupi, medium brown) and `learner-01` (salwar kameez, earrings, deep brown) from the same part library and art family, added `cast-sheet.png`, `props-sheet.png` and `compare-rich-pro.png`, and updated SKILL.md, `docs/OUTPUT-FORMATS.md` and `health_check.py`.
+- Final checks: `health_check.py` `90 PASS | 0 WARN | 0 BLOCKED | 0 INFO | 0 FAIL`, `test_skills.py` 93 skills / 50 self-tests, dummy pipeline 93 PASS, and chain, no-template and format audits pass.
+
+### What is pending
+
+- Nothing from this character task; the user still needs to review `compare-rich-pro.png`, `cast-sheet.png` and `props-sheet.png` and give OK.
+
+### Next step
+
+- Commit, push, confirm `main == origin/main`, then wait for OK before the next skill.
+
 ## 2026-11-25 | PC: Office | commit: 93d571061d5707d05c0ff4449421636d8d540958
 
 ### What was done

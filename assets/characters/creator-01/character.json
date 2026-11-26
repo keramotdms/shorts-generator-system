@@ -68,7 +68,24 @@
     "wide",
     "smile"
   ],
-  "detail_level": "rich",
+  "detail_level": "pro",
+  "culture": {
+    "region": "Bangladesh",
+    "skin_tone": "light warm",
+    "outfit_name": "Shirt with vest",
+    "outfit_name_bn": "শার্ট ও ভেস্ট",
+    "outfit_note": "Teacher-style shirt with a contrast vest.",
+    "accessory_name": "Glasses",
+    "accessory_name_bn": "চশমা",
+    "accessory_note": "Rectangular glasses for a teacher, mentor or office role."
+  },
+  "art_family": {
+    "outline_width": 10,
+    "contour_width": 14,
+    "inner_width": 6,
+    "detail_width": 4,
+    "light_direction": "top-left"
+  },
   "locked": true,
   "fit_score": 100
 }

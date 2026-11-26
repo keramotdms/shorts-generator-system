@@ -1,0 +1,90 @@
+{
+  "id": "mentor-01",
+  "name": "রফিক (3)",
+  "style_source": "config/style-bible.json",
+  "brief": {
+    "role": "teacher",
+    "role_label": "শিক্ষক",
+    "age": 48,
+    "gender": "male",
+    "personality": "calm",
+    "niche": "Personal finance / side hustles",
+    "language": "bn"
+  },
+  "parts": {
+    "head": "head-square",
+    "hair": "hair-side-part",
+    "eyes": "eyes-happy",
+    "brows": "brows-soft",
+    "mouth": "mouth-smile",
+    "body": "body-average",
+    "outfit": "outfit-panjabi",
+    "accessory": "accessory-tupi",
+    "skin": "#C68642",
+    "hair_color": "#111827",
+    "eye_color": "#111827",
+    "outfit_color": "#F59E0B",
+    "accent": "#F59E0B",
+    "outline": "#111827",
+    "light": "#F9FAFB"
+  },
+  "proportions": {
+    "head_height": 310,
+    "total_height": 1300,
+    "head_to_body": 0.238,
+    "shoulder_width": 210
+  },
+  "appearance": {
+    "body": "body-average",
+    "hair": "hair-side-part",
+    "clothing": "outfit-panjabi",
+    "palette": [
+      "#111827",
+      "#F9FAFB",
+      "#F59E0B",
+      "#C68642"
+    ]
+  },
+  "voice": {
+    "gender": "male",
+    "tone": "calm and reassuring"
+  },
+  "expressions": [
+    "neutral",
+    "happy",
+    "worried",
+    "surprised",
+    "thinking"
+  ],
+  "poses": [
+    "idle",
+    "wave",
+    "point"
+  ],
+  "mouth_shapes": [
+    "closed",
+    "open",
+    "wide",
+    "smile"
+  ],
+  "detail_level": "pro",
+  "culture": {
+    "region": "Bangladesh",
+    "skin_tone": "medium brown",
+    "outfit_name": "Panjabi",
+    "outfit_name_bn": "পাঞ্জাবি",
+    "outfit_note": "Long buttoned tunic worn at Eid, weddings and family events.",
+    "accessory_name": "Tupi cap",
+    "accessory_name_bn": "টুপি",
+    "accessory_note": "Traditional Bangladeshi cap; optional, never assumed for every character."
+  },
+  "art_family": {
+    "outline_width": 10,
+    "contour_width": 14,
+    "inner_width": 6,
+    "detail_width": 4,
+    "light_direction": "top-left"
+  },
+  "locked": true,
+  "fit_score": 65
+}

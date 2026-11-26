@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "source": "parametric parts used by scripts/character_designer.py; detail holds the rich layer set",
+  "version": 3,
+  "source": "parametric parts used by scripts/character_designer.py; detail holds the standard/rich layer set and detail.pro holds the pro layer set",
   "viewbox": [
     1080,
     1920
@@ -26,7 +26,9 @@
       "#D9A066",
       "#C68642",
       "#A9683A",
-      "#96603A"
+      "#96603A",
+      "#FBE3CF",
+      "#B97A4E"
     ],
     "outline": [
       "#111827",
@@ -109,7 +111,10 @@
     "outfit-formal": "<path d=\"M455 832 Q540 797 625 832 L645 1242 Q540 1288 435 1242 Z\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M505 815 L540 872 L575 815\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"9\" stroke-linejoin=\"round\"/><path d=\"M490 830 L540 900 L520 1000 L490 860 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"8\"/><path d=\"M590 830 L540 900 L560 1000 L590 860 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"8\"/><circle cx=\"540\" cy=\"960\" r=\"6\" fill=\"{accent}\"/><circle cx=\"540\" cy=\"1020\" r=\"6\" fill=\"{accent}\"/>",
     "outfit-apron": "<path d=\"M455 832 Q540 797 625 832 L645 1242 Q540 1288 435 1242 Z\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M490 930 L590 930 L605 1240 L475 1240 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"9\"/><path d=\"M500 930 L520 840 M580 930 L560 840\" stroke=\"{outline}\" stroke-width=\"9\"/><rect x=\"510\" y=\"1080\" width=\"60\" height=\"50\" rx=\"10\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"8\"/>",
     "outfit-panjabi": "<path d=\"M455 832 Q540 797 625 832 L665 1330 Q540 1370 415 1330 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M505 815 L540 875 L575 815\" fill=\"none\" stroke=\"{light}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M540 880 L540 1310\" stroke=\"{light}\" stroke-width=\"7\" stroke-dasharray=\"4 20\"/><circle cx=\"540\" cy=\"950\" r=\"6\" fill=\"{accent}\"/><circle cx=\"540\" cy=\"1030\" r=\"6\" fill=\"{accent}\"/><circle cx=\"540\" cy=\"1110\" r=\"6\" fill=\"{accent}\"/>",
-    "outfit-kurta": "<path d=\"M455 832 Q540 797 625 832 L655 1300 Q540 1342 425 1300 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M500 818 L540 900 L580 818\" fill=\"none\" stroke=\"{light}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M540 900 L540 1290\" stroke=\"{accent}\" stroke-width=\"8\"/><path d=\"M425 1180 L455 1180 M625 1180 L655 1180\" stroke=\"{outline}\" stroke-width=\"7\"/>"
+    "outfit-kurta": "<path d=\"M455 832 Q540 797 625 832 L655 1300 Q540 1342 425 1300 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M500 818 L540 900 L580 818\" fill=\"none\" stroke=\"{light}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M540 900 L540 1290\" stroke=\"{accent}\" stroke-width=\"8\"/><path d=\"M425 1180 L455 1180 M625 1180 L655 1180\" stroke=\"{outline}\" stroke-width=\"7\"/>",
+    "outfit-shirt-trousers": "<path d=\"M455 832 Q540 797 625 832 L642 1110 L438 1110 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M438 1102 L642 1102 L648 1246 Q540 1290 432 1246 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M505 815 L540 872 L575 815\" fill=\"none\" stroke=\"{light}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M540 890 L540 1088\" stroke=\"{light}\" stroke-width=\"7\" opacity=\"0.55\"/><rect x=\"438\" y=\"1090\" width=\"204\" height=\"26\" rx=\"8\" fill=\"{outline}\" opacity=\"0.9\"/><circle cx=\"540\" cy=\"940\" r=\"6\" fill=\"{accent}\"/><circle cx=\"540\" cy=\"1000\" r=\"6\" fill=\"{accent}\"/><circle cx=\"540\" cy=\"1060\" r=\"6\" fill=\"{accent}\"/>",
+    "outfit-salwar-kameez": "<path d=\"M450 830 Q540 792 630 830 L672 1332 Q540 1378 408 1332 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M498 812 L540 882 L582 812\" fill=\"none\" stroke=\"{light}\" stroke-width=\"10\" stroke-linejoin=\"round\"/><path d=\"M470 894 Q540 930 610 894\" fill=\"none\" stroke=\"{light}\" stroke-width=\"4\" opacity=\"0.65\"/><path d=\"M432 1318 Q470 1390 512 1388 L512 1478 Q458 1482 418 1410 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M648 1318 Q610 1390 568 1388 L568 1478 Q622 1482 662 1410 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M540 872 Q660 850 704 960 Q626 1010 574 946 Q548 910 540 872 Z\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M566 918 Q610 930 660 916\" fill=\"none\" stroke=\"{light}\" stroke-width=\"6\" opacity=\"0.55\"/><circle cx=\"540\" cy=\"940\" r=\"6\" fill=\"{accent}\"/><circle cx=\"540\" cy=\"1010\" r=\"6\" fill=\"{accent}\"/><circle cx=\"540\" cy=\"1080\" r=\"6\" fill=\"{accent}\"/>",
+    "outfit-saree": "<path d=\"M452 832 Q540 796 628 832 L652 1280 Q540 1332 428 1280 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M432 1270 Q470 1372 518 1400 L498 1540 Q430 1500 404 1370 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M648 1270 Q610 1372 562 1400 L582 1540 Q650 1500 676 1370 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M470 870 Q610 830 706 934 L684 994 Q590 910 462 930 Z\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M500 920 Q612 864 690 950\" fill=\"none\" stroke=\"{light}\" stroke-width=\"6\" opacity=\"0.55\"/><path d=\"M456 1130 Q540 1174 636 1130\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"6\" opacity=\"0.75\"/><path d=\"M448 1210 Q540 1258 646 1210\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"6\" opacity=\"0.75\"/><path d=\"M466 1040 Q540 1080 620 1040\" fill=\"none\" stroke=\"{cloth_shadow}\" stroke-width=\"4\" opacity=\"0.5\"/>"
   },
   "accessories": {
     "accessory-glasses": "<rect x=\"438\" y=\"542\" width=\"94\" height=\"66\" rx=\"24\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"10\"/><rect x=\"548\" y=\"542\" width=\"94\" height=\"66\" rx=\"24\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M532 570 L548 570 M438 562 L404 548 M642 562 L676 548\" stroke=\"{outline}\" stroke-width=\"9\" stroke-linecap=\"round\"/>",
@@ -119,7 +124,8 @@
     "accessory-scarf": "<path d=\"M470 830 Q540 884 610 830 L602 878 Q540 930 478 878 Z\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"8\"/><path d=\"M500 880 L488 1010 L530 1000 L540 894 Z\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"8\"/>",
     "accessory-watch": "<circle cx=\"398\" cy=\"1176\" r=\"24\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"8\"/><path d=\"M398 1164 L398 1178 L410 1184\" stroke=\"{outline}\" stroke-width=\"5\" stroke-linecap=\"round\"/>",
     "accessory-earrings": "<circle cx=\"382\" cy=\"604\" r=\"15\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"6\"/><circle cx=\"698\" cy=\"604\" r=\"15\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"6\"/>",
-    "accessory-lanyard": "<path d=\"M500 838 L540 1000 L580 838\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"10\"/><rect x=\"510\" y=\"995\" width=\"60\" height=\"80\" rx=\"10\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"8\"/><path d=\"M522 1020 L558 1020 M522 1042 L550 1042\" stroke=\"{outline}\" stroke-width=\"5\"/>"
+    "accessory-lanyard": "<path d=\"M500 838 L540 1000 L580 838\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"10\"/><rect x=\"510\" y=\"995\" width=\"60\" height=\"80\" rx=\"10\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"8\"/><path d=\"M522 1020 L558 1020 M522 1042 L550 1042\" stroke=\"{outline}\" stroke-width=\"5\"/>",
+    "accessory-tupi": "<path d=\"M410 448 Q540 318 670 448 Z\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M410 448 Q540 420 670 448 L676 480 Q540 452 404 480 Z\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M470 388 Q540 366 610 388\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"6\" opacity=\"0.8\"/><path d=\"M492 424 Q540 412 588 424\" fill=\"none\" stroke=\"{accent}\" stroke-width=\"6\" opacity=\"0.8\"/>"
   },
   "mouth_shapes": {
     "closed": "mouth-closed",
@@ -238,6 +244,209 @@
       "open": "<path d=\"M-22 -4 Q-30 -2 -30 8 L-30 20 Q-30 30 -20 30 L20 30 Q30 30 30 20 L30 8 Q30 -2 22 -4 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><rect x=\"-19\" y=\"26\" width=\"9\" height=\"26\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"-6\" y=\"28\" width=\"9\" height=\"30\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"7\" y=\"27\" width=\"9\" height=\"27\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"18\" y=\"24\" width=\"8\" height=\"22\" rx=\"4\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><path d=\"M-28 4 Q-40 10 -36 24 Q-32 30 -26 24\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
       "point": "<path d=\"M-22 -4 Q-30 -2 -30 8 L-30 20 Q-30 30 -20 30 L20 30 Q30 30 30 20 L30 8 Q30 -2 22 -4 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><rect x=\"10\" y=\"22\" width=\"10\" height=\"38\" rx=\"5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"-18\" y=\"24\" width=\"9\" height=\"14\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"-6\" y=\"26\" width=\"9\" height=\"16\" rx=\"4.5\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"4\" y=\"24\" width=\"8\" height=\"13\" rx=\"4\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><path d=\"M-28 4 Q-40 10 -36 24 Q-32 30 -26 24\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/>",
       "hold": "<path d=\"M-22 -4 Q-30 -2 -30 8 L-30 20 Q-30 30 -20 30 L20 30 Q30 30 30 20 L30 8 Q30 -2 22 -4 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><rect x=\"-18\" y=\"22\" width=\"36\" height=\"14\" rx=\"6\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\"/><path d=\"M-28 4 Q-40 10 -36 24 Q-32 30 -26 24\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linecap=\"round\"/><rect x=\"-16\" y=\"30\" width=\"32\" height=\"46\" rx=\"6\" fill=\"{outline}\" stroke=\"{outline}\" stroke-width=\"4\"/><rect x=\"-11\" y=\"35\" width=\"22\" height=\"34\" rx=\"3\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"4\"/><circle cx=\"0\" cy=\"73\" r=\"3\" fill=\"{light}\"/>"
+    },
+    "pro": {
+      "outline": {
+        "variation": "<path d=\"M404 500 Q392 600 420 690\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"6\" opacity=\"0.55\" stroke-linecap=\"round\"/><path d=\"M676 500 Q688 600 660 690\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"6\" opacity=\"0.45\" stroke-linecap=\"round\"/><path d=\"M424 852 Q540 806 656 852\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"14\" opacity=\"0.85\" stroke-linecap=\"round\"/><path d=\"M462 1614 Q502 1666 540 1662\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"14\" opacity=\"0.8\" stroke-linecap=\"round\"/><path d=\"M620 446 Q680 490 690 560\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"6\" opacity=\"0.4\" stroke-linecap=\"round\"/>"
+      },
+      "face": {
+        "inner_shadow": "<path d=\"M600 480 Q680 545 660 660 Q636 720 570 744 Q626 690 634 600 Q640 520 600 480 Z\" fill=\"{skin_shadow}\" opacity=\"0.25\"/><path d=\"M480 470 Q420 540 440 660 Q456 708 500 736 Q452 690 448 600 Q444 520 480 470 Z\" fill=\"{skin_shadow}\" opacity=\"0.16\"/>",
+        "rim_light": "<path d=\"M404 505 Q392 590 424 682\" fill=\"none\" stroke=\"{light}\" stroke-width=\"6\" opacity=\"0.55\" stroke-linecap=\"round\"/><path d=\"M430 440 Q500 392 574 402\" fill=\"none\" stroke=\"{light}\" stroke-width=\"6\" opacity=\"0.42\" stroke-linecap=\"round\"/><path d=\"M465 880 Q500 910 536 918\" fill=\"none\" stroke=\"{light}\" stroke-width=\"6\" opacity=\"0.30\" stroke-linecap=\"round\"/>",
+        "ear_shading": "<ellipse cx=\"380\" cy=\"564\" rx=\"13\" ry=\"18\" fill=\"{skin_shadow}\" opacity=\"0.38\"/><ellipse cx=\"700\" cy=\"564\" rx=\"13\" ry=\"18\" fill=\"{skin_shadow}\" opacity=\"0.30\"/><path d=\"M374 552 Q382 564 374 578\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"4\" opacity=\"0.6\" stroke-linecap=\"round\"/><path d=\"M706 552 Q698 564 706 578\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"4\" opacity=\"0.5\" stroke-linecap=\"round\"/>",
+        "neck_shading": "<path d=\"M505 724 Q540 782 575 724 L575 790 Q540 824 505 790 Z\" fill=\"{skin_shadow}\" opacity=\"0.42\"/><path d=\"M520 760 Q540 780 560 760\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"6\" opacity=\"0.45\" stroke-linecap=\"round\"/>"
+      },
+      "hair": {
+        "strands_02": "<path d=\"M402 500 Q438 430 500 410\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"6\" opacity=\"0.5\" stroke-linecap=\"round\"/><path d=\"M420 540 Q456 470 512 446\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"4\" opacity=\"0.4\" stroke-linecap=\"round\"/>",
+        "strands_03": "<path d=\"M676 498 Q640 430 578 410\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"6\" opacity=\"0.5\" stroke-linecap=\"round\"/><path d=\"M660 540 Q624 470 568 446\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"4\" opacity=\"0.4\" stroke-linecap=\"round\"/>",
+        "strands_04": "<path d=\"M470 382 Q540 360 610 384\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"6\" opacity=\"0.45\" stroke-linecap=\"round\"/><path d=\"M500 366 Q540 354 580 368\" fill=\"none\" stroke=\"{hair_highlight}\" stroke-width=\"4\" opacity=\"0.35\" stroke-linecap=\"round\"/>"
+      },
+      "outfit": {
+        "fabric_pattern": "<path d=\"M486 880 L486 1200 M506 880 L506 1230 M526 880 L526 1235 M546 880 L546 1235 M566 880 L566 1235 M586 880 L586 1230 M606 880 L606 1200\" stroke=\"{cloth_shadow}\" stroke-width=\"4\" opacity=\"0.18\"/><path d=\"M470 940 L610 940 M466 1000 L614 1000 M462 1060 L618 1060 M460 1120 L620 1120 M462 1180 L618 1180\" stroke=\"{cloth_shadow}\" stroke-width=\"4\" opacity=\"0.14\"/>"
+      },
+      "hands": {
+        "open": "<g data-fingers=\"5\"><path d=\"M-24 -6 Q-34 -4 -34 8 L-34 22 Q-34 34 -22 34 L22 34 Q34 34 34 22 L34 8 Q34 -4 24 -6 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-22 30 Q-24 58 -18 64 Q-12 68 -8 62 L-6 30 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-8 30 Q-9 64 -2 72 Q4 76 9 70 L10 30 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M6 30 Q6 66 13 72 Q19 74 23 68 L22 30 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M18 28 Q20 56 26 60 Q32 62 35 56 L33 26 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-30 8 Q-46 14 -44 30 Q-42 40 -32 36 L-26 26 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-20 8 Q0 18 24 8\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"4\" opacity=\"0.5\" stroke-linecap=\"round\"/></g>",
+        "point": "<g data-fingers=\"5\"><path d=\"M-24 -6 Q-34 -4 -34 8 L-34 22 Q-34 34 -22 34 L22 34 Q34 34 34 22 L34 8 Q34 -4 24 -6 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M10 22 Q10 64 14 76 Q18 84 24 78 L26 22 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-20 26 Q-22 48 -18 54 Q-12 58 -8 52 L-8 26 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-8 26 Q-9 50 -4 56 Q2 58 6 52 L7 26 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M20 24 Q22 44 28 48 Q33 50 35 44 L34 22 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-30 8 Q-46 14 -44 30 Q-42 40 -32 36 L-26 26 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-18 10 Q0 18 20 10\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"4\" opacity=\"0.5\" stroke-linecap=\"round\"/></g>",
+        "hold": "<g data-fingers=\"5\"><path d=\"M-24 -6 Q-34 -4 -34 8 L-34 22 Q-34 34 -22 34 L22 34 Q34 34 34 22 L34 8 Q34 -4 24 -6 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-22 26 Q-6 42 20 26 L20 52 Q-6 66 -22 52 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-18 32 Q-6 44 18 32\" fill=\"none\" stroke=\"{skin_shadow}\" stroke-width=\"4\" opacity=\"0.5\" stroke-linecap=\"round\"/><path d=\"M-24 40 Q-40 44 -38 58 Q-34 66 -26 58 L-20 48 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M20 40 Q36 44 34 58 Q30 66 22 58 L16 48 Z\" fill=\"{skin}\" stroke=\"{outline}\" stroke-width=\"4\" stroke-linejoin=\"round\"/><path d=\"M-12 52 L-12 74 M0 54 L0 78 M12 52 L12 74\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.5\" stroke-linecap=\"round\"/></g>"
+      }
+    }
+  },
+  "culture": {
+    "region": "Bangladesh",
+    "language": "bn",
+    "skin_tones": [
+      {
+        "name": "light warm",
+        "name_bn": "হালকা উষ্ণ",
+        "hex": "#F6D5B8"
+      },
+      {
+        "name": "wheat",
+        "name_bn": "গম রঙ",
+        "hex": "#E8B98E"
+      },
+      {
+        "name": "light brown",
+        "name_bn": "হালকা বাদামি",
+        "hex": "#D9A066"
+      },
+      {
+        "name": "medium brown",
+        "name_bn": "মাঝারি বাদামি",
+        "hex": "#C68642"
+      },
+      {
+        "name": "deep brown",
+        "name_bn": "গভীর বাদামি",
+        "hex": "#A9683A"
+      },
+      {
+        "name": "dark brown",
+        "name_bn": "কালচে বাদামি",
+        "hex": "#96603A"
+      },
+      {
+        "name": "fair",
+        "name_bn": "ফর্সা",
+        "hex": "#FBE3CF"
+      },
+      {
+        "name": "copper",
+        "name_bn": "তামাটে",
+        "hex": "#B97A4E"
+      }
+    ],
+    "outfits": {
+      "outfit-panjabi": {
+        "name": "Panjabi",
+        "name_bn": "পাঞ্জাবি",
+        "note": "Long buttoned tunic worn at Eid, weddings and family events."
+      },
+      "outfit-kurta": {
+        "name": "Kurta",
+        "name_bn": "কুর্তা",
+        "note": "Simple long tunic, common for daily wear and interviews."
+      },
+      "outfit-shirt": {
+        "name": "Shirt",
+        "name_bn": "শার্ট",
+        "note": "Western shirt, normal office and campus wear."
+      },
+      "outfit-shirt-trousers": {
+        "name": "Shirt and trousers",
+        "name_bn": "শার্ট ও ট্রাউজার",
+        "note": "Office, bank and university presentation outfit."
+      },
+      "outfit-salwar-kameez": {
+        "name": "Salwar kameez",
+        "name_bn": "সালোয়ার কামিজ",
+        "note": "Kameez tunic with loose salwar trousers and a dupatta."
+      },
+      "outfit-saree": {
+        "name": "Saree",
+        "name_bn": "শাড়ি",
+        "note": "Draped saree with a pallu over the left shoulder."
+      },
+      "outfit-shirt-vest": {
+        "name": "Shirt with vest",
+        "name_bn": "শার্ট ও ভেস্ট",
+        "note": "Teacher-style shirt with a contrast vest."
+      },
+      "outfit-formal": {
+        "name": "Formal suit",
+        "name_bn": "ফরমাল স্যুট",
+        "note": "Formal jacket and tie for an office or bank role."
+      },
+      "outfit-hoodie": {
+        "name": "Hoodie",
+        "name_bn": "হুডি",
+        "note": "Casual campus and freelancer clothing."
+      },
+      "outfit-t-shirt": {
+        "name": "T-shirt",
+        "name_bn": "টি-শার্ট",
+        "note": "Everyday casual clothing."
+      },
+      "outfit-apron": {
+        "name": "Shop apron",
+        "name_bn": "দোকানের এপ্রন",
+        "note": "Apron for a shop owner or small-business role."
+      }
+    },
+    "accessories": {
+      "accessory-tupi": {
+        "name": "Tupi cap",
+        "name_bn": "টুপি",
+        "note": "Traditional Bangladeshi cap; optional, never assumed for every character."
+      },
+      "accessory-glasses": {
+        "name": "Glasses",
+        "name_bn": "চশমা",
+        "note": "Rectangular glasses for a teacher, mentor or office role."
+      },
+      "accessory-cap": {
+        "name": "Cap",
+        "name_bn": "ক্যাপ",
+        "note": "Casual sports cap for a student or freelancer."
+      },
+      "accessory-earrings": {
+        "name": "Earrings",
+        "name_bn": "কানের দুল",
+        "note": "Small gold earrings, common with saree or salwar kameez."
+      },
+      "accessory-lanyard": {
+        "name": "Lanyard",
+        "name_bn": "ল্যানিয়ার্ড",
+        "note": "Office or school identity card lanyard."
+      },
+      "accessory-watch": {
+        "name": "Watch",
+        "name_bn": "ঘড়ি",
+        "note": "Simple wrist watch for a professional role."
+      },
+      "accessory-tie": {
+        "name": "Tie",
+        "name_bn": "টাই",
+        "note": "Formal office tie."
+      },
+      "accessory-bag": {
+        "name": "Shoulder bag",
+        "name_bn": "কাঁধের ব্যাগ",
+        "note": "Student or commuter bag."
+      },
+      "accessory-scarf": {
+        "name": "Scarf",
+        "name_bn": "স্কার্ফ",
+        "note": "Light scarf for a shop owner or cool-weather scene."
+      }
+    }
+  },
+  "props": {
+    "coin": "<circle cx=\"0\" cy=\"0\" r=\"58\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"10\"/><circle cx=\"0\" cy=\"0\" r=\"40\" fill=\"none\" stroke=\"{light}\" stroke-width=\"6\" opacity=\"0.8\"/><path d=\"M-10 -28 L-10 28 M-22 -16 L12 -16 M-22 16 L12 16\" stroke=\"{outline}\" stroke-width=\"8\" stroke-linecap=\"round\"/>",
+    "phone": "<rect x=\"-65\" y=\"-110\" width=\"130\" height=\"220\" rx=\"24\" fill=\"{outline}\"/><rect x=\"-50\" y=\"-85\" width=\"100\" height=\"160\" rx=\"12\" fill=\"{light}\"/><circle cx=\"0\" cy=\"92\" r=\"7\" fill=\"{light}\"/><path d=\"M-36 -50 L36 -50 M-36 -30 L20 -30 M-36 -10 L36 -10 M-36 10 L28 10 M-36 30 L36 30\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.25\"/><rect x=\"-34\" y=\"48\" width=\"68\" height=\"16\" rx=\"8\" fill=\"{accent}\"/>",
+    "notebook": "<rect x=\"-105\" y=\"-90\" width=\"210\" height=\"180\" rx=\"14\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"10\"/><rect x=\"-105\" y=\"-90\" width=\"34\" height=\"180\" rx=\"14\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M-50 -40 L80 -40 M-50 -5 L80 -5 M-50 30 L60 30\" stroke=\"{outline}\" stroke-width=\"4\" opacity=\"0.5\"/><path d=\"M-96 -64 L-110 -64 M-96 -34 L-110 -34 M-96 -4 L-110 -4 M-96 26 L-110 26 M-96 56 L-110 56\" stroke=\"{outline}\" stroke-width=\"6\" stroke-linecap=\"round\"/>",
+    "bar-graph": "<rect x=\"-150\" y=\"-105\" width=\"300\" height=\"210\" rx=\"18\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M-110 45 L110 45\" stroke=\"{outline}\" stroke-width=\"6\"/><rect x=\"-95\" y=\"5\" width=\"44\" height=\"40\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"6\"/><rect x=\"-33\" y=\"-35\" width=\"44\" height=\"80\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"6\"/><rect x=\"29\" y=\"-70\" width=\"44\" height=\"115\" fill=\"{outfit}\" stroke=\"{outline}\" stroke-width=\"6\"/><path d=\"M-73 -5 L-11 -48 L51 -86\" fill=\"none\" stroke=\"{outline}\" stroke-width=\"6\" stroke-dasharray=\"8 10\"/>",
+    "wallet": "<rect x=\"-90\" y=\"-60\" width=\"180\" height=\"120\" rx=\"20\" fill=\"{accent}\" stroke=\"{outline}\" stroke-width=\"10\"/><path d=\"M-90 -30 L90 -30\" stroke=\"{outline}\" stroke-width=\"6\"/><rect x=\"20\" y=\"-10\" width=\"58\" height=\"40\" rx=\"10\" fill=\"{light}\" stroke=\"{outline}\" stroke-width=\"6\"/><circle cx=\"49\" cy=\"10\" r=\"5\" fill=\"{outline}\"/><rect x=\"-60\" y=\"-50\" width=\"70\" height=\"26\" rx=\"6\" fill=\"{light}\" opacity=\"0.8\"/>"
+  },
+  "prop_names": {
+    "coin": {
+      "name": "Taka coin",
+      "name_bn": "টাকার কয়েন"
+    },
+    "phone": {
+      "name": "Phone",
+      "name_bn": "মোবাইল"
+    },
+    "notebook": {
+      "name": "Notebook",
+      "name_bn": "খাতা"
+    },
+    "bar-graph": {
+      "name": "Bar-graph board",
+      "name_bn": "লাভ-ক্ষতির বোর্ড"
+    },
+    "wallet": {
+      "name": "Wallet",
+      "name_bn": "মানিব্যাগ"
     }
   }
 }

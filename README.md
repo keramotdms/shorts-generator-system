@@ -2,7 +2,7 @@
 
 Tooling for generating short-form vertical videos.
 
-> 93 skills are implemented. See `docs/SKILL-INDEX.md` for the full list and `docs/HOW-TO-USE.md` for the pipeline.
+> 94 skills are implemented. See `docs/SKILL-INDEX.md` for the full list and `docs/HOW-TO-USE.md` for the pipeline.
 
 ## Getting started
 

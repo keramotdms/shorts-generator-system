@@ -32,7 +32,7 @@ Checks tools, skills, handoffs and final output.
 - Format `json_utf8`: `projects/<project>/pipeline-health-checker.json`
 
 # Steps
-1. Count the 93 skill folders and confirm every entry in `config/skill-contracts.json` has both an input and output path.
+1. Count the 94 skill folders and confirm every entry in `config/skill-contracts.json` has both an input and output path.
 2. Verify `projects/<project>/08-final-test/final-video.mp4` exists and ffprobe reports 1080x1920 with a positive duration.
 3. Check that the four required harness scripts are registered in health_check.py.
 4. Confirm no SKILL.md still carries the generic template phrase or an unresolved `<character-id>` path.

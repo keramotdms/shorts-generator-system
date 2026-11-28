@@ -1,6 +1,6 @@
 # Skill Index
 
-Total skills: 93
+Total skills: 94
 
 | Name | Category | Subcategory | Status | Phase |
 | --- | --- | --- | --- | --- |
@@ -41,6 +41,7 @@ Total skills: 93
 | character-qa-tester | character | - | implemented | later |
 | element-designer | scene | - | implemented | later |
 | element-organizer | scene | - | implemented | later |
+| scenery-designer | scene | - | implemented | later |
 | scenario-designer | scene | - | implemented | later |
 | script-voice-character-collector | video-making | - | implemented | 3 |
 | lipsync-motion-planner | video-making | - | implemented | later |

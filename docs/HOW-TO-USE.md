@@ -134,4 +134,4 @@ python tests\test_skills.py
 python scripts\health_check.py
 ```
 
-The dummy pipeline uses a 5-second fixture at `tests/fixtures/latest_script.json`, writes to `projects/dummy/`, and prints `PASS`, `FAIL` or `BLOCKED` for every one of the 93 skills.
+The dummy pipeline uses a 5-second fixture at `tests/fixtures/latest_script.json`, writes to `projects/dummy/`, and prints `PASS`, `FAIL` or `BLOCKED` for every one of the 94 skills.

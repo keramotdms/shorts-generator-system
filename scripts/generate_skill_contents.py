@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate real SKILL.md content for all 93 skills, one batch at a time.
+"""Generate real SKILL.md content for all 94 skills, one batch at a time.
 
 Uses the skill table in generate_skill_scaffolds.py as the single source of truth
 for name, category, subcategory, purpose, input, output and dependency line.

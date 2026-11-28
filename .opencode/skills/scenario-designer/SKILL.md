@@ -22,6 +22,7 @@ Builds scene layouts and visual plans.
 
 - `projects/<project>/02-script/latest_script.json`
 - `config/style-bible.json`
+- `projects/<project>/05-scene/scenery-designer.json` — scene-to-plate map from scenery-designer; use its `scene_plates` and `plates` entries as the backgrounds instead of inventing new ones.
 - Context is read through project-memory from `config/channel.json` and `config/style-bible.json`; nothing niche/language/style is hardcoded.
 - `PROJECT` environment variable (defaults to `_template`).
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the whole 93-skill pipeline against a dummy 5-second project.
+"""Run the whole 94-skill pipeline against a dummy 5-second project.
 
 Marks every skill PASS / FAIL / BLOCKED. No installs, no security changes.
 FFmpeg-dependent skills are BLOCKED (not FAIL) while ffmpeg.exe is blocked.

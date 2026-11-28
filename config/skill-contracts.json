@@ -606,8 +606,35 @@
         "projects/<project>/05-scene/element-organizer.json": "json_utf8"
       }
     },
-    "scenario-designer": {
+    "scenery-designer": {
       "input": "projects/<project>/02-script/latest_script.json + config/style-bible.json",
+      "output": "projects/<project>/05-scene/scenery-designer.json + assets/scenes/scenery/bedroom-night.svg + assets/scenes/scenery/bedroom-night.png + assets/scenes/scenery/study-desk.svg + assets/scenes/scenery/study-desk.png + assets/scenes/scenery/classroom.svg + assets/scenes/scenery/classroom.png + assets/scenes/scenery/shop-interior.svg + assets/scenes/scenery/shop-interior.png + assets/scenes/scenery/street-night.svg + assets/scenes/scenery/street-night.png + assets/scenes/scenery/ceremony-hall.svg + assets/scenes/scenery/ceremony-hall.png",
+      "upstream": "script-writer",
+      "downstream": "scenario-designer",
+      "category": "scene",
+      "status": "implemented",
+      "phase": "later",
+      "type": "script-backed",
+      "batch": "E",
+      "schema": "plan",
+      "format": {
+        "projects/<project>/05-scene/scenery-designer.json": "json_utf8",
+        "assets/scenes/scenery/bedroom-night.svg": "svg_layered",
+        "assets/scenes/scenery/bedroom-night.png": "png_frame_1080x1920",
+        "assets/scenes/scenery/study-desk.svg": "svg_layered",
+        "assets/scenes/scenery/study-desk.png": "png_frame_1080x1920",
+        "assets/scenes/scenery/classroom.svg": "svg_layered",
+        "assets/scenes/scenery/classroom.png": "png_frame_1080x1920",
+        "assets/scenes/scenery/shop-interior.svg": "svg_layered",
+        "assets/scenes/scenery/shop-interior.png": "png_frame_1080x1920",
+        "assets/scenes/scenery/street-night.svg": "svg_layered",
+        "assets/scenes/scenery/street-night.png": "png_frame_1080x1920",
+        "assets/scenes/scenery/ceremony-hall.svg": "svg_layered",
+        "assets/scenes/scenery/ceremony-hall.png": "png_frame_1080x1920"
+      }
+    },
+    "scenario-designer": {
+      "input": "projects/<project>/02-script/latest_script.json + config/style-bible.json + projects/<project>/05-scene/scenery-designer.json",
       "output": "projects/<project>/05-scene/scenario-designer.json + assets/scenes/warm-desk-background.svg + assets/scenes/scene-warm-desk-smile.png",
       "upstream": "collector",
       "downstream": "video-maker",

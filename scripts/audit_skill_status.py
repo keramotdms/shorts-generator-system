@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Full 93-skill audit: count REAL vs TEMPLATE skills and print category totals.
+"""Full 94-skill audit: count REAL vs TEMPLATE skills and print category totals.
 
 A skill is TEMPLATE when any of these is true:
   * its Steps still contain the generator's generic prompt wording
@@ -65,10 +65,10 @@ def main() -> int:
         print(f"{category:<16} {row['REAL']:>5} {row['TEMPLATE']:>9}")
     for name, reason in failures:
         print(f" - {name}: {reason}")
-    if total["TEMPLATE"] == 0 and total["REAL"] == 93:
-        print("PASS: 93 REAL / 0 TEMPLATE")
+    if total["TEMPLATE"] == 0 and total["REAL"] == 94:
+        print("PASS: 94 REAL / 0 TEMPLATE")
         return 0
-    print("FAIL: expected 93 REAL / 0 TEMPLATE")
+    print("FAIL: expected 94 REAL / 0 TEMPLATE")
     return 1
 
 

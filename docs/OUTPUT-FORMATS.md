@@ -51,6 +51,18 @@ format until its contract and SKILL.md Output section are changed first.
 | `assets/characters/props/props-sheet.png` | `png_transparent` | character-designer | _(none in contracts)_ |
 | `assets/characters/props/props-sheet.svg` | `svg_layered` | character-designer | _(none in contracts)_ |
 | `assets/scenes/scene-warm-desk-smile.png` | `png_transparent` | scenario-designer | script-voice-character-collector |
+| `assets/scenes/scenery/bedroom-night.png` | `png_frame_1080x1920` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/bedroom-night.svg` | `svg_layered` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/ceremony-hall.png` | `png_frame_1080x1920` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/ceremony-hall.svg` | `svg_layered` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/classroom.png` | `png_frame_1080x1920` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/classroom.svg` | `svg_layered` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/shop-interior.png` | `png_frame_1080x1920` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/shop-interior.svg` | `svg_layered` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/street-night.png` | `png_frame_1080x1920` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/street-night.svg` | `svg_layered` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/study-desk.png` | `png_frame_1080x1920` | scenery-designer | _(none in contracts)_ |
+| `assets/scenes/scenery/study-desk.svg` | `svg_layered` | scenery-designer | _(none in contracts)_ |
 | `assets/scenes/warm-desk-background.svg` | `svg_layered` | scenario-designer | _(none in contracts)_ |
 | `config/style-bible.json` | `json_utf8` | project-memory | branding-manager, character-designer, character-thinker-counter, color-grading-keeper, element-designer, intro-outro-manager, motion-graphic-editor, music-sfx-selector, scenario-designer, stock-asset-finder, template-preset-manager, transition-designer, voiceover-organizer, watermark-logo-placer |
 | `projects/<project>/01-research/audience-persona-builder.json` | `json_utf8` | audience-persona-builder | copywriter, marketing-specialist |
@@ -86,6 +98,7 @@ format until its contract and SKILL.md Output section are changed first.
 | `projects/<project>/05-scene/element-designer.json` | `json_utf8` | element-designer | element-organizer |
 | `projects/<project>/05-scene/element-organizer.json` | `json_utf8` | element-organizer | animator |
 | `projects/<project>/05-scene/scenario-designer.json` | `json_utf8` | scenario-designer | virtual-camera-planner |
+| `projects/<project>/05-scene/scenery-designer.json` | `json_utf8` | scenery-designer | scenario-designer |
 | `projects/<project>/06-video/lipsync-motion-planner.json` | `json_utf8` | lipsync-motion-planner | _(none in contracts)_ |
 | `projects/<project>/06-video/scenes/` | `mp4_clip` | video-maker | consistency-guardian, rough-cut-assembler, script-video-voice-collector, video-quality-checker |
 | `projects/<project>/06-video/video-maker-report.json` | `json_utf8` | video-maker | _(none in contracts)_ |

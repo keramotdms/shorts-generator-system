@@ -26,7 +26,7 @@ ORDER = [
     "voiceover-generator", "voiceover-tester", "voiceover-captions", "music-sfx-selector",
     "audio-mixer", "character-thinker-counter", "character-organizer", "character-designer",
     "character-setup-manager", "expression-pose-library", "character-qa-tester",
-    "element-designer", "element-organizer",
+    "element-designer", "element-organizer", "scenery-designer",
     "scenario-designer", "script-voice-character-collector", "lipsync-motion-planner",
     "video-maker", "video-quality-checker", "script-video-voice-collector",
     "rough-cut-assembler", "stock-asset-finder", "broll-variety-planner",

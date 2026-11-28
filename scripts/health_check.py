@@ -94,6 +94,18 @@ REQUIRED_FILES = [
     "assets/scenes/warm-desk-background.png",
     "assets/scenes/scene-warm-desk-smile.svg",
     "assets/scenes/scene-warm-desk-smile.png",
+    "assets/scenes/scenery/bedroom-night.svg",
+    "assets/scenes/scenery/bedroom-night.png",
+    "assets/scenes/scenery/study-desk.svg",
+    "assets/scenes/scenery/study-desk.png",
+    "assets/scenes/scenery/classroom.svg",
+    "assets/scenes/scenery/classroom.png",
+    "assets/scenes/scenery/shop-interior.svg",
+    "assets/scenes/scenery/shop-interior.png",
+    "assets/scenes/scenery/street-night.svg",
+    "assets/scenes/scenery/street-night.png",
+    "assets/scenes/scenery/ceremony-hall.svg",
+    "assets/scenes/scenery/ceremony-hall.png",
     "docs/HOW-TO-USE.md",
 ]
 

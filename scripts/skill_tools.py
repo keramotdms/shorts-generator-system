@@ -816,6 +816,9 @@ def self_test(skill: str) -> int:
     if skill == "character-designer":
         import character_designer
         return character_designer.self_test()
+    if skill == "scenery-designer":
+        import scenery_designer
+        return scenery_designer.self_test()
     if skill == "project-memory":
         ctx = lib.style_context()
         assert ctx["niche"] and ctx["language"] and ctx["audience_location"]
@@ -900,7 +903,7 @@ def self_test(skill: str) -> int:
     elif skill == "pipeline-health-checker":
         contracts = lib.read_json(lib.CONTRACTS_PATH)
         skills = contracts["skills"]
-        assert len(skills) == 93, len(skills)
+        assert len(skills) == 94, len(skills)
         assert all(entry.get("input") and entry.get("output") for entry in skills.values())
         print(f"PASS {skill}: {len(skills)} contracts have non-empty exact input/output")
     elif skill == "handover":
@@ -1025,6 +1028,9 @@ def main(argv: list[str] | None = None, skill_override: str | None = None) -> in
         elif skill == "character-designer":
             import character_designer
             character_designer.run()
+        elif skill == "scenery-designer":
+            import scenery_designer
+            scenery_designer.run()
         elif skill == "asset-manager":
             cmd_asset_manager(args)
         elif skill == "task-tracker":
